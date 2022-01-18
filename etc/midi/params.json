@@ -1,0 +1,27 @@
+{
+  "default_config": {
+    "description": "Parent for config maps\n",
+    "41": ["_change_map", "prev"],
+    "51": ["_change_map", "next"],
+    "46": ["_change_map", "playing_0"],
+    "47": ["_change_map", "params_0"],
+    "56": ["_change_map", "playing_0"],
+    "57": ["_change_map", "settings_0"]
+  },
+  "params_0": {
+    "description": "Volume\nA/B-mixer out\nC/D-mixer in\n",
+    "update_method": "_show_mixer_volume",
+    "60": ["_change_mixer_volume", -7, "out"],
+    "62": ["_change_mixer_volume", 7, "out"],
+    "64": ["_change_mixer_volume", -7, "in"],
+    "65": ["_change_mixer_volume", 7, "in"]
+  },
+  "params_1": {
+    "description": "Drum\nA/B-drum volume\nC/D-drum swing\n",
+    "update_method": "_show_drum_param",
+    "60": ["_change_drum_param", -1, "volume"],
+    "62": ["_change_drum_param", 1, "volume"],
+    "64": ["_change_drum_param", -1, "swing"],
+    "65": ["_change_drum_param", 1, "swing"]
+  }
+}

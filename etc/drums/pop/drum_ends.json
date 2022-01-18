@@ -1,0 +1,33 @@
+{
+ "comment": {
+    "1": "The default pattern defines properties that may be changed by a specific pattern",
+    "2": "adjust volume using accents (from 0 to 9) at each pattern step",
+    "3": "example: 563 means 50%, 60% 30% at first 3 steps",
+    "4": "steps repeat, e.g. '563' becomes '56356356' and  '.!' becomes '.!.!.!.!' for 8 steps pattern",
+    "5": "text pattern may contain only '.' - silence, '!' - drum hit"
+  },
+  "default_pattern": {
+    "steps": 16,
+    "accents": "65658565"
+  },
+  "end_0":  {
+    "___": "1234567812345678",
+    "hho": ".....!..........",
+    "tom": "..!!...!!..!..!!"
+  },
+  "end_1":  {
+    "___": "1234567812345678",
+    "hho": "........!......!",
+    "tom": ".!..!..!..!..!.."
+  },
+  "end_2":  {
+    "___": "1234567812345678",
+    "bel": "..!...!...!.....",
+    "tom": "....!...!...!..."
+  },
+  "end_3":  {
+    "___": "1234567812345678",
+    "hhc": "........!..!..!.",
+    "tom": "!!...!!...!!...!"
+  }
+}

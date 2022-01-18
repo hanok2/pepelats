@@ -1,0 +1,40 @@
+{
+  "default_config": {
+    "description": "Parent for playing maps\n",
+    "41": ["_change_drum"],
+    "42": ["_change_drum_silent"],
+    "43": ["_stop_at_part_end"],
+    "47": ["_change_map", "params_0"],
+    "53": ["_fade_and_stop", 8],
+    "56": ["_pause_and_clear"],
+    "57": ["_change_map", "settings_0"]
+  },
+  "playing_0": {
+    "description": "All parts\nA/B/C/D-play part\n",
+    "update_method": "_show_all_parts",
+    "46": ["_change_map", "playing_1"],
+    "51": ["_undo_part"],
+    "52": ["_redo_part"],
+    "60": ["_play_part_id", 0],
+    "62": ["_play_part_id", 1],
+    "64": ["_play_part_id", 2],
+    "65": ["_play_part_id", 3],
+    "86": ["_clear_part_id", 0],
+    "96": ["_clear_part_id", 1],
+    "106": ["_clear_part_id", 2],
+    "116": ["_clear_part_id", 3]
+  },
+  "playing_1": {
+    "description": "One part\nA-record\nB/C-scroll\nD-silence Dx2-reverse DH-delete\n",
+    "update_method": "_show_one_part",
+    "46": ["_change_map", "playing_0"],
+    "51": ["_undo_loop"],
+    "52": ["_redo_loop"],
+    "60": ["_play_loop_next"],
+    "62": ["_change_loop", "change", -1],
+    "64": ["_change_loop", "change", 1],
+    "111": ["_change_loop", "silent"],
+    "112": ["_change_loop", "reverse"],
+    "116": ["_change_loop", "delete"]
+  }
+}

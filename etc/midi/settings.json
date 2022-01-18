@@ -1,0 +1,33 @@
+{
+  "default_config": {
+    "description": "Parent for config maps\n",
+    "41": ["_change_map", "prev"],
+    "51": ["_change_map", "next"],
+    "46": ["_change_map", "playing_0"],
+    "47": ["_change_map", "params_0"],
+    "56": ["_change_map", "playing_0"],
+    "57": ["_change_map", "settings_0"]
+  },
+  "settings_0": {
+    "description": "Song\nA/B-scroll\nCx2-save\nCH-save new\nDx2-load\nDH-delete\n",
+    "update_method": "_show_song",
+    "60": ["_change_song", -1],
+    "62": ["_change_song", 1],
+    "102": ["_save_song"],
+    "106": ["_save_new_song"],
+    "112": ["_load_song"],
+    "116": ["_delete_song"]
+  },
+  "settings_1": {
+    "description": "Drum type\nA/B-scroll\nDx2-load\n",
+    "update_method": "_show_drum_type",
+    "60": ["_change_drum_type", -1],
+    "62": ["_change_drum_type", 1],
+    "112": ["_load_drum_type"]
+  },
+  "settings_2": {
+    "description": "Other\nDx2-update app\n",
+    "update_method": "_show_run_cmd_log",
+    "112": ["_check_updates"]
+  }
+}

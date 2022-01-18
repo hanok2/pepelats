@@ -1,0 +1,18 @@
+__pycache__
+# app data
+save_song
+#pyinstall files
+dist
+build
+*.spec
+#PyCharm
+.idea
+#other
+*.log
+
+
+
+
+
+
+
