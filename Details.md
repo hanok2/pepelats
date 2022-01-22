@@ -46,7 +46,7 @@ Settings view includes screens:
 - load drum style (e.g. pop/rock/....)
 
 MIDI commands assigned to buttons are different for these views and are listed in [commands.md](etc/midi/commands.md)
-located along with JSON files in [etc/midi/](etc/midi/)
+located along with JSON files in [etc/midi/](etc/midi)
 
 ## Extending MIDI foot controller commands
 

@@ -1,7 +1,7 @@
 import sys
 import time
 from multiprocessing.connection import Connection
-from typing import List, Dict
+from typing import List
 
 import mido
 
@@ -35,34 +35,10 @@ def get_midi_port():
         return wait_for_midi_ports(tmp)
 
 
-def is_midi_ctrl_chg(msg):
-    """ if MIDI message is Ctrl_chg """
-    if msg is None:
-        return False
-    byte0 = msg.bytes()[0]
-    return 0xb0 <= byte0 <= 0xbf
-
-
-def is_midi_note_on(msg):
-    byte0 = msg.bytes()[0]
-    return 0x90 <= byte0 <= 0x9f
-
-
-def is_midi_note_off(msg):
-    byte0 = msg.bytes()[0]
-    return 0x80 <= byte0 <= 0x8f
-
-
-def is_midi_note(msg):
-    byte0 = msg.bytes()[0]
-    return 0x80 <= byte0 <= 0x9f
-
-
 class MidiCounter:
 
     def __init__(self, s_conn: Connection, in_port):
 
-        self.__mapped_notes: Dict[str, int] = MainLoader.get(ConfigName.mapped_notes, dict())
         self.__translator: MidiTranslator = MidiTranslator(s_conn)
         self.__in_port = in_port
         self.__exit_note: int = MainLoader.get(ConfigName.exit_note, 59)
@@ -77,42 +53,8 @@ class MidiCounter:
             note = msg.bytes()[1]
             self.__translator.translate_and_send(str(note))
 
-    def __update_count(self, count_note: int, is_on: bool) -> None:
-        # if we got another note number, restart count
-        if self.__past_count_note != count_note:
-            self.__on_count = self.__off_count = 0
-            self.__past_count_note = count_note
-
-        if is_on:
-            self.__on_count += 1
-        else:
-            # old OFF note may come before ON, we correct
-            if self.__on_count > 0:
-                self.__off_count += 1
-
-    def __count_and_send(self, on_count: int, off_count: int, count_note: int) -> None:
-        # if we came here after a delay and note counts have changed we do not send
-        self.__past_note = -1
-        if self.__past_count_note != count_note \
-                or self.__on_count != on_count \
-                or self.__off_count != off_count:
-            return
-
-        # note and count did not change for long, we send MIDI
-        count_note += self.__on_count
-        if self.__on_count > self.__off_count:
-            count_note += 5
-
-        self.__on_count = self.__off_count = 0
-
-        if count_note == self.__exit_note:
-            self.__alive = False
-
-        self.__translator.translate_and_send(str(count_note))
-
     def __str__(self):
-        return f"{self.__class__.__name__} note={self.__past_count_note} " \
-               f"on_count={self.__on_count} off_count={self.__off_count}"
+        return f"{self.__class__.__name__}"
 
 
 if __name__ == "__main__":

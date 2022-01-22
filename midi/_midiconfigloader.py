@@ -7,9 +7,7 @@ from utils import JsonDictLoader
 
 class MidiConfigLoader:
     """Load MIDI notes mapping dict. from JSON files
-    Dict[str, Dict[str, List[Any]]]
-    First string key is name, second - midi note,
-    List is command and parameters
+    Dict[map_name, Dict[note, List[command, param1, ... ]]]
     To load this it parses etc/midi directory for JSON files"""
 
     ff: FileFinder = FileFinder("etc/midi", True, ".json", "")
