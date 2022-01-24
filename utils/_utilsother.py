@@ -14,10 +14,11 @@ logging.basicConfig(level=logging.ERROR, filename=Path(ROOT_DIR, 'log.log'), fil
 IS_LINUX = os.name == "posix"
 START_TIME = time.time()
 
-if IS_LINUX:
+# noinspection PyBroadException
+try:
     SCR_COLS, SCR_ROWS = os.get_terminal_size()
-else:
-    SCR_COLS, SCR_ROWS = 40, 5
+except Exception:
+    SCR_COLS, SCR_ROWS = 32, 10
 
 STATE_COLS = 6  # columns to show loop state - playing, recording ...
 
