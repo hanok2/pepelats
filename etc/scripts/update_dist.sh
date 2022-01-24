@@ -3,7 +3,7 @@
 cd ~/pepelats || exit 1
 python3 -O -m PyInstaller --add-data="etc:etc" --add-data="start.sh:." \
   --add-data="README.md:." --name=pepelatsexe \
-  --add-binary="/usr/lib/arm-linux-gnueabihf/libportaudio.so.2"
+  --add-binary="/usr/lib/arm-linux-gnueabihf/libportaudio.so.2:." \
   --hidden-import="mido.backends.rtmidi" --noconfirm start.py
 
 rsync -av --progress --exclude=".git" --exclude=".gitignore" \
