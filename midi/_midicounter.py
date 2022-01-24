@@ -17,8 +17,7 @@ def get_midi_port():
     def wait_for_midi_ports(port_names: List[str]):
         for k in range(180):
             time.sleep(1)
-            if k % 30 == 0:
-                print("Waiting for MIDI port to appear:", port_names)
+            print("Waiting for MIDI port to appear:", port_names)
             port_list = mido.get_input_names()
             for name in port_names:
                 for port_name in port_list:
