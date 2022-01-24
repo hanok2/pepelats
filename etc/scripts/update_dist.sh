@@ -2,6 +2,7 @@
 
 cd ~/pepelats || exit 1
 python3 -O -m PyInstaller --add-data="etc:etc" --add-data="start.sh:." \
+  --ascii --clean --log-level DEBUG \
   --paths="/usr/local/lib/python3.9/dist-packages/" \
   --paths="/usr/lib/python3/dist-packages/" \
   --paths="/usr/lib/python3.9/dist-packages/" \
