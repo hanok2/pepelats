@@ -9,9 +9,9 @@ python3 -O -m PyInstaller --add-data="etc:etc" --add-data="start.sh:." \
   --paths="/usr/lib/python3.9/" \
   --add-data="README.md:." --name=pepelatsexe \
   --debug=all --python-option=v \
-  --hidden-import="sounddevice" \
-  --hidden-import="soundfile"  \
   --hidden-import="mido.backends.rtmidi" \
+  --collect-binaries "sounddevice" \
+  --collect-binaries "soundfile" \
   --noconfirm start.py
 
 exit 0
