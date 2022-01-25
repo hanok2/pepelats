@@ -6,8 +6,7 @@ from threading import Thread
 from loop import ExtendedCtrl
 from loop import ScreenUpdater
 from midi import MidiCounter
-from midi import get_midi_port
-from utils import ConfigName
+from utils import ConfigName, get_midi_port
 
 
 def proc_ctrl(r_conn: Connection, s_conn: Connection):

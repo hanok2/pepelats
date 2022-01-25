@@ -1,3 +1,5 @@
 from midi._midiconfigloader import MidiConfigLoader
-from midi._midicounter import MidiCounter, get_midi_port
+from midi._midiconverter import MidiConverter
+from midi._midicounter import MidiCounter
 from midi._miditranslator import MidiTranslator
+
