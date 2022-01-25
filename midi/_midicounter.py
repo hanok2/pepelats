@@ -14,10 +14,8 @@ def get_midi_port():
 
     # noinspection PyUnresolvedReferences
     def wait_for_midi_ports(port_names: List[str]):
-        for k in range(180):
-            time.sleep(1)
-            if k % 30 == 0:
-                print("Waiting for MIDI port to appear:", port_names)
+        for k in range(3):
+            print("Waiting for MIDI port to appear:", port_names)
             port_list = mido.get_input_names()
             for name in port_names:
                 for port_name in port_list:
@@ -25,6 +23,7 @@ def get_midi_port():
                         print("opening:", port_name)
                         port_in = mido.open_input(port_name)
                         return port_in
+            time.sleep(5)
 
     if ConfigName.use_keyboard_option in sys.argv or not IS_LINUX:
         from midi._kbdmidiport import KbdMidiPort

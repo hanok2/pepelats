@@ -1,10 +1,13 @@
 #!/bin/bash
 
+# commands to set and save ALSA mixer values
+# works for TROND (and similar using C-media chip) USB audio
+
 CARDN=$(aplay -l | grep -i -m1 "usb audio" | cut -f1 -d ':' | cut -f2 -d ' ')
 
 if [[ "$CARDN" == "" ]]; then echo "USB audio not connected!"; exit 20; fi
 
-# setting for TROND (and similar using C-meadia chip) USB audio
+
 amixer -c "$CARDN" set "Auto Gain Control" off
 amixer -c "$CARDN" set Speaker on
 amixer -c "$CARDN" set Speaker playback 90%

@@ -13,25 +13,19 @@
 - Menu to display and change looper parameters using only foot controller
 - Simple installation with executable file in repository
 
-## Two repositories:
-
-Code repo (needs installation of Python and dependencies):
-
-- https://github.com/slmnv5/pepelats
-
-Executable repo:
-
-- https://github.com/slmnv5/pepelatsexe
 
 ## Installation:
 
-Install Raspberry Pi OS Lite, LCD screen and drivers, I added few notes below, it may be helpful. There is executable
-repository for this looper and installation needs only one git clone command:
+Install Raspberry Pi OS Lite, LCD screen and drivers.
 
-- cd ~/; git clone https://github.com/slmnv5/pepelatsexe
+Install dependencies running script [install_dependencies.sh](etc/scripts/install_dependencies.sh)
+
+Clone this repository: 
+- cd ~/; git clone https://github.com/slmnv5/pepelats
 
 To enable auto start edit ~/.bashrc file, append this line:
 
-- $HOME/pepelatsexe/start.sh
+- $HOME/pepelats/start.sh
+
 
 # [Pepelats details](./Details.md)
