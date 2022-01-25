@@ -1,6 +1,7 @@
+import sys
 from typing import List
 
-from utils import ConfigName, MainLoader
+from utils import ConfigName, MainLoader, IS_LINUX
 
 
 def get_midi_port():
@@ -20,7 +21,7 @@ def get_midi_port():
             time.sleep(5)
 
     if ConfigName.use_keyboard_option in sys.argv or not IS_LINUX:
-        from midi._kbdmidiport import KbdMidiPort
+        from midi import KbdMidiPort
         tmp = MainLoader.get(ConfigName.kbd_notes, dict())
         return KbdMidiPort(tmp)
     else:

@@ -35,7 +35,7 @@ if __name__ == "__main__":
     r_upd, s_upd = Pipe(False)  # screen update messages
     r_ctrl, s_ctrl = Pipe(False)  # looper control messages
 
-    if ConfigName.one in sys.argv:
+    if ConfigName.one_process in sys.argv:
         """one process version"""
         p_upd = Thread(target=proc_updater, args=(r_upd,), daemon=True)
         p_ctrl = Thread(target=proc_ctrl, args=(r_ctrl, s_upd), daemon=True)
@@ -47,10 +47,11 @@ if __name__ == "__main__":
     p_upd.start()
     p_ctrl.start()
 
-    if ConfigName.use_converter in sys.argv:
-        midi_contr = MidiConverter(s_ctrl, in_midi_port)
-    else:
+    if ConfigName.external_converter in sys.argv:
+        """use external MIDI note counter converter module"""
         midi_contr = MidiController(s_ctrl, in_midi_port)
+    else:
+        midi_contr = MidiConverter(s_ctrl, in_midi_port)
 
     midi_contr.start()
 

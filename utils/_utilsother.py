@@ -124,7 +124,8 @@ class ConfigName:
     run_cmd_log: str = "run_cmd.log"
     use_keyboard_option: str = "--kbd"
     redraw: str = "_redraw"
-    one: str = "--one"
+    one_process: str = "--one"
+    external_converter: str = "--external_converter"
     #  main loader
     drum_swing: str = "DRUM_SWING"
     drum_type: str = "DRUM_TYPE"
