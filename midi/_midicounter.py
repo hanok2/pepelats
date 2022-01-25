@@ -4,7 +4,7 @@ from midi._miditranslator import MidiTranslator
 from utils import always_true
 
 
-class MidiCounter:
+class MidiController:
 
     def __init__(self, s_conn: Connection, in_port):
 

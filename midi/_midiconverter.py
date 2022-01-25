@@ -4,7 +4,7 @@ from typing import Dict
 
 import mido
 
-from midi import MidiCounter
+from midi import MidiController
 from utils import always_true, ConfigName, MainLoader
 
 
@@ -73,7 +73,7 @@ class MidiCcToNote:
                 return None
 
 
-class MidiConverter(MidiCounter):
+class MidiConverter(MidiController):
     """Count MIDI notes to increase number of messages MIDI pedal send,
     tap, double tap, long tap - send different notes. Count algorithm:
     --take the original note 60, find the mapped note 80

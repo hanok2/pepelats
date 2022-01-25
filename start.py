@@ -5,7 +5,7 @@ from threading import Thread
 
 from loop import ExtendedCtrl
 from loop import ScreenUpdater
-from midi import MidiCounter
+from midi import MidiController, MidiConverter
 from utils import ConfigName, get_midi_port
 
 
@@ -25,34 +25,6 @@ def proc_updater(r_conn: Connection):
         screen_updater.process_message(msg)
 
 
-def start_mp():
-    """multi process version"""
-
-    r_upd, s_upd = Pipe(False)  # screen update messages
-    r_ctrl, s_ctrl = Pipe(False)  # looper control messages
-    p_upd = Process(target=proc_updater, args=(r_upd,), daemon=True)
-    p_upd.start()
-    p_ctrl = Process(target=proc_ctrl, args=(r_ctrl, s_upd), daemon=True)
-    p_ctrl.start()
-
-    midi_counter = MidiCounter(s_ctrl, in_midi_port)
-    midi_counter.start()
-
-
-def start_op():
-    """one process version"""
-
-    r_upd, s_upd = Pipe(False)  # screen update messages
-    r_ctrl, s_ctrl = Pipe(False)  # looper control messages
-    p_upd = Thread(target=proc_updater, args=(r_upd,), daemon=True)
-    p_upd.start()
-    p_ctrl = Thread(target=proc_ctrl, args=(r_ctrl, s_upd), daemon=True)
-    p_ctrl.start()
-
-    midi_counter = MidiCounter(s_ctrl, in_midi_port)
-    midi_counter.start()
-
-
 if __name__ == "__main__":
     #  freeze_support()
     in_midi_port = get_midi_port()
@@ -60,9 +32,26 @@ if __name__ == "__main__":
         print("Failed to connecting to MIDI input ports")
         sys.exit(1)
 
+    r_upd, s_upd = Pipe(False)  # screen update messages
+    r_ctrl, s_ctrl = Pipe(False)  # looper control messages
+
     if ConfigName.one in sys.argv:
-        start_op()
+        """one process version"""
+        p_upd = Thread(target=proc_updater, args=(r_upd,), daemon=True)
+        p_ctrl = Thread(target=proc_ctrl, args=(r_ctrl, s_upd), daemon=True)
     else:
-        start_mp()
+        """multi process version"""
+        p_upd = Process(target=proc_updater, args=(r_upd,), daemon=True)
+        p_ctrl = Process(target=proc_ctrl, args=(r_ctrl, s_upd), daemon=True)
+
+    p_upd.start()
+    p_ctrl.start()
+
+    if ConfigName.use_converter in sys.argv:
+        midi_contr = MidiConverter(s_ctrl, in_midi_port)
+    else:
+        midi_contr = MidiController(s_ctrl, in_midi_port)
+
+    midi_contr.start()
 
     print("=========Done==============")
