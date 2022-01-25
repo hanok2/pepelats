@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# script to make an executable for python application.
+# But it looses some dependencies and may crash depending on installed packages
+
 cd ~/pepelats || exit 1
 python3 -O -m PyInstaller --add-data="etc:etc" --add-data="start.sh:." \
   --ascii --clean --log-level DEBUG \

@@ -1,13 +1,14 @@
 #!/bin/bash
 
-echo "restart bluetooth"
+# commands to pair and connect a bluetooth device
 sudo service bluetooth restart
-
+sudo service bluetooth status
+sleep 2
 #sudo hciconfig hci0 sspmode 0 
 sudo bluetoothctl << EOF1
-#power on 
-#pairable on 
-#discoverable on
+power on
+pairable on
+discoverable on
 default-agent 
 trust BC:6A:29:36:D1:F5 
 #disconnect BC:6A:29:36:D1:F5
