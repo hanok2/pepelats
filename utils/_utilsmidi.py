@@ -1,6 +1,8 @@
 import sys
 from typing import List
 
+import mido
+
 from utils._utilsloader import MainLoader
 from utils._utilsother import ConfigName, IS_LINUX
 
