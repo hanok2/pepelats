@@ -20,6 +20,7 @@
     "w": 13
   },
   "MIDI_PORT_NAMES": [
+    "note_counter",
     "BlueBoard",
     "Livid"
   ],

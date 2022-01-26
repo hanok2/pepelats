@@ -54,7 +54,7 @@ EXT_CONV=""
 if [[ -f mimap5 && -f rules.txt ]]; then
   killall -9 mimap5
   aconnect -x
-  ./mimap5 -r rules.txt -n note_counter -vvv &
+  ./mimap5 -r rules.txt -n note_counter &
   time sleep 2
   PEDAL_OUT=$(aconnect -l | awk -v nm="$PEDAL_NAME" '$0 ~ nm {print $2;exit}')
   CLIENT_IN=$(aconnect -l | awk '/note_counter/ {print $2;exit}')
