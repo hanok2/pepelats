@@ -10,7 +10,7 @@
     "57": ["_change_map", "settings_0"]
   },
   "playing_0": {
-    "description": "All parts\nA/B/C/D-play part\n",
+    "description": "All parts: A/B/C/D-play part",
     "update_method": "_show_all_parts",
     "46": ["_change_map", "playing_1"],
     "51": ["_undo_part"],
@@ -25,7 +25,7 @@
     "116": ["_clear_part_id", 3]
   },
   "playing_1": {
-    "description": "One part\nA-record\nB/C-scroll\nD-silence Dx2-reverse DH-delete\n",
+    "description": "One part: A-record B/C-scroll D-silence Dx2-reverse DH-delete",
     "update_method": "_show_one_part",
     "46": ["_change_map", "playing_0"],
     "51": ["_undo_loop"],

@@ -86,7 +86,6 @@ class MidiConverter(MidiController):
     def __init__(self, s_conn: Connection, in_port):
         super().__init__(s_conn, in_port)
         self.__mapped_notes: Dict[str, int] = MainLoader.get(ConfigName.mapped_notes, dict())
-        self.__exit_note: int = MainLoader.get(ConfigName.exit_note, 59)
 
         self.__on_count: int = 0
         self.__off_count: int = 0
@@ -96,7 +95,7 @@ class MidiConverter(MidiController):
 
     def start(self) -> None:
         assert always_true("Started MIDI note counter")
-        while self._alive:
+        while True:
             msg = self._in_port.receive()
             msg = self.__midi_cc_to_note.convert(msg)
             if msg is None:
@@ -145,9 +144,6 @@ class MidiConverter(MidiController):
             count_note += 5
 
         self.__on_count = self.__off_count = 0
-
-        if count_note == self.__exit_note:
-            self._alive = False
 
         self._translator.translate_and_send(str(count_note))
 

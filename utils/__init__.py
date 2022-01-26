@@ -7,5 +7,5 @@ from utils._utilsloader import JsonDictLoader, MainLoader
 from utils._utilsmidi import get_midi_port
 # util classes and other
 from utils._utilsother import CollectionOwner, FileFinder, ConfigName, MsgProcessor
-from utils._utilsother import IS_LINUX, STATE_COLS, SCR_COLS, SCR_ROWS
+from utils._utilsother import IS_LINUX, STATE_COLS, SCR_COLS, SCR_ROWS, CURRENT_VERSION
 from utils._utilsother import always_true, val_str, print_at, run_os_cmd, clear_screen

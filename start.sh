@@ -49,26 +49,25 @@ for var in "$@"; do
   fi
 done
 
-EXT_CONV=""
+CONVERTER=""
 # who will convert MIDI messages - pepelats or binary app. mimap5
-if [[ -f mimap5 && -f rules.txt ]]; then
+if [[ -z "$USE_KBD" && -f mimap5 && -f rules.txt ]]; then
   killall -9 mimap5
   aconnect -x
   ./mimap5 -r rules.txt -n note_counter &
   time sleep 2
   PEDAL_OUT=$(aconnect -l | awk -v nm="$PEDAL_NAME" '$0 ~ nm {print $2;exit}')
   CLIENT_IN=$(aconnect -l | awk '/note_counter/ {print $2;exit}')
-  aconnect -e ${PEDAL_OUT}0 ${CLIENT_IN}0
-  if [ $? -eq 0 ]; then
-    EXT_CONV="--external_converter"
+  if aconnect -e "${PEDAL_OUT}0" "${CLIENT_IN}0"; then
+    CONVERTER="--no_converter"
     echo "========= using external converter for MIDI - mimap5 =============="
   else
-    EXT_CONV=""
+    CONVERTER=""
   fi
 fi
 
 
-python_command="$USE_KBD python3 $CODE_OPTIMIZE ./start.py $EXT_CONV $*"
+python_command="$USE_KBD python3 $CODE_OPTIMIZE ./start.py $CONVERTER $*"
 
 
 # keep past 100 lines only

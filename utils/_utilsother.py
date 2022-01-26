@@ -13,6 +13,7 @@ logging.basicConfig(level=logging.ERROR, filename=Path(ROOT_DIR, 'log.log'), fil
 
 IS_LINUX = os.name == "posix"
 START_TIME = time.time()
+CURRENT_VERSION = 'Jan 2022'
 
 # noinspection PyBroadException
 try:
@@ -44,9 +45,9 @@ def clear_screen():
     print_at(0, 0, (' ' * SCR_COLS + '\n') * SCR_ROWS)
 
 
-def run_os_cmd(cmd_list: list[str]) -> None:
-    with open(ConfigName.run_cmd_log, "w") as f:
-        sp.run(cmd_list, stdout=f)
+def run_os_cmd(cmd_list: list[str]) -> int:
+    output = sp.run(cmd_list)
+    return output.returncode
 
 
 class MsgProcessor:
@@ -121,11 +122,10 @@ class ConfigName:
     default_pattern: str = "default_pattern"
     comment: str = "comment"
     #  other
-    run_cmd_log: str = "run_cmd.log"
     use_keyboard_option: str = "--kbd"
     redraw: str = "_redraw"
     one_process: str = "--one"
-    external_converter: str = "--external_converter"
+    no_converter: str = "--no_converter"
     #  main loader
     drum_swing: str = "DRUM_SWING"
     drum_type: str = "DRUM_TYPE"
@@ -133,7 +133,6 @@ class ConfigName:
     kbd_notes: str = "KBD_NOTES"
     mapped_notes: str = "MAPPED_NOTES"
     midi_port_names: str = "MIDI_PORT_NAMES"
-    exit_note: str = "EXIT_NOTE"
 
 
 if __name__ == "__main__":

@@ -10,11 +10,10 @@ class MidiController:
 
         self._translator: MidiTranslator = MidiTranslator(s_conn)
         self._in_port = in_port
-        self._alive: bool = True
 
     def start(self) -> None:
         assert always_true("Started MIDI note counter")
-        while self._alive:
+        while True:
             msg = self._in_port.receive()
             if msg is None:
                 continue

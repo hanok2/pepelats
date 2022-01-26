@@ -9,7 +9,7 @@
     "57": ["_change_map", "settings_0"]
   },
   "params_0": {
-    "description": "Volume\nA/B-mixer out\nC/D-mixer in\n",
+    "description": "Mix_Volume: A/B-out  C/D-in",
     "update_method": "_show_mixer_volume",
     "60": ["_change_mixer_volume", -7, "out"],
     "62": ["_change_mixer_volume", 7, "out"],
@@ -17,7 +17,7 @@
     "65": ["_change_mixer_volume", 7, "in"]
   },
   "params_1": {
-    "description": "Drum\nA/B-drum volume\nC/D-drum swing\n",
+    "description": "Drum: A/B-volume C/D-swing",
     "update_method": "_show_drum_param",
     "60": ["_change_drum_param", -1, "volume"],
     "62": ["_change_drum_param", 1, "volume"],

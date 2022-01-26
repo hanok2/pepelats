@@ -9,7 +9,7 @@
     "57": ["_change_map", "settings_0"]
   },
   "settings_0": {
-    "description": "Song\nA/B-scroll\nCx2-save\nCH-save new\nDx2-load\nDH-delete\n",
+    "description": "Song: A/B-scroll Cx2-save CH-save_new Dx2-load DH-delete",
     "update_method": "_show_song",
     "60": ["_change_song", -1],
     "62": ["_change_song", 1],
@@ -19,15 +19,15 @@
     "116": ["_delete_song"]
   },
   "settings_1": {
-    "description": "Drum type\nA/B-scroll\nDx2-load\n",
+    "description": "Drum_Type: A/B-scroll Dx2-load",
     "update_method": "_show_drum_type",
     "60": ["_change_drum_type", -1],
     "62": ["_change_drum_type", 1],
     "112": ["_load_drum_type"]
   },
   "settings_2": {
-    "description": "Other\nDx2-update app\n",
-    "update_method": "_show_run_cmd_log",
+    "description": "App: Cx2-restart Dx2-update",
+    "update_method": "_show_version",
     "112": ["_check_updates"]
   }
 }

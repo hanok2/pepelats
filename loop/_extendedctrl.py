@@ -1,3 +1,5 @@
+import logging
+import os
 import time
 from multiprocessing.connection import Connection
 
@@ -5,7 +7,7 @@ from loop._looperctrl import LooperCtrl
 from loop._loopsimple import LoopWithDrum
 from loop._songpart import SongPart
 from mixer import Mixer
-from utils import IN_CHANNELS, OUT_CHANNELS, val_str, ConfigName, SCR_COLS
+from utils import IN_CHANNELS, OUT_CHANNELS, val_str, ConfigName, SCR_COLS, CURRENT_VERSION
 from utils import run_os_cmd
 
 
@@ -94,13 +96,8 @@ class ExtendedCtrl(LooperCtrl):
         return tmp
 
     @staticmethod
-    def _show_run_cmd_log() -> str:
-        try:
-            with open(ConfigName.run_cmd_log, "r") as f:
-                result = f.read(SCR_COLS * 5)
-        except FileNotFoundError:
-            result = ""
-        return result
+    def _show_version() -> str:
+        return CURRENT_VERSION
 
     # ================ other methods
 
@@ -111,9 +108,21 @@ class ExtendedCtrl(LooperCtrl):
         self.stop_now()
 
     @staticmethod
+    def _restart() -> None:
+        ppid = os.getppid()
+        for sg in [signal.CTRL_C_EVENT, signal.SIGKILL]:
+            try:
+                os.kill(ppid, sg)
+            except Exception as e:
+                logging.error(f"Method _restart with signal {sg}, error: {e}")
+
+    @staticmethod
     def _check_updates() -> None:
         run_os_cmd(["git", "reset", "--hard"])
-        run_os_cmd(["git", "pull", "--ff-only"])
+        res = run_os_cmd(["git", "pull", "--ff-only"])
+        if res:
+            return
+        ExtendedCtrl._restart()
 
     #  ============ All song parts view and related commands
 
