@@ -30,6 +30,9 @@ check_if_running() {
   done
 }
 
+cd_to_script_dir
+check_if_running
+
 CODE_OPTIMIZE="-O"
 for var in "$@"; do
   if [ "$var" == "--debug" ]; then
@@ -51,12 +54,12 @@ EXT_CONV=""
 if [[ -f mimap5 && -f rules.txt ]]; then
   killall -9 mimap5
   aconnect -x
-  ./mimap5 -r ./rules.txt -n note_counter &
+  ./mimap5 -r rules.txt -n note_counter -vvv &
   time sleep 2
-  PEDAL_OUT=$(aconnect -l | awk "/$PEDAL_NAME/ {print $2;exit}")
-  CLIENT=$(aconnect -l | awk '/note_counter/ {print $2;exit}')
-  echo "========= aconnect ${PEDAL_OUT}0 ${CLIENT}$0 =============="
-  if aconnect "${MIDI_IN}0 ${CLIENT}$0" ; then
+  PEDAL_OUT=$(aconnect -l | awk -v nm="$PEDAL_NAME" '$0 ~ nm {print $2;exit}')
+  CLIENT_IN=$(aconnect -l | awk '/note_counter/ {print $2;exit}')
+  aconnect -e ${PEDAL_OUT}0 ${CLIENT_IN}0
+  if [ $? -eq 0 ]; then
     EXT_CONV="--external_converter"
     echo "========= using external converter for MIDI - mimap5 =============="
   else
@@ -64,10 +67,9 @@ if [[ -f mimap5 && -f rules.txt ]]; then
   fi
 fi
 
+
 python_command="$USE_KBD python3 $CODE_OPTIMIZE ./start.py $EXT_CONV $*"
 
-cd_to_script_dir
-check_if_running
 
 # keep past 100 lines only
 touch ./log.log
@@ -79,7 +81,7 @@ mv -f ./tmp.log ./log.log
 echo "$python_command"
 
 # disable undervoltage error on screen as it works OK with undervoltage
-#sudo dmesg -D
+sudo dmesg -D
 
 # restart many times
 for k in {1..100}; do
@@ -89,4 +91,4 @@ for k in {1..100}; do
   $python_command
 done
 
-#sudo dmesg -E
+sudo dmesg -E
