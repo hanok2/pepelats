@@ -1,4 +1,3 @@
-import logging
 import os
 import time
 from multiprocessing.connection import Connection
@@ -110,11 +109,7 @@ class ExtendedCtrl(LooperCtrl):
     @staticmethod
     def _restart() -> None:
         ppid = os.getppid()
-        for sg in [signal.CTRL_C_EVENT, signal.SIGKILL]:
-            try:
-                os.kill(ppid, sg)
-            except Exception as e:
-                logging.error(f"Method _restart with signal {sg}, error: {e}")
+        run_os_cmd(["kill", "-9", str(ppid)])
 
     @staticmethod
     def _check_updates() -> None:
