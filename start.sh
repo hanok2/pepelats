@@ -79,7 +79,7 @@ mv -f ./tmp.log ./log.log
 echo "$python_command"
 
 # disable undervoltage error on screen as it works OK with undervoltage
-sudo dmesg -D
+#sudo dmesg -D
 
 # restart many times
 for k in {1..100}; do
@@ -89,4 +89,4 @@ for k in {1..100}; do
   $python_command
 done
 
-sudo dmesg -E
+#sudo dmesg -E
