@@ -9,6 +9,8 @@ build
 .idea
 #other
 *.log
+*.pyc
+
 
 
 
