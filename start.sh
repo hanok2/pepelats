@@ -51,7 +51,7 @@ done
 
 EXT_CONV=""
 # who will convert MIDI messages - pepelats or binary app. mimap5
-if [[ -f mimap5 && -f rules.txt ]]; then
+if [[ -z "$USE_KBD" && -f mimap5 && -f rules.txt ]]; then
   killall -9 mimap5
   aconnect -x
   ./mimap5 -r rules.txt -n note_counter &
