@@ -41,7 +41,7 @@ Looper parameters view has:
 
 Settings view includes screens:
 
-- save as new/load/delete song (song name is just a time stamp, e.g. 21-09-25-22-52.pickle)
+- save as new/load/delete song (song name is just a time stamp: mm-dd-hh-MM-ss)
 - restart/update application (download the latest branch form GitHub)
 - load drum style (e.g. pop/rock/....)
 

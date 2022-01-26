@@ -13,7 +13,7 @@ class Song(CollectionOwner[SongPart], OneLoopCtrl):
 
     def __init__(self):
         super().__init__()
-        self._file_finder: FileFinder = FileFinder("save_song", True, ".pickle", "")
+        self._file_finder: FileFinder = FileFinder("save_song", True, "", "")
         self._song_name = ""
         self.__set_song_name()
 
@@ -36,7 +36,7 @@ class Song(CollectionOwner[SongPart], OneLoopCtrl):
     def _load_song(self) -> None:
         self._stop_song()
         self._file_finder.now = self._file_finder.next
-        full_name = self._file_finder.get_path_now().with_suffix(".pickle")
+        full_name = self._file_finder.get_path_now()
         with open(full_name, 'rb') as f:
             length, load_list = pickle.load(f)
 
@@ -56,7 +56,7 @@ class Song(CollectionOwner[SongPart], OneLoopCtrl):
         for k in self.items:
             save_list.append(k if not k.is_empty else None)
 
-        full_name = self._file_finder.get_path_now().with_suffix(".pickle")
+        full_name = self._file_finder.get_path_now()
         with open(full_name, 'wb') as f:
             pickle.dump((length, save_list), f)
 
