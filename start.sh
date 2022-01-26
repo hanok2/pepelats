@@ -8,8 +8,12 @@
 # --kbd - use typing keyboard keys 1,2,3,4,q,w to send MIDI notes 60,62,64,65,12,13
 # --debug - show debug info, works for python version only
 
+# Looper patrameters passed via env.
 #export MAX_LEN_SECONDS=60
 #export SD_RATE=48000
+
+# Part of MIDI controller name that you want to connect; To check use: aconnect -l
+PEDAL_NAME="BlueBoard"
 
 cd_to_script_dir() {
   THIS_DIR=$(dirname "$0")
@@ -20,7 +24,7 @@ check_if_running() {
   script_name=${BASH_SOURCE[0]}
   for pid in $(pidof -x "$script_name"); do
     if [ "$pid" != "$$" ]; then
-      echo "Script $script_name is already running with PID: $pid"
+      echo "Exiting. Script $script_name is already running with PID: $pid"
       exit 1
     fi
   done
@@ -42,34 +46,47 @@ for var in "$@"; do
   fi
 done
 
-python_command="$USE_KBD python3 $CODE_OPTIMIZE ./start.py $*"
+EXT_CONV=""
+# who will convert MIDI messages - pepelats or binary app. mimap5
+if [[ -f mimap5 && -f rules.txt ]]; then
+  killall -9 mimap5
+  aconnect -x
+  ./mimap5 -r ./rules.txt -n note_counter &
+  time sleep 2
+  PEDAL_OUT=$(aconnect -l | awk "/$PEDAL_NAME/ {print $2;exit}")
+  CLIENT=$(aconnect -l | awk '/note_counter/ {print $2;exit}')
+  echo "========= aconnect ${PEDAL_OUT}0 ${CLIENT}$0 =============="
+  if aconnect "${MIDI_IN}0 ${CLIENT}$0" ; then
+    EXT_CONV="--external_converter"
+    echo "========= using external converter for MIDI - mimap5 =============="
+  else
+    EXT_CONV=""
+  fi
+fi
+
+python_command="$USE_KBD python3 $CODE_OPTIMIZE ./start.py $EXT_CONV $*"
 
 cd_to_script_dir
 check_if_running
 
+# keep past 100 lines only
+touch ./log.log
 tail -n 100 ./log.log > ./tmp.log
 mv -f ./tmp.log ./log.log
 
 #export PYTHONPATH="$THIS_DIR:$THIS_DIR/tests"
 
-# check for linux executable
-if [ -f "./pepelatsexe" ]; then
-  run_command="$USE_KBD ./pepelatsexe $*"
-else
-  run_command=$python_command
-fi
+echo "$python_command"
 
-echo "$run_command"
-
+# disable undervoltage error on screen as it works OK with undervoltage
 sudo dmesg -D
 
 # restart many times
 for k in {1..100}; do
   echo "started $k time(s)"
   killall -s 9 -w -v python3
-  killall -s 9 -w -v pepelatsexe
   sleep 3
-  $run_command
+  $python_command
 done
 
 sudo dmesg -E
