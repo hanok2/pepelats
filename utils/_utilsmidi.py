@@ -1,4 +1,5 @@
 import sys
+from time import sleep
 from typing import List
 
 import mido
@@ -21,7 +22,7 @@ def get_midi_port():
                         print("opening:", port_name)
                         port_in = mido.open_input(port_name)
                         return port_in
-            time.sleep(5)
+            sleep(5)
 
     if ConfigName.use_keyboard_option in sys.argv or not IS_LINUX:
         from midi import KbdMidiPort
