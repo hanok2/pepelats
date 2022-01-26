@@ -4,7 +4,7 @@ from typing import Dict
 
 import mido
 
-from midi import MidiController
+from midi._midicontroller import MidiController
 from utils import always_true, ConfigName, MainLoader
 
 

@@ -5,7 +5,7 @@ from typing import Dict
 
 import mido
 
-from midi import MidiController
+from midi import MidiConverter
 from utils import ConfigName
 
 r_conn, s_conn = Pipe(False)
@@ -45,7 +45,7 @@ class TestMidiCounter(unittest.TestCase):
         in_port = MockMidiPort()
         in_port.charge({0.1: 60, 0.15: -60, 0.2: 60})
 
-        counter = MidiController(s_conn, in_port)
+        counter = MidiConverter(s_conn, in_port)
         try:
             counter.start()
         except EndOfTest:
