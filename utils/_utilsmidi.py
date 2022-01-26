@@ -1,7 +1,8 @@
 import sys
 from typing import List
 
-from utils import ConfigName, MainLoader, IS_LINUX
+from _utilsloader import MainLoader
+from _utilsother import ConfigName, IS_LINUX
 
 
 def get_midi_port():
