@@ -36,7 +36,8 @@ class Song(CollectionOwner[SongPart], OneLoopCtrl):
     def _load_song(self) -> None:
         self._stop_song()
         self._file_finder.now = self._file_finder.next
-        with open(self._file_finder.get_path_now(), 'rb') as f:
+        full_name = self._file_finder.get_path_now().with_suffix(".pickle")
+        with open(full_name, 'rb') as f:
             length, load_list = pickle.load(f)
 
         self.items.clear()
@@ -54,7 +55,9 @@ class Song(CollectionOwner[SongPart], OneLoopCtrl):
         save_list = []
         for k in self.items:
             save_list.append(k if not k.is_empty else None)
-        with open(self._file_finder.get_path_now(), 'wb') as f:
+
+        full_name = self._file_finder.get_path_now().with_suffix(".pickle")
+        with open(full_name, 'wb') as f:
             pickle.dump((length, save_list), f)
 
     def _save_new_song(self):
@@ -75,7 +78,7 @@ class Song(CollectionOwner[SongPart], OneLoopCtrl):
 
     @staticmethod
     def __new_song_name() -> str:
-        return datetime.now().strftime("%m-%d-%H-%M-%S") + ".pickle"
+        return datetime.now().strftime("%m-%d-%H-%M-%S")
 
     def __set_song_name(self):
         """create empty song or select latest saved song"""

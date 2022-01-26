@@ -81,7 +81,7 @@ class ExtendedCtrl(LooperCtrl):
         tmp = ""
         for part in self.items:
             tmp += part.state_str(self) + LoopWithDrum.info_str(part) + "\n"
-        return tmp + f"  song: {self._song_name}"
+        return tmp + f"  Song: {self._song_name}"
 
     def _show_drum_param(self) -> str:
         tmp = val_str(self.drum.volume, 0, 1, SCR_COLS) + "\n"
@@ -97,7 +97,7 @@ class ExtendedCtrl(LooperCtrl):
 
     @staticmethod
     def _show_version() -> str:
-        return CURRENT_VERSION
+        return f"  Ver: {CURRENT_VERSION}"
 
     # ================ other methods
 
