@@ -1,4 +1,5 @@
 import os
+import sys
 import time
 from multiprocessing.connection import Connection
 
@@ -96,7 +97,9 @@ class ExtendedCtrl(LooperCtrl):
 
     @staticmethod
     def _show_version() -> str:
-        return f"  Ver: {CURRENT_VERSION}"
+        tmp = sys.argv
+        tmp.pop(0)
+        return f"  Ver: {CURRENT_VERSION}  args: {tmp}"
 
     # ================ other methods
 
@@ -114,10 +117,8 @@ class ExtendedCtrl(LooperCtrl):
     @staticmethod
     def _check_updates() -> None:
         run_os_cmd(["git", "reset", "--hard"])
-        res = run_os_cmd(["git", "pull", "--ff-only"])
-        if res:
-            return
-        ExtendedCtrl._restart()
+        if 0 == run_os_cmd(["git", "pull", "--ff-only"]):
+            ExtendedCtrl._restart()
 
     #  ============ All song parts view and related commands
 

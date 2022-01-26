@@ -26,8 +26,9 @@
     "112": ["_load_drum_type"]
   },
   "settings_2": {
-    "description": "App: Cx2-restart Dx2-update",
+    "description": "App: Dx2-update DH-restart",
     "update_method": "_show_version",
-    "112": ["_check_updates"]
+    "112": ["_check_updates"],
+    "116": ["_restart"]
   }
 }
