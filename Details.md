@@ -73,8 +73,6 @@ indispensable.
 
 Connect LCD and run scripts coming with it. Without X11 on Raspberry Pi OS Lite there may be some errors reported but
 after reboot you should see boot messages and command prompt. Check files in etc/lcd/ directory: config.txt, cmdline.txt
-This is configuration working for my version of LCD screen. To make text readable on 3.5 inch LCD select bigger font '
-Terminus 16x32' using this command:
+This is configuration working for my version of LCD screen.
 
-- sudo dpkg-reconfigure console-setup
 
