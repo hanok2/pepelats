@@ -11,7 +11,6 @@
 - MIDI over Bluetooth or USB is easy to configure in a text file. Users may adjust buttons to their needs.
 - Text console shows loop position, state, length and volume of each part and loop
 - Menu to display and change looper parameters using only foot controller
-- Simple installation with executable file in repository
 
 
 ## Installation:
