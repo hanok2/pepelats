@@ -98,7 +98,6 @@ class ExtendedCtrl(LooperCtrl):
     @staticmethod
     def _show_version() -> str:
         tmp = sys.argv
-        tmp.pop(0)
         return f"  Ver: {CURRENT_VERSION}  args: {tmp}"
 
     # ================ other methods
