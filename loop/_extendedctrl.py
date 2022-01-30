@@ -7,7 +7,7 @@ from loop._looperctrl import LooperCtrl
 from loop._loopsimple import LoopWithDrum
 from loop._songpart import SongPart
 from mixer import Mixer
-from utils import IN_CHANNELS, OUT_CHANNELS, val_str, ConfigName, SCR_COLS, CURRENT_VERSION
+from utils import IN_CHANNELS, OUT_CHANNELS, val_str, ConfigName, SCR_COLS, CURRENT_VERSION, clear_screen
 from utils import run_os_cmd
 
 
@@ -155,6 +155,7 @@ class ExtendedCtrl(LooperCtrl):
         elif params[0] == "delete" and part.now != 0:
             part.items.pop(part.now)
             part.now = 0
+            clear_screen()
         elif params[0] == "silent" and part.now != 0:
             loop = self.get_item_now().get_item_now()
             loop.is_silent = not loop.is_silent

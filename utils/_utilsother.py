@@ -42,7 +42,7 @@ def val_str(val: float, min_val: float, max_val: float, cols: int) -> str:
 
 
 def clear_screen():
-    print_at(0, 0, (' ' * SCR_COLS + '\n') * SCR_ROWS)
+    print_at(2, 0, (' ' * SCR_COLS + '\n') * (SCR_ROWS - 2))
 
 
 def run_os_cmd(cmd_list: list[str]) -> int:
