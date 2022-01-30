@@ -1,7 +1,7 @@
 import time
 import unittest
 
-from drum import RealDrum
+from drum import RealDrum, Intensity
 
 drum = RealDrum()
 
@@ -13,7 +13,7 @@ class TestDrumSound(unittest.TestCase):
         drum.prepare_drum(150_000)
         print(drum)
 
-        while drum.is_silent:
+        while drum.intensity == Intensity.SILENT:
             time.sleep(0.1)
         drum.sound_test(1, False)
         print(drum)

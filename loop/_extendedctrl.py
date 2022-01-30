@@ -3,6 +3,7 @@ import sys
 import time
 from multiprocessing.connection import Connection
 
+from drum import Intensity
 from loop._looperctrl import LooperCtrl
 from loop._loopsimple import LoopWithDrum
 from loop._songpart import SongPart
@@ -53,7 +54,7 @@ class ExtendedCtrl(LooperCtrl):
             raise ValueError("Looper message drum_param has incorrect parameter: " + params[1])
 
     def _change_drum(self) -> None:
-        self.drum.is_silent = False
+        self.drum.intensity = Intensity.PTRN_FILL
         self.drum.change_drum_now()
 
     def _change_song(self, *params) -> None:
@@ -62,8 +63,9 @@ class ExtendedCtrl(LooperCtrl):
     def _change_drum_type(self, *params) -> None:
         self.drum.change_drum_type(go_fwd=params[0] >= 0)
 
-    def _change_drum_silent(self) -> None:
-        self.drum.is_silent = not self.drum.is_silent
+    def _change_drum_intensity(self) -> None:
+        self.drum.intensity += 1
+        self.drum.intensity %= 4
 
     # ================ show methods
 
@@ -98,7 +100,6 @@ class ExtendedCtrl(LooperCtrl):
     @staticmethod
     def _show_version() -> str:
         tmp = sys.argv
-        tmp.pop(0)
         return f"  Ver: {CURRENT_VERSION}  args: {tmp}"
 
     # ================ other methods

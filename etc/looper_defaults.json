@@ -2,7 +2,6 @@
   "DRUM_SWING": 0.75,
   "DRUM_VOLUME": 0.3,
   "DRUM_TYPE": "rock",
-  "???????????????": 59,
   "MAPPED_NOTES": {
     "60": 80,
     "62": 90,
@@ -25,6 +24,5 @@
     "Livid"
   ],
   "MIXER_IN": 33,
-  "MIXER_OUT": 98,
-  "TEST": 232
+  "MIXER_OUT": 98
 }

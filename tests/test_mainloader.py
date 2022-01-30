@@ -1,19 +1,13 @@
 import unittest
 
-from utils import MainLoader
+from utils import MainLoader, ConfigName
 
 
 class TestMainLoader(unittest.TestCase):
 
     def test_1(self):
-        MainLoader.set("TEST", 232)
-        val = MainLoader.get("TEST", -1)
-        self.assertEqual(val, 232)
-
-    def test_2(self):
-        MainLoader.set("TEST", 232)
-        val = MainLoader.get("TEST", -1)
-        self.assertEqual(val, 232)
+        val = MainLoader.get(ConfigName.drum_swing, -1)
+        self.assertTrue(val > 0)
 
 
 if __name__ == "__main__":

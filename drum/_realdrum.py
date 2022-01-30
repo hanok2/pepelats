@@ -1,7 +1,8 @@
 import logging
 import random
+from enum import IntEnum
 from threading import Timer
-from typing import List, Any, Tuple, Optional
+from typing import List, Any, Tuple
 
 import numpy as np
 
@@ -11,17 +12,24 @@ from utils import MAX_LEN, MAX_32_INT, ConfigName, MainLoader, make_zero_buffer,
 from utils import SD_TYPE, SD_RATE, play_sound_buff
 
 
+class Intensity(IntEnum):
+    SILENT = 0
+    FILL = 1
+    PTRN = 2
+    PTRN_FILL = 3
+    ENDING = 4
+
+
 class RealDrum:
     """Drums generated from patterns with random changes"""
 
     change_after_bars: int = 3  # change pattern and fill after this many bars
-    prob_play_fill: float = 0.5
 
     def __init__(self):
         self.__change_after_samples: int = MAX_32_INT
         self.__buff_len: int = MAX_LEN
         self.__sample_counter: int = 0
-        self.__tuple: Optional[Tuple[np.ndarray, np.ndarray, np.ndarray, bool]] = None
+        self.__tuple: Tuple[np.ndarray, np.ndarray, np.ndarray] = np.ndarray([]), np.ndarray([]), np.ndarray([])
         self.__patterns: List[np.ndarray] = []
         self.__fills: List[np.ndarray] = []
         self.__ends: List[np.ndarray] = []
@@ -30,7 +38,7 @@ class RealDrum:
         self.__file_finder = FileFinder("etc/drums", False, "", MainLoader.get(ConfigName.drum_type, "pop"))
         tmp = self.__file_finder.get_path_now()
         DrumLoader.load(tmp)
-        self.is_silent: bool = True
+        self.intensity: Intensity = Intensity.SILENT
 
     def clear(self):
         self.__buff_len = MAX_LEN
@@ -80,22 +88,22 @@ class RealDrum:
         self.__buff_len = buff_len
         self.__change_after_samples = buff_len * RealDrum.change_after_bars
 
-        self.is_silent = True
+        self.intensity = Intensity.SILENT
         self.__prep_all_patterns(DrumLoader.patterns, self.__patterns)
         self.__prep_all_patterns(DrumLoader.fills, self.__fills)
         self.__prep_all_patterns(DrumLoader.ends, self.__ends)
         self.__tuple = self.__random_drum()
-        self.is_silent = False
+        self.intensity = Intensity.PTRN_FILL
 
-    def __random_drum(self) -> Tuple[np.ndarray, np.ndarray, np.ndarray, bool]:
+    def __random_drum(self) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
         p = random.randrange(len(self.__patterns))
         f = random.randrange(len(self.__fills))
         e = random.randrange(len(self.__ends))
-        play_fill = random.random() < RealDrum.prob_play_fill
-        return self.__patterns[p], self.__fills[f], self.__ends[e], play_fill
+
+        return self.__patterns[p], self.__fills[f], self.__ends[e]
 
     def play_samples(self, out_data: np.ndarray, idx: int) -> None:
-        if self.is_silent or self.is_empty:
+        if self.intensity == Intensity.SILENT or self.is_empty:
             return
 
         self.__sample_counter += len(out_data)
@@ -103,9 +111,17 @@ class RealDrum:
             self.__sample_counter = 0
             self.__tuple = self.__random_drum()
 
-        play_sound_buff(self.__tuple[0], out_data, idx)
-        if self.__tuple[3]:
+        if self.intensity == Intensity.FILL:
             play_sound_buff(self.__tuple[1], out_data, idx)
+        elif self.intensity == Intensity.PTRN:
+            play_sound_buff(self.__tuple[0], out_data, idx)
+        elif self.intensity == Intensity.PTRN_FILL:
+            play_sound_buff(self.__tuple[0], out_data, idx)
+            play_sound_buff(self.__tuple[1], out_data, idx)
+        elif self.intensity == Intensity.ENDING:
+            play_sound_buff(self.__tuple[2], out_data, idx)
+        else:
+            pass
 
     def change_drum_at_end(self, part_len: int, idx: int) -> None:
         idx %= part_len
@@ -114,10 +130,8 @@ class RealDrum:
             Timer(start_at / SD_RATE, self.change_drum_now).start()
 
     def change_drum_now(self) -> None:
-        if self.is_silent or self.is_empty:
+        if self.is_empty:
             return
-        p, f, e, _ = self.__tuple
-        self.__tuple = p, e, f, True
         self.__sample_counter = self.__change_after_samples - self.length // 2
 
     def __prep_all_patterns(self, loader_list: List[Any], storage: List[np.ndarray]) -> None:
@@ -184,4 +198,4 @@ class RealDrum:
         sound_test(self.__tuple[0], duration_sec, record)
 
     def __str__(self):
-        return f"RealDrum length {self.length} empty {self.is_empty} silent {self.is_silent}"
+        return f"RealDrum length {self.length} empty {self.is_empty} intensity {self.intensity}"
