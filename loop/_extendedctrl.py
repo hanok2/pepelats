@@ -62,8 +62,7 @@ class ExtendedCtrl(LooperCtrl):
         self.drum.change_drum_type(go_fwd=params[0] >= 0)
 
     def _change_drum_intensity(self) -> None:
-        self.drum.intensity += 1
-        self.drum.intensity %= 4
+        self.drum.change_drum_intensity()
 
     # ================ show methods
 

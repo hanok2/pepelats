@@ -76,6 +76,12 @@ class RealDrum:
     def change_drum_type(self, go_fwd: bool) -> None:
         self.__file_finder.iterate_dir(go_fwd)
 
+    def change_drum_intensity(self) -> None:
+        p, f, e, i = self.__tuple
+        i += 1
+        i %= 4
+        self.__tuple = p, f, e, i
+
     def load_drum_type(self) -> None:
         if self.__file_finder.now == self.__file_finder.next:
             return
