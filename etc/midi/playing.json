@@ -3,7 +3,7 @@
     "description": "Parent for playing maps\n",
     "41": ["_change_drum"],
     "42": ["_change_drum_intensity"],
-    "43": ["_stop_at_part_end"],
+    "43": ["_silence_drum"],
     "47": ["_change_map", "params_0"],
     "53": ["_fade_and_stop", 8],
     "56": ["_pause_and_clear"],

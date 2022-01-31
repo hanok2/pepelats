@@ -16,9 +16,10 @@ EMPTY_ARR = np.ndarray([])
 
 class Intensity(IntEnum):
     SILENT = 0
-    PTRN = 1
-    PTRN_FILL = 2
-    ENDING = 3
+    FILL = 1
+    PTRN = 2
+    PTRN_FILL = 3
+    ENDING = 4
 
 
 DrumTupleType = Tuple[np.ndarray, np.ndarray, np.ndarray, Intensity]
@@ -78,8 +79,13 @@ class RealDrum:
     def change_drum_intensity(self) -> None:
         p, f, e, i = self.__tuple
         i += 1
-        i %= Intensity.ENDING
+        if i >= Intensity.ENDING:
+            i = Intensity.FILL
         self.__tuple = p, f, e, i
+
+    def silence_drum(self) -> None:
+        p, f, e, i = self.__tuple
+        self.__tuple = p, f, e, Intensity.SILENT
 
     def load_drum_type(self) -> None:
         if self.__file_finder.now == self.__file_finder.next:
@@ -112,7 +118,7 @@ class RealDrum:
         return self.__patterns[p], self.__fills[f], self.__ends[e], i
 
     def play_samples(self, out_data: np.ndarray, idx: int) -> None:
-        if self.__tuple[3] == Intensity.SILENT or self.is_empty:
+        if self.is_empty:
             return
 
         self.__sample_counter += len(out_data)
@@ -120,6 +126,8 @@ class RealDrum:
             self.__sample_counter = 0
             self.__tuple = self.__random_drum()
 
+        if self.__tuple[3] == Intensity.FILL:
+            play_sound_buff(self.__tuple[1], out_data, idx)
         if self.__tuple[3] == Intensity.PTRN:
             play_sound_buff(self.__tuple[0], out_data, idx)
         elif self.__tuple[3] == Intensity.PTRN_FILL:

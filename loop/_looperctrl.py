@@ -44,14 +44,10 @@ class LooperCtrl(Song, MsgProcessor):
         self._go_play.clear()
         self.stop_now()
 
-    def _stop_at_part_end(self):
-        self._go_play.clear()
-        self._stop_at_bound(self.get_item_now().length)
-
     def _pause_and_clear(self) -> None:
         if self._go_play.is_set():
             self._go_play.clear()
-            self.stop_now()
+            self._stop_at_bound(self.get_item_now().length)
         else:
             self._prepare_song()
 

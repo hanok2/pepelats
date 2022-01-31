@@ -64,6 +64,9 @@ class ExtendedCtrl(LooperCtrl):
     def _change_drum_intensity(self) -> None:
         self.drum.change_drum_intensity()
 
+    def _silence_drum(self) -> None:
+        self.drum.silence_drum()
+
     # ================ show methods
 
     def _show_song(self) -> str:
