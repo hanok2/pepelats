@@ -1,3 +1,4 @@
+import logging
 import os
 from pathlib import Path
 from typing import List, Any, Dict, Union, Tuple
@@ -5,7 +6,7 @@ from typing import List, Any, Dict, Union, Tuple
 import numpy as np
 import soundfile as sf
 
-from utils import JsonDictLoader
+from utils import JsonDictLoader, make_zero_buffer, record_sound_buff, MainLoader, MAX_LEN, SD_TYPE
 from utils import MAX_SD, always_true, ConfigName
 
 
@@ -23,6 +24,7 @@ class DrumLoader:
     patterns: List[Dict[str, Any]] = []
     fills: List[Dict[str, Any]] = []
     ends: List[Dict[str, Any]] = []
+    buff_len: int = MAX_LEN
 
     @classmethod
     def get_max_volume(cls) -> float:
@@ -76,6 +78,76 @@ class DrumLoader:
             for sound_name in [x for x in cls.sounds if x in pattern]:
                 pattern[sound_name] = extend_list(pattern[sound_name], steps)
             storage.append(pattern)
+
+    @classmethod
+    def __prep_all_patterns(cls, loader_list: List[Any], storage: List[np.ndarray]) -> None:
+        storage.clear()
+        for i in loader_list:
+            #  assert always_true(f"Pattern: {i}")
+            storage.append(cls.__prep_one_pattern(i))
+
+    @classmethod
+    def __prep_one_pattern(cls, pattern, length: int) -> np.ndarray:
+        accents = pattern["accents"]
+        ndarr = make_zero_buffer(length)
+        drum_volume = MainLoader.get(ConfigName.drum_volume, 1)
+        for sound_name in [x for x in DrumLoader.sounds if x in pattern]:
+            notes = pattern[sound_name]
+            steps = len(notes)
+            if notes.count("!") + notes.count(".") != steps:
+                logging.error(f"sound {sound_name} notes {notes} must contain only '.' and '!'")
+
+            step_len = length / steps
+            sound, sound_volume = DrumLoader.sounds[sound_name]
+            sound = sound[:length]
+            assert sound.ndim == 2 and sound.shape[1] == 2
+            assert 0 < sound.shape[0] <= length, f"Must be: 0 < {sound.shape[0]} <= {length}"
+
+            for step_number in range(steps):
+                if notes[step_number] != '.':
+                    step_accent = int(accents[step_number])
+                    step_volume = sound_volume * step_accent * drum_volume / 9.0
+                    pos = cls.__pos_with_swing(step_number, step_len)
+                    tmp = (sound * step_volume).astype(SD_TYPE)
+                    record_sound_buff(ndarr, tmp, pos)
+
+        return ndarr
+
+    @classmethod
+    def __pos_with_swing(cls, step_number, step_len) -> int:
+        """shift every even 16th note to make it swing like"""
+        if step_number % 2 == 0:
+            return round(step_number * step_len)
+        else:
+            swing_delta = step_len * (MainLoader.get(ConfigName.drum_swing, 0.625) - 0.5)
+            return round(step_number * step_len + swing_delta)
+
+    @classmethod
+    def change_drum_volume(cls, change_by) -> None:
+        factor = 1.41 if change_by >= 0 else 1 / 1.41
+        cls.volume *= factor
+        MainLoader.set(ConfigName.drum_volume, cls.__drum_volume)
+        MainLoader.save()
+        cls.prepare_drum_blocking(cls.length)
+
+    @classmethod
+    def change_swing(cls, change_by) -> None:
+        cls.swing = MainLoader.get(ConfigName.drum_swing, 0.625)
+        delta = 0.25 / 4 if change_by >= 0 else -0.25 / 4
+        cls.swing += delta
+        cls.swing = max(min(cls.swing, 0.75), 0.5)
+        if cls.swing != MainLoader.get(ConfigName.drum_swing, 0.625):
+            MainLoader.set(ConfigName.drum_swing, cls.swing)
+            MainLoader.save()
+            cls.prepare_drum_blocking(cls.length)
+
+    @classmethod
+    def prepare_drum_blocking(cls, buff_len: int) -> None:
+        cls.__buff_len = buff_len
+        cls.__prep_all_patterns(DrumLoader.patterns, cls.__patterns)
+        cls.__prep_all_patterns(DrumLoader.fills, cls.__fills)
+        cls.__prep_all_patterns(DrumLoader.ends, cls.__ends)
+        cls.__random_drum()
 
 
 if __name__ == "__main__":
