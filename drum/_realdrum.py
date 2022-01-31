@@ -1,6 +1,6 @@
 import logging
 import random
-from enum import IntEnum
+from enum import Enum
 from threading import Timer
 from typing import List, Any, Tuple
 
@@ -14,12 +14,40 @@ from utils import SD_TYPE, SD_RATE, play_sound_buff
 EMPTY_ARR = np.ndarray([])
 
 
-class Intensity(IntEnum):
+class Intensity(Enum):
     SILENT = 0
     FILL = 1
     PTRN = 2
     PTRN_FILL = 3
     ENDING = 4
+
+
+def get_ending_intensities(i: Intensity) -> Tuple[Intensity, Intensity]:
+    """Two new intensities - normal and elevated"""
+    if i == Intensity.SILENT:
+        return Intensity.FILL, Intensity.PTRN
+    elif i == Intensity.FILL:
+        return Intensity.FILL, Intensity.PTRN_FILL
+    elif i == Intensity.PTRN:
+        return Intensity.PTRN, Intensity.ENDING
+    elif i == Intensity.PTRN_FILL:
+        return Intensity.PTRN_FILL, Intensity.ENDING
+    else:
+        return Intensity.PTRN_FILL, Intensity.ENDING
+
+
+def get_next_intensity(i: Intensity) -> Intensity:
+    """Cycle intensities except SILEND and ENDING"""
+    if i == Intensity.SILENT:
+        return Intensity.FILL
+    elif i == Intensity.FILL:
+        return Intensity.PTRN
+    elif i == Intensity.PTRN:
+        return Intensity.PTRN_FILL
+    elif i == Intensity.PTRN_FILL:
+        return Intensity.FILL
+    else:
+        return Intensity.PTRN_FILL
 
 
 DrumTupleType = Tuple[np.ndarray, np.ndarray, np.ndarray, Intensity]
@@ -76,13 +104,6 @@ class RealDrum:
     def change_drum_type(self, go_fwd: bool) -> None:
         self.__file_finder.iterate_dir(go_fwd)
 
-    def change_drum_intensity(self) -> None:
-        p, f, e, i = self.__tuple
-        i += 1
-        if i >= Intensity.ENDING:
-            i = Intensity.FILL
-        self.__tuple = p, f, e, i
-
     def silence_drum(self) -> None:
         p, f, e, i = self.__tuple
         self.__tuple = p, f, e, Intensity.SILENT
@@ -114,7 +135,7 @@ class RealDrum:
         p = random.randrange(len(self.__patterns))
         f = random.randrange(len(self.__fills))
         e = random.randrange(len(self.__ends))
-        i = min(self.__tuple[3], Intensity.PTRN_FILL)
+        i = self.__tuple[3]
         return self.__patterns[p], self.__fills[f], self.__ends[e], i
 
     def play_samples(self, out_data: np.ndarray, idx: int) -> None:
@@ -146,11 +167,21 @@ class RealDrum:
             Timer(start_at / SD_RATE, self.change_drum_now).start()
 
     def change_drum_now(self) -> None:
-        if self.is_empty:
-            return
-        p, f, e, i = self.__tuple
-        self.__tuple = p, f, e, Intensity.ENDING
-        self.__sample_counter = self.__change_after_samples - self.length // 2
+
+        def assign_tuple(t: Tuple):
+            self.__tuple = t
+
+        p, f, e, k = self.__tuple
+        i, j = get_ending_intensities(k)
+        self.__tuple = p, f, e, j
+        delay_samples = self.length // 2
+        self.__sample_counter = 0
+        Timer(delay_samples / SD_RATE, assign_tuple, ((p, f, e, i),)).start()
+
+    def set_next_intensity(self) -> None:
+        p, f, e, k = self.__tuple
+        i = get_next_intensity(k)
+        self.__tuple = p, f, e, i
 
     def __prep_all_patterns(self, loader_list: List[Any], storage: List[np.ndarray]) -> None:
         storage.clear()
