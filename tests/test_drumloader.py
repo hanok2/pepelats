@@ -15,6 +15,7 @@ class TestDrumLoader(unittest.TestCase):
             tmp = ff.get_path_now()
             print(tmp)
             DrumLoader.load(tmp)
+            print(DrumLoader.fills)
 
 
 if __name__ == "__main__":
