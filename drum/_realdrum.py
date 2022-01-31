@@ -22,18 +22,19 @@ class Intensity(Enum):
     ENDING = 4
 
 
-def get_ending_intensities(i: Intensity) -> Tuple[Intensity, Intensity]:
-    """Two new intensities - normal and elevated"""
+def get_ending(i: Intensity) -> Tuple[Intensity, Intensity, bool]:
+    """Two new intensities - normal and elevated, and bool to play elevated longer"""
+    longer: bool = random.random() < 0.5
     if i == Intensity.SILENT:
-        return Intensity.FILL, Intensity.PTRN
+        return Intensity.FILL, Intensity.PTRN, longer
     elif i == Intensity.FILL:
-        return Intensity.FILL, Intensity.PTRN_FILL
+        return Intensity.FILL, Intensity.PTRN_FILL, longer
     elif i == Intensity.PTRN:
-        return Intensity.PTRN, Intensity.ENDING
+        return Intensity.PTRN, Intensity.ENDING, longer
     elif i == Intensity.PTRN_FILL:
-        return Intensity.PTRN_FILL, Intensity.ENDING
+        return Intensity.PTRN_FILL, Intensity.ENDING, longer
     else:
-        return Intensity.PTRN_FILL, Intensity.ENDING
+        return Intensity.PTRN_FILL, Intensity.ENDING, longer
 
 
 def get_next_intensity(i: Intensity) -> Intensity:
@@ -172,9 +173,9 @@ class RealDrum:
             self.__tuple = t
 
         p, f, e, k = self.__tuple
-        i, j = get_ending_intensities(k)
+        i, j, longer = get_ending(k)
         self.__tuple = p, f, e, j
-        delay_samples = self.length // 2
+        delay_samples = self.length if longer else self.length // 2
         self.__sample_counter = 0
         Timer(delay_samples / SD_RATE, assign_tuple, ((p, f, e, i),)).start()
 
