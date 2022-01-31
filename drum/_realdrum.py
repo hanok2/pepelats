@@ -16,10 +16,9 @@ EMPTY_ARR = np.ndarray([])
 
 class Intensity(IntEnum):
     SILENT = 0
-    FILL = 1
-    PTRN = 2
-    PTRN_FILL = 3
-    ENDING = 4
+    PTRN = 1
+    PTRN_FILL = 2
+    ENDING = 3
 
 
 DrumTupleType = Tuple[np.ndarray, np.ndarray, np.ndarray, Intensity]
@@ -79,7 +78,7 @@ class RealDrum:
     def change_drum_intensity(self) -> None:
         p, f, e, i = self.__tuple
         i += 1
-        i %= 4
+        i %= Intensity.ENDING
         self.__tuple = p, f, e, i
 
     def load_drum_type(self) -> None:
@@ -103,13 +102,14 @@ class RealDrum:
         self.__prep_all_patterns(DrumLoader.patterns, self.__patterns)
         self.__prep_all_patterns(DrumLoader.fills, self.__fills)
         self.__prep_all_patterns(DrumLoader.ends, self.__ends)
-        self.__tuple = self.__random_drum()
+        self.__tuple = self.__patterns[0], self.__fills[0], self.__ends[0], Intensity.PTRN_FILL
 
     def __random_drum(self) -> DrumTupleType:
         p = random.randrange(len(self.__patterns))
         f = random.randrange(len(self.__fills))
         e = random.randrange(len(self.__ends))
-        return self.__patterns[p], self.__fills[f], self.__ends[e], Intensity.PTRN_FILL
+        i = min(self.__tuple[3], Intensity.PTRN_FILL)
+        return self.__patterns[p], self.__fills[f], self.__ends[e], i
 
     def play_samples(self, out_data: np.ndarray, idx: int) -> None:
         if self.__tuple[3] == Intensity.SILENT or self.is_empty:
@@ -120,14 +120,13 @@ class RealDrum:
             self.__sample_counter = 0
             self.__tuple = self.__random_drum()
 
-        if self.__tuple[3] == Intensity.FILL:
-            play_sound_buff(self.__tuple[1], out_data, idx)
-        elif self.__tuple[3] == Intensity.PTRN:
+        if self.__tuple[3] == Intensity.PTRN:
             play_sound_buff(self.__tuple[0], out_data, idx)
         elif self.__tuple[3] == Intensity.PTRN_FILL:
             play_sound_buff(self.__tuple[0], out_data, idx)
             play_sound_buff(self.__tuple[1], out_data, idx)
         elif self.__tuple[3] == Intensity.ENDING:
+            play_sound_buff(self.__tuple[0], out_data, idx)
             play_sound_buff(self.__tuple[2], out_data, idx)
         else:
             pass
