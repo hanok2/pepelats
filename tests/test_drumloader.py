@@ -1,7 +1,7 @@
 import unittest
 
 from drum import DrumLoader
-from utils import FileFinder, ConfigName, MainLoader
+from utils import FileFinder, ConfigName, MainLoader, sound_test
 
 
 class TestDrumLoader(unittest.TestCase):
@@ -15,7 +15,9 @@ class TestDrumLoader(unittest.TestCase):
             tmp = ff.get_path_now()
             print(tmp)
             DrumLoader.load(tmp)
-            print(DrumLoader.fills)
+            DrumLoader.prepare_all(150_000)
+            sound_test(DrumLoader.patterns[0], 1, False)
+            print(DrumLoader.to_str())
 
 
 if __name__ == "__main__":

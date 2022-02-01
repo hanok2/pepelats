@@ -110,7 +110,7 @@ class LooperCtrl(Song, MsgProcessor):
                     self._stop_at_bound(self.drum.length)
                 else:
                     self._stop_at_bound(part.length)
-                    self.drum.change_drum_at_end(part.length, self.idx)
+                    self.drum.play_ending_later(part.length, self.idx)
             else:
                 self._stop_never()
 

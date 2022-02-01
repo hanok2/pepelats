@@ -5,7 +5,7 @@ from typing import Tuple
 
 from loop import LoopWithDrum
 from loop import OneLoopCtrl
-from utils import MAX_LEN, SD_RATE
+from utils import SD_RATE
 
 
 def record_with_drum(samples: int, control: OneLoopCtrl) -> Tuple[int, int]:
@@ -28,8 +28,6 @@ class TestLoopWithDrum(unittest.TestCase):
         self.assertFalse(control.is_rec)
         self.assertFalse(control.is_stop_len_set())
         self.assertFalse(control.get_stop_event().is_set())
-        self.assertTrue(control.drum.is_empty)
-        self.assertEqual(control.drum.length, MAX_LEN)
 
     def test_2(self):
         # Test new recorded loop is multiple of drum
@@ -44,6 +42,7 @@ class TestLoopWithDrum(unittest.TestCase):
     def test_3(self):
         # Test new recorded loop is multiple of drum
         control = OneLoopCtrl()
+        control.drum.clear()
         loop_len, idx = record_with_drum(240_000, control)
         self.assertTrue(loop_len == idx)
         self.assertTrue(loop_len == control.drum.length)

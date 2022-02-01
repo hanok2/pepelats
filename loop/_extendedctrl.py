@@ -3,6 +3,7 @@ import sys
 import time
 from multiprocessing.connection import Connection
 
+from drum import DrumLoader
 from loop._looperctrl import LooperCtrl
 from loop._loopsimple import LoopWithDrum
 from loop._songpart import SongPart
@@ -44,16 +45,17 @@ class ExtendedCtrl(LooperCtrl):
         out_vol: bool = params[1] == "out"
         ExtendedCtrl.__mixer.change_volume(params[0], out_vol)
 
-    def _change_drum_param(self, *params) -> None:
+    @staticmethod
+    def _change_drum_param(*params) -> None:
         if params[1] == "volume":
-            self.drum.change_drum_volume(change_by=params[0])
+            DrumLoader.change_drum_volume(change_by=params[0])
         elif params[1] == "swing":
-            self.drum.change_swing(change_by=params[0])
+            DrumLoader.change_swing(change_by=params[0])
         else:
             raise ValueError("Looper message drum_param has incorrect parameter: " + params[1])
 
     def _change_drum(self) -> None:
-        self.drum.change_drum_now()
+        self.drum.play_ending_now()
 
     def _change_song(self, *params) -> None:
         self._file_finder.iterate_dir(go_fwd=params[0] > 0)
