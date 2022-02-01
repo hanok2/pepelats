@@ -71,12 +71,6 @@ class RealDrum:
     def clear():
         DrumLoader.length = 0
 
-    def load(self):
-        tmp = self.__file_finder.get_path_now()
-        DrumLoader.load(tmp)
-        MainLoader.set(ConfigName.drum_type, self.__file_finder.get_item_now())
-        MainLoader.save()
-
     @property
     def is_empty(self) -> bool:
         return DrumLoader.length == 0
@@ -106,7 +100,10 @@ class RealDrum:
         if self.__file_finder.now == self.__file_finder.next:
             return
         self.__file_finder.now = self.__file_finder.next
-        self.load()
+        tmp = self.__file_finder.get_path_now()
+        DrumLoader.load(tmp)
+        MainLoader.set(ConfigName.drum_type, self.__file_finder.get_item_now())
+        MainLoader.save()
 
         if not self.is_empty:
             self.prepare_drum(self.length)
@@ -114,12 +111,8 @@ class RealDrum:
     def prepare_drum(self, length: int) -> None:
         """ Non blocking drum init in another thread, length is one bar long and holds drum pattern """
         Timer(0.2, DrumLoader.prepare_all, [length]).start()
+        self.__change_after_samples = RealDrum.change_after_bars * length
         self.__intensity = Intensity.PTRN_FILL
-
-    def __random_drum(self) -> None:
-        self.__pattern = random.randrange(len(DrumLoader.patterns))
-        self.__fill = random.randrange(len(DrumLoader.fills))
-        self.__end = random.randrange(len(DrumLoader.ends))
 
     def play_samples(self, out_data: np.ndarray, idx: int) -> None:
         if self.__intensity == Intensity.SILENT or self.is_empty:
@@ -128,7 +121,9 @@ class RealDrum:
         self.__sample_counter += len(out_data)
         if self.__sample_counter > self.__change_after_samples:
             self.__sample_counter = 0
-            self.__random_drum()
+            self.__pattern = random.randrange(len(DrumLoader.patterns))
+            self.__fill = random.randrange(len(DrumLoader.fills))
+            self.__end = random.randrange(len(DrumLoader.ends))
 
         if self.__intensity == Intensity.FILL:
             play_sound_buff(DrumLoader.fills[self.__fill], out_data, idx)
