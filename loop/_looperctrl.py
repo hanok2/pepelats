@@ -24,7 +24,8 @@ class LooperCtrl(Song, MsgProcessor):
         self._redraw(ConfigName.show_all_parts, "")
 
     def set_drum_length(self, length: int) -> None:
-        self.drum.prepare_drum(length)
+        if length > 0:
+            self.drum.prepare_drum(length)
 
     def get_drum_length(self) -> int:
         return self.drum.length
