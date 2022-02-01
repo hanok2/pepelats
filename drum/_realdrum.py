@@ -45,7 +45,7 @@ class RealDrum:
         DrumLoader.load(tmp)
 
     @staticmethod
-    def clear():
+    def clear() -> None:
         DrumLoader.length = 0
 
     @property
