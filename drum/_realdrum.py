@@ -16,15 +16,24 @@ class Intensity(IntEnum):
     END = 4
 
 
-def get_ending_intensity(i: int) -> int:
+def get_ending_intensity(i: Intensity) -> Intensity:
     """Intensity for drum ending"""
-    return i * 2
+    if i == Intensity.SILENT:
+        return Intensity.FILL
+    if i == Intensity.FILL:
+        return Intensity.PTRN
+    elif i == Intensity.PTRN:
+        return Intensity.PTRN + Intensity.END
+    else:
+        return i
 
 
-def get_next_intensity(i: Intensity) -> int:
-    """Cycle over intensities 1,2,3 only"""
-    i = (i + 1) % Intensity.END
-    return max(i, 1)
+def get_next_intensity(i: Intensity) -> Intensity:
+    """Cycle over intensities 1,2 only"""
+    if i >= Intensity.PTRN:
+        return Intensity.FILL
+    else:
+        return Intensity.PTRN
 
 
 class RealDrum:
@@ -136,6 +145,10 @@ class RealDrum:
     def change_drum_volume(change_by) -> None:
         factor = 1.41 if change_by >= 0 else (1 / 1.41)
         v = MainLoader.get(ConfigName.drum_volume, 1) * factor
+        if v * DrumLoader.max_volume >= MAX_SD:
+            return
+        if v * DrumLoader.max_volume < 0.01 * MAX_SD:
+            return
         MainLoader.set(ConfigName.drum_volume, v)
         MainLoader.save()
         DrumLoader.prepare_all(DrumLoader.length)
