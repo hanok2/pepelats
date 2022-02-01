@@ -163,6 +163,10 @@ class ExtendedCtrl(LooperCtrl):
         elif params[0] == "reverse" and part.now != 0:
             loop = self.get_item_now().get_item_now()
             loop.is_reverse = not loop.is_reverse
+        elif params[0] == "move" and part.now != 0:
+            loop = part.items.pop(part.now)
+            part.items.append(loop)
+            part.now = part.next = part.items_len - 1
 
     def _undo_loop(self):
         self.is_rec = False

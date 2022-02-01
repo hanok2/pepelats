@@ -35,6 +35,7 @@
     "64": ["_change_loop", "change", 1],
     "111": ["_change_loop", "silent"],
     "112": ["_change_loop", "reverse"],
+    "113": ["_change_loop", "move"],
     "116": ["_change_loop", "delete"]
   }
 }
