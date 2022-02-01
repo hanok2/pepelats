@@ -1,52 +1,30 @@
 import random
-from enum import Enum
+from enum import IntEnum
 from threading import Timer
-from typing import Tuple
 
 import numpy as np
 
 from drum._drumloader import DrumLoader
-from utils import MAX_32_INT, ConfigName, MainLoader, FileFinder, MAX_SD, make_zero_buffer
+from utils import MAX_32_INT, ConfigName, MainLoader, FileFinder, MAX_SD
 from utils import SD_RATE, play_sound_buff
 
-EMPTY_ARR = make_zero_buffer(20)
 
-
-class Intensity(Enum):
+class Intensity(IntEnum):
     SILENT = 0
     FILL = 1
     PTRN = 2
-    PTRN_FILL = 3
-    END_FILL = 4
-    END_PTRN = 5
+    END = 4
 
 
-def get_ending(i: Intensity) -> Tuple[Intensity, Intensity]:
-    """Two new intensities - normal and elevated """
-    if i == Intensity.SILENT:
-        return Intensity.FILL, Intensity.PTRN
-    elif i == Intensity.FILL:
-        return Intensity.FILL, Intensity.PTRN_FILL
-    elif i == Intensity.PTRN:
-        return Intensity.PTRN, Intensity.END_FILL
-    elif i == Intensity.PTRN_FILL:
-        return Intensity.PTRN_FILL, Intensity.END_PTRN
-    else:
-        return Intensity.PTRN_FILL, Intensity.END_PTRN
+def get_ending_intensity(i: int) -> int:
+    """Intensity for drum ending"""
+    return i * 2
 
 
-def get_next_intensity(i: Intensity) -> Intensity:
-    """Cycle over intensities"""
-    if i == Intensity.SILENT:
-        return Intensity.FILL
-    elif i == Intensity.FILL:
-        return Intensity.PTRN
-    elif i == Intensity.PTRN:
-        return Intensity.PTRN_FILL
-    elif i == Intensity.PTRN_FILL:
-        return Intensity.FILL
-    else:
-        return Intensity.PTRN_FILL
+def get_next_intensity(i: Intensity) -> int:
+    """Cycle over intensities 1,2,3 only"""
+    i = (i + 1) % Intensity.END
+    return max(i, 1)
 
 
 class RealDrum:
@@ -56,7 +34,6 @@ class RealDrum:
 
     def __init__(self):
         self.__change_after_samples: int = MAX_32_INT
-        self.__buffer: np.ndarray = EMPTY_ARR
         self.__sample_counter: int = 0
         self.__intensity: Intensity = Intensity.SILENT
         self.__pattern: int = 0
@@ -112,7 +89,7 @@ class RealDrum:
         """ Non blocking drum init in another thread, length is one bar long and holds drum pattern """
         Timer(0.2, DrumLoader.prepare_all, [length]).start()
         self.__change_after_samples = RealDrum.change_after_bars * length
-        self.__intensity = Intensity.PTRN_FILL
+        self.__intensity = Intensity.PTRN
 
     def play_samples(self, out_data: np.ndarray, idx: int) -> None:
         if self.__intensity == Intensity.SILENT or self.is_empty:
@@ -125,37 +102,32 @@ class RealDrum:
             self.__fill = random.randrange(len(DrumLoader.fills))
             self.__end = random.randrange(len(DrumLoader.ends))
 
-        if self.__intensity == Intensity.FILL:
+        if self.__intensity & Intensity.FILL == Intensity.FILL:
             play_sound_buff(DrumLoader.fills[self.__fill], out_data, idx)
-        elif self.__intensity == Intensity.PTRN:
+        if self.__intensity & Intensity.PTRN == Intensity.PTRN:
             play_sound_buff(DrumLoader.patterns[self.__pattern], out_data, idx)
-        elif self.__intensity == Intensity.PTRN_FILL:
-            play_sound_buff(DrumLoader.fills[self.__fill], out_data, idx)
-            play_sound_buff(DrumLoader.patterns[self.__pattern], out_data, idx)
-        elif self.__intensity == Intensity.END_FILL:
+        if self.__intensity & Intensity.END == Intensity.END:
             play_sound_buff(DrumLoader.ends[self.__end], out_data, idx)
-            play_sound_buff(DrumLoader.fills[self.__fill], out_data, idx)
-        elif self.__intensity == Intensity.END_PTRN:
-            play_sound_buff(DrumLoader.ends[self.__end], out_data, idx)
-            play_sound_buff(DrumLoader.patterns[self.__pattern], out_data, idx)
-        else:
-            pass
 
     def play_ending_later(self, part_len: int, idx: int) -> None:
+        bars = 0.5 if random.random() < 0.5 else 1
+        samples = self.length * bars
         idx %= part_len
-        start_at = (part_len - idx) - self.length
+        start_at = (part_len - idx) - samples
         if start_at > 0:
-            Timer(start_at / SD_RATE, self.play_ending_now).start()
+            Timer(start_at / SD_RATE, self.play_ending_now, (bars,)).start()
 
     def __set_intensity(self, i: Intensity) -> None:
         self.__intensity = i
 
-    def play_ending_now(self) -> None:
-        normal, elevated = get_ending(self.__intensity)
-        delay_samples = self.length
+    def play_ending_now(self, bars: float = 0) -> None:
+        saved, elevated = self.__intensity, get_ending_intensity(self.__intensity)
         self.__sample_counter = 0
         self.__intensity = elevated
-        Timer(delay_samples / SD_RATE, self.__set_intensity, (normal,)).start()
+        if bars <= 0:
+            bars = 0.5 if random.random() < 0.5 else 1
+        samples = self.length * bars
+        Timer(samples / SD_RATE, self.__set_intensity, (saved,)).start()
 
     def set_next_intensity(self) -> None:
         self.__intensity = get_next_intensity(self.__intensity)

@@ -30,7 +30,8 @@ class TestLoopWithDrum(unittest.TestCase):
         self.assertFalse(control.get_stop_event().is_set())
 
     def test_2(self):
-        # Test new recorded loop is multiple of drum
+        """Test control drum and loop length"""
+        # Test new recorded loop is multiple of drum if drum non empty
         control = OneLoopCtrl()
         control.drum.prepare_drum(100_000)
         while control.drum.is_empty:
@@ -39,10 +40,9 @@ class TestLoopWithDrum(unittest.TestCase):
         loop_len, idx = record_with_drum(240_000, control)
         self.assertTrue(loop_len % 100_000 == 0)
 
-    def test_3(self):
-        # Test new recorded loop is multiple of drum
-        control = OneLoopCtrl()
+        # Test new recorded loop is equal to drum if drum was empty
         control.drum.clear()
+        control.idx = 0
         loop_len, idx = record_with_drum(240_000, control)
         self.assertTrue(loop_len == idx)
         self.assertTrue(loop_len == control.drum.length)
