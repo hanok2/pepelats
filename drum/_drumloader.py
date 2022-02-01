@@ -80,10 +80,11 @@ class DrumLoader:
 
     @classmethod
     def prepare_all(cls, length: int) -> None:
+        assert length > 0, f"Length must be > 0: {length}"
         cls.length = 0
 
-        for j in [cls.fills, cls.patterns, cls.ends]:
-            j.clear()
+        for i in [cls.fills, cls.patterns, cls.ends]:
+            i.clear()
 
         for i in cls.__fills:
             cls.fills.append(cls.__prepare_one(i, length))
