@@ -19,7 +19,7 @@ class JsonDictLoader:
         if len(self.__app_dict) == 0:
             raise RuntimeError("JSON file must have non empty dictionary {self.__filename}")
 
-    def save(self):
+    def save(self) -> None:
         with open(self.__filename, "w") as f:
             dump(self.__app_dict, f, indent=2)
 
