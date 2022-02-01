@@ -1,6 +1,6 @@
 {
-  "DRUM_SWING": 0.75,
-  "DRUM_VOLUME": 0.42299999999999993,
+  "DRUM_SWING": 0.5,
+  "DRUM_VOLUME": 0.8409662999999998,
   "DRUM_TYPE": "pop",
   "MAPPED_NOTES": {
     "60": 80,
@@ -23,6 +23,6 @@
     "BlueBoard",
     "Livid"
   ],
-  "MIXER_IN": 33,
-  "MIXER_OUT": 98
+  "MIXER_IN": 47,
+  "MIXER_OUT": 84
 }

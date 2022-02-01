@@ -58,11 +58,11 @@ class RealDrum:
 
     @property
     def volume(self) -> float:
-        return DrumLoader.volume * DrumLoader.max_volume / MAX_SD
+        return MainLoader.get(ConfigName.drum_volume, 1) * DrumLoader.max_volume / MAX_SD
 
     @property
     def swing(self) -> float:
-        return DrumLoader.swing
+        return MainLoader.get(ConfigName.drum_swing, 0.75)
 
     def show_drum_type(self) -> str:
         return f"  now  {self.__file_finder.get_item_now()}\n  next {self.__file_finder.get_item_next()}"
@@ -134,20 +134,19 @@ class RealDrum:
 
     @staticmethod
     def change_drum_volume(change_by) -> None:
-        factor = 1.41 if change_by >= 0 else 1 / 1.41
-        DrumLoader.volume *= factor
-        MainLoader.set(ConfigName.drum_volume, DrumLoader.volume)
+        factor = 1.41 if change_by >= 0 else (1 / 1.41)
+        v = MainLoader.get(ConfigName.drum_volume, 1) * factor
+        MainLoader.set(ConfigName.drum_volume, v)
         MainLoader.save()
         DrumLoader.prepare_all(DrumLoader.length)
 
     @staticmethod
     def change_swing(change_by) -> None:
-        DrumLoader.swing = MainLoader.get(ConfigName.drum_swing, 0.625)
-        delta = 0.25 / 4 if change_by >= 0 else -0.25 / 4
-        DrumLoader.swing += delta
-        DrumLoader.swing = max(min(DrumLoader.swing, 0.75), 0.5)
-        if DrumLoader.swing != MainLoader.get(ConfigName.drum_swing, 0.625):
-            MainLoader.set(ConfigName.drum_swing, DrumLoader.swing)
+        v = MainLoader.get(ConfigName.drum_swing, 0.625)
+        v += (0.25 / 4) if change_by >= 0 else (-0.25 / 4)
+        v = max(min(v, 0.75), 0.5)
+        if v != MainLoader.get(ConfigName.drum_swing, 0.625):
+            MainLoader.set(ConfigName.drum_swing, v)
             MainLoader.save()
             DrumLoader.prepare_all(DrumLoader.length)
 

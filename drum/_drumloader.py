@@ -19,8 +19,6 @@ def extend_list(some_list: Union[List, str], new_len: int) -> List:
 class DrumLoader:
     """Load drums"""
 
-    swing: float = MainLoader.get(ConfigName.drum_swing, 0.75)
-    volume: float = MainLoader.get(ConfigName.drum_volume, 1)
     patterns: List[np.ndarray] = []
     fills: List[np.ndarray] = []
     ends: List[np.ndarray] = []
@@ -51,16 +49,16 @@ class DrumLoader:
             assert type(drum_sound) == dict
             file_name = drum_sound["file_name"]
             file_name = Path(loader.get_filename().parent, file_name)
-            volume: float = drum_sound.get("volume", 1.0)
+            v1: float = drum_sound.get("volume", 1.0)
 
             (sound, _) = sf.read(str(file_name), dtype="int16", always_2d=True)
             assert sound.ndim == 2
             assert sound.shape[1] == 2
-            sound_vol: float = np.max(sound) * volume
-            cls.max_volume = max(cls.max_volume, sound_vol)
-            assert sound_vol < MAX_SD
+            v2: float = np.max(sound)
+            cls.max_volume = max(cls.max_volume, v1 * v2)
+            assert cls.max_volume < MAX_SD
             #  assert always_true(f"Loaded sound {file_name}")
-            cls.__sounds[name] = (sound, volume)
+            cls.__sounds[name] = (sound, v1)
 
     @classmethod
     def __load_all_patterns(cls, dir_name: Path, file_name: str, storage: List[Dict]) -> None:
