@@ -17,26 +17,26 @@ class Intensity(Enum):
     FILL = 1
     PTRN = 2
     PTRN_FILL = 3
-    ENDING = 4
+    END_FILL = 4
+    END_PTRN = 5
 
 
-def get_ending(i: Intensity) -> Tuple[Intensity, Intensity, bool]:
-    """Two new intensities - normal and elevated, and bool to play elevated longer"""
-    longer: bool = random.random() < 0.5
+def get_ending(i: Intensity) -> Tuple[Intensity, Intensity]:
+    """Two new intensities - normal and elevated """
     if i == Intensity.SILENT:
-        return Intensity.FILL, Intensity.PTRN, longer
+        return Intensity.FILL, Intensity.PTRN
     elif i == Intensity.FILL:
-        return Intensity.FILL, Intensity.PTRN_FILL, longer
+        return Intensity.FILL, Intensity.PTRN_FILL
     elif i == Intensity.PTRN:
-        return Intensity.PTRN, Intensity.ENDING, longer
+        return Intensity.PTRN, Intensity.END_FILL
     elif i == Intensity.PTRN_FILL:
-        return Intensity.PTRN_FILL, Intensity.ENDING, longer
+        return Intensity.PTRN_FILL, Intensity.END_PTRN
     else:
-        return Intensity.PTRN_FILL, Intensity.ENDING, longer
+        return Intensity.PTRN_FILL, Intensity.END_PTRN
 
 
 def get_next_intensity(i: Intensity) -> Intensity:
-    """Cycle intensities except SILEND and ENDING"""
+    """Cycle over intensities"""
     if i == Intensity.SILENT:
         return Intensity.FILL
     elif i == Intensity.FILL:
@@ -145,7 +145,7 @@ class RealDrum:
 
     def play_ending_later(self, part_len: int, idx: int) -> None:
         idx %= part_len
-        start_at = (part_len - idx) - self.length // 2
+        start_at = (part_len - idx) - self.length
         if start_at > 0:
             Timer(start_at / SD_RATE, self.play_ending_now).start()
 
@@ -153,14 +153,33 @@ class RealDrum:
         self.__intensity = i
 
     def play_ending_now(self) -> None:
-        normal, elevated, longer = get_ending(self.__intensity)
-        delay_samples = self.length if longer else self.length // 2
+        normal, elevated = get_ending(self.__intensity)
+        delay_samples = self.length
         self.__sample_counter = 0
         self.__intensity = elevated
         Timer(delay_samples / SD_RATE, self.__set_intensity, (normal,)).start()
 
     def set_next_intensity(self) -> None:
         self.__intensity = get_next_intensity(self.__intensity)
+
+    @staticmethod
+    def change_drum_volume(change_by) -> None:
+        factor = 1.41 if change_by >= 0 else 1 / 1.41
+        DrumLoader.volume *= factor
+        MainLoader.set(ConfigName.drum_volume, DrumLoader.volume)
+        MainLoader.save()
+        DrumLoader.prepare_all(DrumLoader.length)
+
+    @staticmethod
+    def change_swing(change_by) -> None:
+        DrumLoader.swing = MainLoader.get(ConfigName.drum_swing, 0.625)
+        delta = 0.25 / 4 if change_by >= 0 else -0.25 / 4
+        DrumLoader.swing += delta
+        DrumLoader.swing = max(min(DrumLoader.swing, 0.75), 0.5)
+        if DrumLoader.swing != MainLoader.get(ConfigName.drum_swing, 0.625):
+            MainLoader.set(ConfigName.drum_swing, DrumLoader.swing)
+            MainLoader.save()
+            DrumLoader.prepare_all(DrumLoader.length)
 
     def __str__(self):
         return f"RealDrum length: {self.length} empty: {self.is_empty} intensity: {self.__intensity}"

@@ -135,25 +135,6 @@ class DrumLoader:
             return round(step_number * step_len + swing_delta)
 
     @classmethod
-    def change_drum_volume(cls, change_by) -> None:
-        factor = 1.41 if change_by >= 0 else 1 / 1.41
-        cls.volume *= factor
-        MainLoader.set(ConfigName.drum_volume, cls.volume)
-        MainLoader.save()
-        cls.prepare_all(cls.length)
-
-    @classmethod
-    def change_swing(cls, change_by) -> None:
-        cls.swing = MainLoader.get(ConfigName.drum_swing, 0.625)
-        delta = 0.25 / 4 if change_by >= 0 else -0.25 / 4
-        cls.swing += delta
-        cls.swing = max(min(cls.swing, 0.75), 0.5)
-        if cls.swing != MainLoader.get(ConfigName.drum_swing, 0.625):
-            MainLoader.set(ConfigName.drum_swing, cls.swing)
-            MainLoader.save()
-            cls.prepare_all(cls.length)
-
-    @classmethod
     def to_str(cls) -> str:
         return f"DrumLoader length: {cls.length}  patterns: {len(cls.patterns)} fills: {len(cls.fills)} " \
                f"ends: {len(cls.ends)} sounds: {len(cls.__sounds)} max_volume: {cls.max_volume}"
