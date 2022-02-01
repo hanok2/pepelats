@@ -137,7 +137,10 @@ class RealDrum:
         elif self.__intensity == Intensity.PTRN_FILL:
             play_sound_buff(DrumLoader.fills[self.__fill], out_data, idx)
             play_sound_buff(DrumLoader.patterns[self.__pattern], out_data, idx)
-        elif self.__intensity == Intensity.ENDING:
+        elif self.__intensity == Intensity.END_FILL:
+            play_sound_buff(DrumLoader.ends[self.__end], out_data, idx)
+            play_sound_buff(DrumLoader.fills[self.__fill], out_data, idx)
+        elif self.__intensity == Intensity.END_PTRN:
             play_sound_buff(DrumLoader.ends[self.__end], out_data, idx)
             play_sound_buff(DrumLoader.patterns[self.__pattern], out_data, idx)
         else:
