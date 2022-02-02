@@ -4,7 +4,7 @@ from threading import Thread, Event
 from loop._loopsimple import LoopWithDrum
 from loop._oneloopctrl import OneLoopCtrl
 from loop._song import Song
-from utils import MsgProcessor, ConfigName, clear_screen
+from utils import MsgProcessor, ConfigName
 
 
 class LooperCtrl(Song, MsgProcessor):
@@ -20,7 +20,6 @@ class LooperCtrl(Song, MsgProcessor):
 
     def start(self):
         self.__t1.start()
-        clear_screen()
         self._redraw(ConfigName.show_all_parts, "")
 
     def set_drum_length(self, length: int) -> None:

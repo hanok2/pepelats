@@ -1,7 +1,7 @@
 from multiprocessing.connection import Connection
 
 from midi._midiconfigloader import MidiConfigLoader
-from utils import ConfigName, always_true, clear_screen
+from utils import ConfigName, always_true
 
 
 class MidiTranslator:
@@ -17,7 +17,6 @@ class MidiTranslator:
             assert always_true(f"Sending message: {msg}")
             if method_name == ConfigName.change_map:
                 MidiConfigLoader.change_map(params[0])
-                clear_screen()
             else:
                 self.__s_conn.send(msg)
             update_method = MidiConfigLoader.get(ConfigName.update_method)

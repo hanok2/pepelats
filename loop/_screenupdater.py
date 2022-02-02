@@ -1,6 +1,6 @@
 import time
 from threading import Thread
-from typing import Dict
+from typing import Dict, Tuple
 
 from utils import SCR_COLS, print_at, MsgProcessor, SD_RATE
 
@@ -19,18 +19,10 @@ ScrColors: Dict[str, str] = {
 }
 
 
-def extend_strings(some_str: str, cols: int) -> str:
-    delim: str = '\n'
-    mp = map(lambda x: x.ljust(cols), some_str.split(delim))
-    return delim.join(list(mp))
-
-
-def extend_strings_color(some_str: str, cols: int) -> str:
-    delim: str = '\n'
-    cend = ScrColors['end']
-    mp = map(lambda x: x.ljust(cols), some_str.split(delim))
-    ls = [ScrColors.get(s[0], '') + s[1:] + cend for s in mp]
-    return delim.join(ls)
+def extend_strings(some_str: str, cols: int) -> Tuple[str, int]:
+    line_list = some_str.split('\n')
+    mp = map(lambda x: x.ljust(cols), line_list)
+    return "".join(list(mp)), len(line_list)
 
 
 class ScreenUpdater(MsgProcessor):
@@ -53,9 +45,11 @@ class ScreenUpdater(MsgProcessor):
         self.__loop_len = loop_len
         msg_delay = time.time() - time_stamp
         self.__idx = idx + round(msg_delay * SD_RATE)
-        print_at(2, 0, extend_strings_color(info, SCR_COLS))
-        if description:
-            print(extend_strings(description, SCR_COLS))
+        tmp, count1 = extend_strings(info, SCR_COLS)
+        print_at(1, 0, tmp)
+        tmp, count2 = extend_strings(description, SCR_COLS)
+        print(tmp)
+        print(' ' * (count1 + count2))
 
     def __progress_update(self):
         while True:

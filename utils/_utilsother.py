@@ -41,7 +41,7 @@ def val_str(val: float, min_val: float, max_val: float, cols: int) -> str:
     return fill_str * val
 
 
-def clear_screen():
+def clear_screen_1():
     print_at(2, 0, (' ' * SCR_COLS + '\n') * (SCR_ROWS - 2))
 
 
