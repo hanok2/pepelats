@@ -55,6 +55,7 @@ class LooperCtrl(Song, MsgProcessor):
     def _play_loop_next(self) -> None:
         if not self._go_play.is_set():
             self._go_play.set()
+            return
 
         part = self.get_item_now()
         loop = part.get_item_now()
