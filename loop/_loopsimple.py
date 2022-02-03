@@ -2,6 +2,7 @@ import numpy as np
 import sounddevice as sd
 
 from loop._oneloopctrl import OneLoopCtrl
+from loop._screenupdater import ScrColors
 from loop._wrapbuffer import WrapBuffer
 from utils import MAX_LEN, CollectionOwner, always_true, STATE_COLS
 
@@ -56,9 +57,11 @@ class LoopSimple(WrapBuffer):
         full_str = (full_str * count).rjust(STATE_COLS, '░')
         part_id = owner.items.index(self)
         if part_id == owner.now:
-            return ('r' if self._ctrl.is_rec else 'g') + full_str
+            tmp = (ScrColors['r'] if self._ctrl.is_rec else ScrColors['g']) + full_str
         else:
-            return 'w' + full_str
+            tmp = ScrColors['w'] + full_str
+
+        return tmp + ScrColors['end']
 
     def __str__(self):
         return f"{WrapBuffer.__str__(self)} silent={self.is_silent} {self._ctrl}"

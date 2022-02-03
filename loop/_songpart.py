@@ -4,6 +4,7 @@ import numpy as np
 
 from loop._loopsimple import LoopWithDrum
 from loop._oneloopctrl import OneLoopCtrl
+from loop._screenupdater import ScrColors
 from loop._wrapbuffer import WrapBuffer
 from utils import CollectionOwner
 from utils import MAX_LEN
@@ -56,15 +57,17 @@ class SongPart(CollectionOwner[LoopWithDrum], LoopWithDrum):
     def state_str(self, owner: CollectionOwner) -> str:
         """colored string to show state of loops"""
         count = min(self.items_len, STATE_COLS)
-        full_str = '■'
-        full_str = (full_str * count).rjust(STATE_COLS, '░')
+        full_str = '■' * count
+        full_str = full_str.rjust(STATE_COLS, '░')
         part_id = owner.items.index(self)
         if part_id == owner.now:
-            return ('r' if self._ctrl.is_rec else 'g') + full_str
+            tmp = (ScrColors['r'] if self._ctrl.is_rec else ScrColors['g']) + full_str
         elif part_id == owner.next:
-            return ('y' if self._ctrl.is_stop_len_set() else 'v') + full_str
+            tmp = (ScrColors['y'] if self._ctrl.is_stop_len_set() else ScrColors['v']) + full_str
         else:
-            return 'w' + full_str
+            tmp = ScrColors['w'] + full_str
+
+        return tmp + ScrColors['end']
 
     def __str__(self):
         return f"{LoopWithDrum.__str__(self)} items={self.items_len} redo={len(self.__redo)}"

@@ -22,7 +22,7 @@ ScrColors: Dict[str, str] = {
 def extend_strings(some_str: str, cols: int) -> Tuple[str, int]:
     line_list = some_str.split('\n')
     mp = map(lambda x: x.ljust(cols), line_list)
-    return "".join(list(mp)), len(line_list)
+    return "\n".join(list(mp)), len(line_list)
 
 
 class ScreenUpdater(MsgProcessor):
