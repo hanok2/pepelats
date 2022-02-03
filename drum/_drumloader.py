@@ -19,14 +19,14 @@ def extend_list(some_list: Union[List, str], new_len: int) -> List:
 class DrumLoader:
     """Load drums"""
 
-    patterns: List[np.ndarray] = []
-    fills: List[np.ndarray] = []
+    level2: List[np.ndarray] = []
+    level1: List[np.ndarray] = []
     ends: List[np.ndarray] = []
     max_volume: float = 0
     length: int = 0
     __sounds: Dict[str, Tuple[np.ndarray, float]] = dict()
-    __patterns: List[Dict[str, Any]] = []
-    __fills: List[Dict[str, Any]] = []
+    __level2: List[Dict[str, Any]] = []
+    __level1: List[Dict[str, Any]] = []
     __ends: List[Dict[str, Any]] = []
 
     @classmethod
@@ -34,8 +34,8 @@ class DrumLoader:
         assert always_true(f"Loading drum {dir_name}")
         if len(cls.__sounds) == 0:
             cls.__load_sounds(dir_name)
-        cls.__load_all_patterns(dir_name, "drum_patterns", cls.__patterns)
-        cls.__load_all_patterns(dir_name, "drum_fills", cls.__fills)
+        cls.__load_all_patterns(dir_name, "drum_level2", cls.__level2)
+        cls.__load_all_patterns(dir_name, "drum_level1", cls.__level1)
         cls.__load_all_patterns(dir_name, "drum_ends", cls.__ends)
 
     @classmethod
@@ -83,14 +83,14 @@ class DrumLoader:
         assert length > 0, f"Length must be > 0: {length}"
         cls.length = 0
 
-        for i in [cls.fills, cls.patterns, cls.ends]:
+        for i in [cls.level1, cls.level2, cls.ends]:
             i.clear()
 
-        for i in cls.__fills:
-            cls.fills.append(cls.__prepare_one(i, length))
+        for i in cls.__level1:
+            cls.level1.append(cls.__prepare_one(i, length))
 
-        for i in cls.__patterns:
-            cls.patterns.append(cls.__prepare_one(i, length))
+        for i in cls.__level2:
+            cls.level2.append(cls.__prepare_one(i, length))
 
         for i in cls.__ends:
             cls.ends.append(cls.__prepare_one(i, length))
@@ -135,7 +135,7 @@ class DrumLoader:
 
     @classmethod
     def to_str(cls) -> str:
-        return f"DrumLoader length: {cls.length}  patterns: {len(cls.patterns)} fills: {len(cls.fills)} " \
+        return f"DrumLoader length: {cls.length}  patterns: {len(cls.level2)} fills: {len(cls.level1)} " \
                f"ends: {len(cls.ends)} sounds: {len(cls.__sounds)} max_volume: {cls.max_volume}"
 
 

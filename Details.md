@@ -1,6 +1,6 @@
 ## Drums configuration
 
-Drums are configured in a text files (in [etc/drums/pop/](etc/drums/pop/drum_patterns.json), etc/drums/rock/, ...) using
+Drums are configured in a text files (in [etc/drums/pop/](etc/drums/pop/drum_level2.json), etc/drums/rock/, ...) using
 JSON format. Several popular drum patterns are pre-configured. Looper uses random drum fills and endings to make drums
 less repetitive. Fills and patterns change every three bars. Endings play when loop is switched or when a button is
 pushed. Drums accompaniment is created after the first loop is recorded and BPM is defined by length of this loop. Drum

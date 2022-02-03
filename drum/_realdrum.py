@@ -11,29 +11,29 @@ from utils import SD_RATE, play_sound_buff
 
 class Intensity(IntEnum):
     SILENT = 0
-    FILL = 1
-    PTRN = 2
+    LVL1 = 1
+    LVL2 = 2
     END = 4
 
 
 def get_ending_intensity(i: Intensity) -> Intensity:
     """Intensity for drum ending"""
     if i == Intensity.SILENT:
-        return Intensity.FILL
-    if i == Intensity.FILL:
-        return Intensity.FILL + Intensity.END
-    elif i == Intensity.PTRN:
-        return Intensity.PTRN + Intensity.END
+        return Intensity.LVL1
+    if i == Intensity.LVL1:
+        return Intensity.LVL1 + Intensity.END
+    elif i == Intensity.LVL2:
+        return Intensity.LVL2 + Intensity.END
     else:
         return i
 
 
 def get_next_intensity(i: Intensity) -> Intensity:
     """Cycle over intensities 1,2 only"""
-    if i >= Intensity.PTRN:
-        return Intensity.FILL
+    if i >= Intensity.LVL2:
+        return Intensity.LVL1
     else:
-        return Intensity.PTRN
+        return Intensity.LVL2
 
 
 class RealDrum:
@@ -45,8 +45,8 @@ class RealDrum:
         self.__change_after_samples: int = MAX_32_INT
         self.__sample_counter: int = 0
         self.__intensity: Intensity = Intensity.SILENT
-        self.__pattern: int = 0
-        self.__fill: int = 0
+        self.__level2: int = 0
+        self.__level1: int = 0
         self.__end: int = 0
 
         self.__file_finder = FileFinder("etc/drums", False, "", MainLoader.get(ConfigName.drum_type, "pop"))
@@ -98,7 +98,7 @@ class RealDrum:
         """ Non blocking drum init in another thread, length is one bar long and holds drum pattern """
         Timer(0.2, DrumLoader.prepare_all, [length]).start()
         self.__change_after_samples = RealDrum.change_after_bars * length
-        self.__intensity = Intensity.PTRN
+        self.__intensity = Intensity.LVL2
 
     def play_samples(self, out_data: np.ndarray, idx: int) -> None:
         if self.__intensity == Intensity.SILENT or self.is_empty:
@@ -107,14 +107,14 @@ class RealDrum:
         self.__sample_counter += len(out_data)
         if self.__sample_counter > self.__change_after_samples:
             self.__sample_counter = 0
-            self.__pattern = random.randrange(len(DrumLoader.patterns))
-            self.__fill = random.randrange(len(DrumLoader.fills))
+            self.__level2 = random.randrange(len(DrumLoader.level2))
+            self.__level1 = random.randrange(len(DrumLoader.level1))
             self.__end = random.randrange(len(DrumLoader.ends))
 
-        if self.__intensity & Intensity.FILL == Intensity.FILL:
-            play_sound_buff(DrumLoader.fills[self.__fill], out_data, idx)
-        if self.__intensity & Intensity.PTRN == Intensity.PTRN:
-            play_sound_buff(DrumLoader.patterns[self.__pattern], out_data, idx)
+        if self.__intensity & Intensity.LVL1 == Intensity.LVL1:
+            play_sound_buff(DrumLoader.level1[self.__level1], out_data, idx)
+        if self.__intensity & Intensity.LVL2 == Intensity.LVL2:
+            play_sound_buff(DrumLoader.level2[self.__level2], out_data, idx)
         if self.__intensity & Intensity.END == Intensity.END:
             play_sound_buff(DrumLoader.ends[self.__end], out_data, idx)
 
