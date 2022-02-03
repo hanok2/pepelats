@@ -5,10 +5,10 @@
 - Arbitrary number of song parts (verse/chorus/bridge) each made of any number of parallel loops
 - Parallel loops in song part may have different length (number of bars)
 - Song parts and loops have "undo/redo" and may be added/deleted on the run
-- Automatic drums with changing patterns and endings editable in a text file
+- Automatic drums with random patterns and breaks configureable in a text file
 - Quantization - time of changing parts, recording is adjusted to keep rhythm intact
 - Songs may be saved and loaded from SD card
-- MIDI over Bluetooth or USB configureable in a text file.
+- MIDI over Bluetooth or USB configureable in a text file
 - Text console shows loop position, state, length and volume of each part and loop
 - Menu to display, change looper parameters using only foot controller
 
