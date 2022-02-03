@@ -21,7 +21,7 @@ def get_ending_intensity(i: Intensity) -> Intensity:
     if i == Intensity.SILENT:
         return Intensity.FILL
     if i == Intensity.FILL:
-        return Intensity.PTRN
+        return Intensity.FILL + Intensity.END
     elif i == Intensity.PTRN:
         return Intensity.PTRN + Intensity.END
     else:
