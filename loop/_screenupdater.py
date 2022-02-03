@@ -46,7 +46,7 @@ class ScreenUpdater(MsgProcessor):
         msg_delay = time.time() - time_stamp
         self.__idx = idx + round(msg_delay * SD_RATE)
         tmp, count1 = extend_strings(info, SCR_COLS)
-        print_at(1, 0, tmp)
+        print_at(2, 0, tmp)
         tmp, count2 = extend_strings(description, SCR_COLS)
         print(tmp)
         print(' ' * (count1 + count2))
