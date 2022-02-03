@@ -1,10 +1,10 @@
 ## Drums configuration
 
 Drums are configured in a text files (in [etc/drums/pop/](etc/drums/pop/drum_level2.json), etc/drums/rock/, ...) using
-JSON format. Several popular drum patterns are pre-configured. Looper uses random drum fills and endings to make drums
-less repetitive. Fills and patterns change every three bars. Endings play when loop is switched or when a button is
-pushed. Drums accompaniment is created after the first loop is recorded and BPM is defined by length of this loop. Drum
-volume and swing may be changed on the run. Swing settings is same as Linn's LM-1, from 0.5 to 0.75.
+JSON format. Several popular drum patterns are pre-configured. Looper uses randomness to make it less repetitive,
+patterns change every three bars. Drum ends (aka breaks) play when loop is switched or when a button is pushed. Drums
+accompaniment is created after the first loop is recorded and BPM is defined by length of this loop. Drum volume and
+swing may be changed on the run. Swing settings is same as Linn's LM-1, from 0.5 to 0.75.
 
 ## MIDI foot controller to use
 
