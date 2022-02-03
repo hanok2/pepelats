@@ -19,13 +19,13 @@ class ExtendedCtrl(LooperCtrl):
         LooperCtrl.__init__(self)
         self.__scr_conn: Connection = scr_conn
 
-    def _redraw(self, update_method: str) -> None:
+    def _redraw(self, update_method: str, description: str) -> None:
         """used by children to _redraw itself on screen"""
         method = getattr(self, update_method)
         info = method()
         part = self.get_item_now()
         self.__scr_conn.send(
-            [ConfigName.redraw, info, part.length, self.idx, time.time(), self._go_play.is_set()])
+            [ConfigName.redraw, info, description, part.length, self.idx, time.time(), self._go_play.is_set()])
 
     def _prepare_song(self) -> None:
         super()._prepare_song()

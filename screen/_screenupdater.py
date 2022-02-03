@@ -2,8 +2,7 @@ import time
 from threading import Thread
 from typing import Tuple
 
-from midi._midiconfigloader import MidiConfigLoader
-from utils import SCR_COLS, print_at, MsgProcessor, SD_RATE, SCR_ROWS, ConfigName
+from utils import SCR_COLS, print_at, MsgProcessor, SD_RATE, SCR_ROWS
 
 UPDATES_PER_LOOP = 8
 
@@ -22,22 +21,24 @@ class ScreenUpdater(MsgProcessor):
         self.__sleep_time: float = 1
         self.__loop_len: int = 1000000
         self.__idx: int = 0
+        self.__description: str = ""  # keep latest one
         self.__t1: Thread = Thread(target=self.__progress_update, name="progress_update_thread", daemon=True)
 
     def start(self):
         self.__t1.start()
 
-    def _redraw(self, info: str, loop_len: int, idx: int, time_stamp: float, is_play: bool) -> None:
+    def _redraw(self, info: str, description: str, loop_len: int, idx: int, time_stamp: float, is_play: bool) -> None:
         self.__is_play = is_play
         self.__delta = loop_len / UPDATES_PER_LOOP
         self.__sleep_time = self.__delta / SD_RATE
         self.__loop_len = loop_len
+        if description:
+            self.__description = description
         msg_delay = time.time() - time_stamp
         self.__idx = idx + round(msg_delay * SD_RATE)
         print_at(2, 1, ' ' * (SCR_ROWS - 1) * SCR_COLS)
         print_at(2, 1, info)
-        description = MidiConfigLoader.get(ConfigName.description)
-        print(description)
+        print(self.__description)
 
     def __progress_update(self):
         while True:

@@ -4,7 +4,8 @@ from multiprocessing.connection import Connection
 from threading import Thread
 
 from loop import ExtendedCtrl
-from midi import MidiController, MidiConverter, ScreenUpdater
+from midi import MidiController, MidiConverter
+from screen import ScreenUpdater
 from utils import ConfigName, get_midi_port
 
 

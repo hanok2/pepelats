@@ -35,7 +35,7 @@ class MidiConfigLoader:
         elif new_name in ["prev", "next"]:
             prefix = cls.__map_name.split('_')[0]
             lst = [x for x in cls.__map if x.startswith(prefix)]
-            k = lst.index(cls.__map_name) + (1 if cls.__map_name == "next" else -1)
+            k = lst.index(cls.__map_name) + (1 if new_name == "next" else -1)
             k %= len(lst)
             cls.__map_name = lst[k]
         else:

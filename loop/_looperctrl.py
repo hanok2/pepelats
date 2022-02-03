@@ -20,7 +20,7 @@ class LooperCtrl(Song, MsgProcessor):
 
     def start(self):
         self.__t1.start()
-        self._redraw(ConfigName.show_all_parts)
+        self._redraw(ConfigName.show_all_parts, "")
 
     def set_drum_length(self, length: int) -> None:
         if length > 0:
@@ -30,7 +30,7 @@ class LooperCtrl(Song, MsgProcessor):
         return self.drum.length
 
     @abstractmethod
-    def _redraw(self, update_method: str) -> None:
+    def _redraw(self, update_method: str, description: str) -> None:
         """used by children to _redraw itself on screen"""
         pass
 
@@ -93,7 +93,7 @@ class LooperCtrl(Song, MsgProcessor):
             self._stop_never()
             self.idx = 0
             self.is_rec = part.is_empty
-            self._redraw(ConfigName.show_all_parts)
+            self._redraw(ConfigName.show_all_parts, "")
             part.play_buffer()
 
     def __stop_quantized(self) -> None:

@@ -20,6 +20,7 @@ class MidiTranslator:
             else:
                 self.__s_conn.send(msg)
             update_method = MidiConfigLoader.get(ConfigName.update_method)
-            msg = [ConfigName.redraw, update_method]
+            description = MidiConfigLoader.get(ConfigName.description)
+            msg = [ConfigName.redraw, update_method, description]
             assert always_true(f"Sending message: {msg}")
             self.__s_conn.send(msg)
