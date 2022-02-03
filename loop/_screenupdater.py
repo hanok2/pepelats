@@ -33,13 +33,9 @@ class ScreenUpdater(MsgProcessor):
         self.__loop_len = loop_len
         msg_delay = time.time() - time_stamp
         self.__idx = idx + round(msg_delay * SD_RATE)
-        count1 = info.count('\n')
-        print_at(2, 0, info)
-        count2 = len(description)
+        print_at(2, 1, ' ' * (SCR_ROWS - 1) * SCR_COLS)
+        print_at(2, 1, info)
         print(description)
-        count = SCR_ROWS - (count1 + 1)
-        count = count * SCR_COLS - count2
-        print('.' * count)
 
     def __progress_update(self):
         while True:
@@ -48,7 +44,8 @@ class ScreenUpdater(MsgProcessor):
                 self.__idx += self.__delta
                 self.__idx %= self.__loop_len
                 pos = round(self.__idx / self.__loop_len * SCR_COLS)
-                print_at(0, 0, "■" * pos + " " * (SCR_COLS - pos))
+                # cursor postion starts at 1,1
+                print_at(1, 1, "■" * pos + " " * (SCR_COLS - pos))
 
 
 if __name__ == "__main__":
