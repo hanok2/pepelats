@@ -19,9 +19,9 @@ ScrColors: Dict[str, str] = {
 }
 
 
-def extend_strings(s: str, cols: int) -> Tuple[str, int]:
+def extend_strings(s: str, fill_char: str, cols: int) -> Tuple[str, int]:
     line_list = s.split('\n')
-    mp = map(lambda x: x.ljust(cols), line_list)
+    mp = map(lambda x: x.ljust(cols, fill_char), line_list)
     return "\n".join(list(mp)), len(line_list) + 1
 
 
@@ -45,9 +45,9 @@ class ScreenUpdater(MsgProcessor):
         self.__loop_len = loop_len
         msg_delay = time.time() - time_stamp
         self.__idx = idx + round(msg_delay * SD_RATE)
-        tmp, count1 = extend_strings(info, SCR_COLS)
+        tmp, count1 = extend_strings(info, '-', SCR_COLS)
         print_at(2, 0, tmp)
-        tmp, count2 = extend_strings(description, SCR_COLS)
+        tmp, count2 = extend_strings(description, '!', SCR_COLS)
         print(tmp)
         count = SCR_ROWS - (count1 + count2)
         print('.' * count * SCR_COLS)
