@@ -2,7 +2,7 @@ import time
 from threading import Thread
 from typing import Dict, Tuple
 
-from utils import SCR_COLS, print_at, MsgProcessor, SD_RATE
+from utils import SCR_COLS, print_at, MsgProcessor, SD_RATE, SCR_ROWS
 
 UPDATES_PER_LOOP = 8
 
@@ -19,8 +19,8 @@ ScrColors: Dict[str, str] = {
 }
 
 
-def extend_strings(some_str: str, cols: int) -> Tuple[str, int]:
-    line_list = some_str.split('\n')
+def extend_strings(s: str, cols: int) -> Tuple[str, int]:
+    line_list = s.split('\n')
     mp = map(lambda x: x.ljust(cols), line_list)
     return "\n".join(list(mp)), len(line_list) + 1
 
@@ -49,7 +49,8 @@ class ScreenUpdater(MsgProcessor):
         print_at(2, 0, tmp)
         tmp, count2 = extend_strings(description, SCR_COLS)
         print(tmp)
-        print('.' * (count1 + count2))
+        count = SCR_ROWS - (count1 + count2)
+        print('.' * count * SCR_COLS)
 
     def __progress_update(self):
         while True:
