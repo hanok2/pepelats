@@ -35,7 +35,8 @@ class ScreenUpdater(MsgProcessor):
         self.__idx = idx + round(msg_delay * SD_RATE)
         print_at(2, 1, ' ' * (SCR_ROWS - 1) * SCR_COLS)
         print_at(2, 1, info)
-        print(description)
+        if description:
+            print(description)
 
     def __progress_update(self):
         while True:
