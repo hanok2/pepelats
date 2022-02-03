@@ -1,6 +1,7 @@
 import unittest
 
-from midi import MidiConfigLoader
+# noinspection PyProtectedMember
+from midi._midiconfigloader import MidiConfigLoader
 
 
 class TestMidiConfigLoader(unittest.TestCase):

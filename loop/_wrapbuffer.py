@@ -118,7 +118,7 @@ class WrapBuffer:
 
     def info_str(self, cols: int) -> str:
         """Colored string to show volume and length. Volume uses color inversion"""
-        volume_db = 20 * log(max(self.volume, 0.001), 10)  # from -60 decibeb to 0 decibel
+        volume_db = 20 * log(max(self.volume, 0.001), 10)  # from -60 decibel to 0 decibel
         volume_db += 60  # from 0 to +60
         assert 0 <= volume_db <= 60, "Must be: 0 <= volume_db <= 60"
         len_pos: int = 0 if self.is_empty else round(self.length / MAX_LEN * cols)

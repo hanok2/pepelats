@@ -13,7 +13,7 @@
         - 1 tap: undo current part/loop, if available
         - 2 taps: redo current part/loop if available
         - 3 taps: volume decay and stop after 8 seconds
-        - 1 tap + hold: stop all, if has stopped clear all
+        - 1 tap + hold: stop all, if stopped clear all
         - 2 taps + hold: switch between "all parts" / "looper settings" view
 ## Configuration for "one part" view
 - Buttons A,B,C,D manipulate loops of one song parts.

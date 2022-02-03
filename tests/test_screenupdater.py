@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import MagicMock
 
-from loop import ScreenUpdater
+from midi import ScreenUpdater
 from utils import ConfigName
 
 

@@ -2,7 +2,8 @@ import time
 from threading import Thread
 from typing import Tuple
 
-from utils import SCR_COLS, print_at, MsgProcessor, SD_RATE, SCR_ROWS
+from midi._midiconfigloader import MidiConfigLoader
+from utils import SCR_COLS, print_at, MsgProcessor, SD_RATE, SCR_ROWS, ConfigName
 
 UPDATES_PER_LOOP = 8
 
@@ -26,7 +27,7 @@ class ScreenUpdater(MsgProcessor):
     def start(self):
         self.__t1.start()
 
-    def _redraw(self, info: str, description: str, loop_len: int, idx: int, time_stamp: float, is_play: bool) -> None:
+    def _redraw(self, info: str, loop_len: int, idx: int, time_stamp: float, is_play: bool) -> None:
         self.__is_play = is_play
         self.__delta = loop_len / UPDATES_PER_LOOP
         self.__sleep_time = self.__delta / SD_RATE
@@ -35,8 +36,8 @@ class ScreenUpdater(MsgProcessor):
         self.__idx = idx + round(msg_delay * SD_RATE)
         print_at(2, 1, ' ' * (SCR_ROWS - 1) * SCR_COLS)
         print_at(2, 1, info)
-        if description:
-            print(description)
+        description = MidiConfigLoader.get(ConfigName.description)
+        print(description)
 
     def __progress_update(self):
         while True:
@@ -45,7 +46,7 @@ class ScreenUpdater(MsgProcessor):
                 self.__idx += self.__delta
                 self.__idx %= self.__loop_len
                 pos = round(self.__idx / self.__loop_len * SCR_COLS)
-                # cursor postion starts at 1,1
+                # cursor position starts at 1,1
                 print_at(1, 1, "■" * pos + " " * (SCR_COLS - pos))
 
 

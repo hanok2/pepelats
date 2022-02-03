@@ -8,7 +8,7 @@
 # --kbd - use typing keyboard keys 1,2,3,4,q,w to send MIDI notes 60,62,64,65,12,13
 # --debug - show debug info, works for python version only
 
-# Looper patrameters passed via env.
+# Looper parameters passed via env.
 #export MAX_LEN_SECONDS=60
 #export SD_RATE=48000
 
@@ -79,7 +79,7 @@ mv -f ./tmp.log ./log.log
 
 echo "$python_command"
 
-# disable undervoltage error on screen as it works OK with undervoltage
+# disable under voltage error on screen as it works OK with under voltage
 sudo dmesg -D
 
 # restart many times
