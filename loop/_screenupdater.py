@@ -1,22 +1,10 @@
 import time
 from threading import Thread
-from typing import Dict, Tuple
+from typing import Tuple
 
 from utils import SCR_COLS, print_at, MsgProcessor, SD_RATE, SCR_ROWS
 
 UPDATES_PER_LOOP = 8
-
-# foreground, background ends with '40m'
-ScrColors: Dict[str, str] = {
-    'b': '\x1b[1;30m',
-    'r': '\x1b[1;31m',
-    'g': '\x1b[1;32m',
-    'y': '\x1b[1;33m',
-    'v': '\x1b[1;34m',
-    'w': '\x1b[37m',
-    'end': '\x1b[0m',
-    'reverse': '\x1b[7m'
-}
 
 
 def extend_strings(s: str, fill_char: str, cols: int) -> Tuple[str, int]:
@@ -45,23 +33,22 @@ class ScreenUpdater(MsgProcessor):
         self.__loop_len = loop_len
         msg_delay = time.time() - time_stamp
         self.__idx = idx + round(msg_delay * SD_RATE)
-        tmp, count1 = extend_strings(info, '-', SCR_COLS)
-        print_at(2, 0, tmp)
-        tmp, count2 = extend_strings(description, '!', SCR_COLS)
-        print(tmp)
-        count = SCR_ROWS - (count1 + count2)
-        print('.' * count * SCR_COLS)
+        count1 = info.count('\n')
+        print_at(2, 0, info)
+        count2 = len(description)
+        print(description)
+        count = SCR_ROWS - (count1 + 1)
+        count = count * SCR_COLS - count2
+        print('.' * count)
 
     def __progress_update(self):
         while True:
-            cgreen = ScrColors['g']
-            cend = ScrColors['end']
             time.sleep(self.__sleep_time)
             if self.__is_play:
                 self.__idx += self.__delta
                 self.__idx %= self.__loop_len
                 pos = round(self.__idx / self.__loop_len * SCR_COLS)
-                print_at(0, 0, cgreen + "■" * pos + " " * (SCR_COLS - pos) + cend)
+                print_at(0, 0, "■" * pos + " " * (SCR_COLS - pos))
 
 
 if __name__ == "__main__":

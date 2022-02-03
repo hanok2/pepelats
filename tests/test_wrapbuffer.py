@@ -1,7 +1,7 @@
 import unittest
 
 from loop import WrapBuffer
-from utils import make_sin_sound, SD_RATE
+from utils import make_sin_sound, SD_RATE, STATE_COLS, SCR_COLS
 
 sound_len = 500_000  # samples
 sound = make_sin_sound(440, sound_len / SD_RATE)
@@ -14,7 +14,7 @@ class TestWrapBuffer(unittest.TestCase):
         test_buff.record_samples(sound[:100_000], 0)
         test_buff.trim_buffer(121_000, -1)
         self.assertTrue(test_buff.length == 121_000)
-        print(test_buff.info_str())
+        print(test_buff.info_str(SCR_COLS - STATE_COLS))
         test_buff.sound_test(1, False)
 
     def test_trim2(self):

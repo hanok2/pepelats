@@ -3,7 +3,7 @@ import os
 import subprocess as sp
 import time
 from pathlib import Path
-from typing import Any, List, TypeVar, Generic, Union
+from typing import Any, List, TypeVar, Generic, Union, Dict
 
 T = TypeVar('T')
 
@@ -22,6 +22,18 @@ except Exception:
     SCR_COLS, SCR_ROWS = 32, 10
 
 STATE_COLS = 6  # columns to show loop state - playing, recording ...
+
+# foreground, background ends with '40m'
+ScrColors: Dict[str, str] = {
+    'b': '\x1b[1;30m',
+    'r': '\x1b[1;31m',
+    'g': '\x1b[1;32m',
+    'y': '\x1b[1;33m',
+    'v': '\x1b[1;34m',
+    'w': '\x1b[37m',
+    'end': '\x1b[0m',
+    'reverse': '\x1b[7m'
+}
 
 
 # used with assert to print info

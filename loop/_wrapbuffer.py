@@ -3,7 +3,7 @@ from typing import List, Any
 
 import numpy as np
 
-from utils import record_sound_buff, play_sound_buff, SD_RATE, SCR_COLS, STATE_COLS
+from utils import record_sound_buff, play_sound_buff, SD_RATE, ScrColors
 from utils import sound_test, make_zero_buffer, MAX_LEN, MAX_SD
 
 
@@ -116,19 +116,16 @@ class WrapBuffer:
             self.__redo.clear()
             self.__undo.append(self.__buff.copy())
 
-    def info_str(self) -> str:
+    def info_str(self, cols: int) -> str:
         """Colored string to show volume and length. Volume uses color inversion"""
         volume_db = 20 * log(max(self.volume, 0.001), 10)  # from -60 decibeb to 0 decibel
         volume_db += 60  # from 0 to +60
-        cols = SCR_COLS - STATE_COLS
+        assert 0 <= volume_db <= 60, "Must be: 0 <= volume_db <= 60"
         len_pos: int = 0 if self.is_empty else round(self.length / MAX_LEN * cols)
         vol_pos: int = round(volume_db / 60 * cols)
-        tmp = '░' * len_pos
-        if len_pos >= vol_pos:
-            tmp = tmp[:vol_pos] + '╬' + tmp[vol_pos + 1:]
-        else:
-            tmp = tmp + '—' * (vol_pos - len_pos - 1) + '╬'
-
+        tmp = '—' * vol_pos + '╬' + '-' * (cols - vol_pos - 1)
+        if len_pos > 0:
+            tmp = ScrColors['reverse'] + tmp[:len_pos] + ScrColors['end'] + tmp[len_pos:]
         return tmp
 
     def __str__(self):

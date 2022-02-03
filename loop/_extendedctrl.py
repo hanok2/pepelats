@@ -7,7 +7,7 @@ from loop._looperctrl import LooperCtrl
 from loop._loopsimple import LoopWithDrum
 from loop._songpart import SongPart
 from mixer import Mixer
-from utils import IN_CHANNELS, OUT_CHANNELS, val_str, ConfigName, SCR_COLS, CURRENT_VERSION
+from utils import IN_CHANNELS, OUT_CHANNELS, val_str, ConfigName, SCR_COLS, CURRENT_VERSION, STATE_COLS
 from utils import run_os_cmd
 
 
@@ -77,12 +77,12 @@ class ExtendedCtrl(LooperCtrl):
         return self.drum.show_drum_type()
 
     def _show_one_part(self) -> str:
-        return self.get_item_now().info_str()
+        return self.get_item_now().info_str(SCR_COLS - STATE_COLS)
 
     def _show_all_parts(self) -> str:
         tmp = ""
         for part in self.items:
-            tmp += part.state_str(self) + LoopWithDrum.info_str(part) + "\n"
+            tmp += part.state_str(self) + LoopWithDrum.info_str(part, SCR_COLS - STATE_COLS) + "\n"
         return tmp + f"  Song: {self._song_name}"
 
     def _show_drum_param(self) -> str:

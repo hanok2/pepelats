@@ -4,9 +4,8 @@ import numpy as np
 
 from loop._loopsimple import LoopWithDrum
 from loop._oneloopctrl import OneLoopCtrl
-from loop._screenupdater import ScrColors
 from loop._wrapbuffer import WrapBuffer
-from utils import CollectionOwner
+from utils import CollectionOwner, SCR_COLS, ScrColors
 from utils import MAX_LEN
 from utils import STATE_COLS
 
@@ -44,14 +43,14 @@ class SongPart(CollectionOwner[LoopWithDrum], LoopWithDrum):
         loop = self.get_item_now()
         WrapBuffer.record_samples(loop, in_data, idx)
 
-    def info_str(self) -> str:
+    def info_str(self, cols: int) -> str:
         """colored string to show volume and length"""
         tmp = ""
         for loop in self.items:
             assert self._ctrl.drum.is_empty or loop.is_empty or loop.length % self._ctrl.drum.length == 0, \
                 f"loop: {loop.length} drum: {self._ctrl.drum.length}"
             state_str = LoopWithDrum.state_str(loop, self)
-            tmp += state_str + LoopWithDrum.info_str(loop) + "\n"
+            tmp += state_str + LoopWithDrum.info_str(loop, SCR_COLS - STATE_COLS) + "\n"
         return tmp[:-1]
 
     def state_str(self, owner: CollectionOwner) -> str:

@@ -2,9 +2,8 @@ import numpy as np
 import sounddevice as sd
 
 from loop._oneloopctrl import OneLoopCtrl
-from loop._screenupdater import ScrColors
 from loop._wrapbuffer import WrapBuffer
-from utils import MAX_LEN, CollectionOwner, always_true, STATE_COLS
+from utils import MAX_LEN, CollectionOwner, always_true, STATE_COLS, ScrColors
 
 
 class LoopSimple(WrapBuffer):
