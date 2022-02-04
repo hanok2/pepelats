@@ -74,6 +74,8 @@ class LooperCtrl(Song, MsgProcessor):
     def _play_part_id(self, part_id: int) -> None:
         if not self._go_play.is_set():
             self._go_play.set()
+            return
+
         self.next = part_id
         if self.next == self.now:
             if not self.is_rec:
