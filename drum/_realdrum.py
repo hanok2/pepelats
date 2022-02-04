@@ -25,7 +25,7 @@ def get_ending_intensity(i: Intensity) -> Intensity:
     elif i == Intensity.LVL2:
         return Intensity.LVL2 + Intensity.END
     else:
-        return i
+        return Intensity.LVL2
 
 
 def get_next_intensity(i: Intensity) -> Intensity:

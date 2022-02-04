@@ -24,7 +24,7 @@ def get_midi_port():
                         return port_in
             sleep(5)
 
-    if ConfigName.use_keyboard_option in sys.argv or not IS_LINUX:
+    if ConfigName.use_typing in sys.argv or not IS_LINUX:
         from midi import KbdMidiPort
         tmp = MainLoader.get(ConfigName.kbd_notes, dict())
         return KbdMidiPort(tmp)

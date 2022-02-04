@@ -5,7 +5,7 @@
 # for executable version use: $HOME/pepelatsexe/start.sh
 
 # Two optional parameters:
-# --kbd - use typing keyboard keys 1,2,3,4,q,w to send MIDI notes 60,62,64,65,12,13
+# --use_typing - use typing keys 1,2,3,4,q,w to send MIDI notes 60,62,64,65,12,13
 # --debug - show debug info, works for python version only
 
 # Looper parameters passed via env.
@@ -43,7 +43,7 @@ done
 
 USE_KBD=""
 for var in "$@"; do
-  if [ "$var" == "--kbd" ]; then
+  if [ "$var" == "--use_typing" ]; then
     USE_KBD="sudo -E"
     break
   fi

@@ -37,10 +37,12 @@ if __name__ == "__main__":
 
     if ConfigName.one_process in sys.argv:
         """one process version"""
+        print("Starting application in a single OS process")
         p_upd = Thread(target=proc_updater, args=(r_upd,), daemon=True)
         p_ctrl = Thread(target=proc_ctrl, args=(r_ctrl, s_upd), daemon=True)
     else:
         """multi process version"""
+        print("Starting application in three OS processes")
         p_upd = Process(target=proc_updater, args=(r_upd,), daemon=True)
         p_ctrl = Process(target=proc_ctrl, args=(r_ctrl, s_upd), daemon=True)
 

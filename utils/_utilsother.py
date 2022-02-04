@@ -134,9 +134,9 @@ class ConfigName:
     default_pattern: str = "default_pattern"
     comment: str = "comment"
     #  other
-    use_keyboard_option: str = "--kbd"
+    use_typing: str = "--use_typing"
     redraw: str = "_redraw"
-    one_process: str = "--one"
+    one_process: str = "--one_process"
     no_converter: str = "--no_converter"
     #  main loader
     drum_swing: str = "DRUM_SWING"
