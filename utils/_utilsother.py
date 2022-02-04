@@ -136,7 +136,6 @@ class ConfigName:
     #  other
     use_typing: str = "--use_typing"
     redraw: str = "_redraw"
-    one_process: str = "--one_process"
     no_converter: str = "--no_converter"
     #  main loader
     drum_swing: str = "DRUM_SWING"

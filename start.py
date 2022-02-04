@@ -1,7 +1,6 @@
 import sys
 from multiprocessing import Pipe, Process
 from multiprocessing.connection import Connection
-from threading import Thread
 
 from loop import ExtendedCtrl
 from midi import MidiController, MidiConverter
@@ -35,16 +34,9 @@ if __name__ == "__main__":
     r_upd, s_upd = Pipe(False)  # screen update messages
     r_ctrl, s_ctrl = Pipe(False)  # looper control messages
 
-    if ConfigName.one_process in sys.argv:
-        """one process version"""
-        print("Starting application in a single OS process")
-        p_upd = Thread(target=proc_updater, args=(r_upd,), daemon=True)
-        p_ctrl = Thread(target=proc_ctrl, args=(r_ctrl, s_upd), daemon=True)
-    else:
-        """multi process version"""
-        print("Starting application in three OS processes")
-        p_upd = Process(target=proc_updater, args=(r_upd,), daemon=True)
-        p_ctrl = Process(target=proc_ctrl, args=(r_ctrl, s_upd), daemon=True)
+    print("Starting application in three OS processes")
+    p_upd = Process(target=proc_updater, args=(r_upd,), daemon=True)
+    p_ctrl = Process(target=proc_ctrl, args=(r_ctrl, s_upd), daemon=True)
 
     p_upd.start()
     p_ctrl.start()
