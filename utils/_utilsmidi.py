@@ -4,7 +4,7 @@ from typing import List
 
 import mido
 
-from utils._utilsloader import MainLoader
+from utils._utilsloader import MainLoader, JsonDictLoader
 from utils._utilsother import ConfigName, IS_LINUX
 
 
@@ -26,8 +26,8 @@ def get_midi_port():
 
     if ConfigName.use_typing in sys.argv or not IS_LINUX:
         from midi import KbdMidiPort
-        tmp = MainLoader.get(ConfigName.kbd_notes, dict())
-        return KbdMidiPort(tmp)
+        kbd_map = JsonDictLoader("etc/count/kbd_notes.json").get(ConfigName.kbd_notes, dict())
+        return KbdMidiPort(kbd_map)
     else:
         tmp = MainLoader.get(ConfigName.midi_port_names, [])
         return wait_for_midi_ports(tmp)

@@ -39,18 +39,6 @@ class JsonDictLoader:
     def get_filename(self):
         return self.__filename
 
-    def get_dict(self, merge_name: str) -> Dict[str, Dict]:
-        """get Dict[str, Dict] where merge name is the default sub dictionary.
-       Every sub dictionary is merged with the default"""
-        merge_dict = self.get(merge_name, dict())
-        result = dict()
-        for map_id in [x for x in self.get_keys() if x not in [merge_name, ConfigName.comment]]:
-            config = self.get(map_id, None)
-            assert type(config) == dict, f"Must be dictionary {map_id}"
-            assert len(config) > 0, f"Dictionary must be non empty {map_id}"
-            result[map_id] = dict(merge_dict, **config)
-        return result
-
 
 class MainLoader:
     """class will only static methods to keep app's main configs"""
@@ -74,10 +62,6 @@ class MainLoader:
         MainLoader.__dl.add_if_missing(ConfigName.drum_swing, 0.75)
         MainLoader.__dl.add_if_missing(ConfigName.drum_volume, 0.3)
         MainLoader.__dl.add_if_missing(ConfigName.drum_type, "pop")
-        irig_notes = {"60": 80, "62": 90, "64": 100, "65": 110, "12": 40, "13": 50}
-        MainLoader.__dl.add_if_missing(ConfigName.mapped_notes, irig_notes)
-        kbd_notes = {'1': 60, '2': 62, '3': 64, '4': 65, 'q': 12, 'w': 13}
-        MainLoader.__dl.add_if_missing(ConfigName.kbd_notes, kbd_notes)
 
 
 if __name__ == "__main__":

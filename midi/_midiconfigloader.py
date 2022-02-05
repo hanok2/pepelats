@@ -21,8 +21,16 @@ class MidiConfigLoader:
         item = ff.get_item_now()
         assert always_true(f"Loading midi config {item} from {file}")
         loader = JsonDictLoader(file)
-        dic = loader.get_dict(ConfigName.default_config)
-        __map.update(dic)
+        default = loader.get(ConfigName.default_config, dict())
+        result = dict()
+
+        for key in [x for x in loader.get_keys() if x not in [ConfigName.default_config, ConfigName.comment]]:
+            value = loader.get(key, None)
+            assert type(value) == dict, f"Must be dictionary {key}"
+            assert len(value) > 0, f"Dictionary must be non empty {key}"
+            result[key] = dict(default, **value)
+
+        __map.update(result)
 
     @classmethod
     def get(cls, key: str) -> Union[list[str, float], str]:

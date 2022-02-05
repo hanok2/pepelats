@@ -6,7 +6,7 @@ import mido
 
 
 class KbdMidiPort:
-    """Using keyboard keys 1,2,3,4,q,w instead of MIDI notes"""
+    """Using keyboard keys instead of MIDI notes"""
 
     def __init__(self, kbd_notes: Dict[str, int]):
         self.__kbd_notes = kbd_notes

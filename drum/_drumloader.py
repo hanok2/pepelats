@@ -66,17 +66,19 @@ class DrumLoader:
         path = os.path.join(dir_name, file_name + ".json")
         loader = JsonDictLoader(path)
         default = loader.get(ConfigName.default_pattern, dict())
-        excl_lst = [ConfigName.comment, ConfigName.default_pattern]
-        for x, pattern in [(x, loader.get(x, None)) for x in loader.get_keys() if x not in excl_lst]:
-            pattern = dict(default, **pattern)
-            pattern["name"] = x
-            pattern["___"] = ""
-            steps: int = pattern["steps"]
-            accents: str = pattern["accents"]
-            pattern["accents"] = extend_list(accents, steps)
-            for sound_name in [x for x in cls.__sounds if x in pattern]:
-                pattern[sound_name] = extend_list(pattern[sound_name], steps)
-            storage.append(pattern)
+        for key in [x for x in loader.get_keys() if x not in [ConfigName.comment, ConfigName.default_pattern]]:
+            value = loader.get(key, None)
+            assert type(value) == dict, f"Must be dictionary {key}"
+            assert len(value) > 0, f"Dictionary must be non empty {key}"
+            value = dict(default, **value)
+            value["name"] = key
+            value["___"] = ""
+            steps: int = value["steps"]
+            accents: str = value["accents"]
+            value["accents"] = extend_list(accents, steps)
+            for sound_name in [x for x in cls.__sounds if x in value]:
+                value[sound_name] = extend_list(value[sound_name], steps)
+            storage.append(value)
 
     @classmethod
     def prepare_all(cls, length: int) -> None:
