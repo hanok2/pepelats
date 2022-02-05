@@ -13,7 +13,7 @@ configured in a text files (e.g. [etc/midi/playing.json](etc/midi/playing.json))
 There are 4 buttons on this pedal named A,B,C,D and 2 extra buttons attached to MIDI expression inputs named E1 and E2.
 
 MIDI over Bluetooth needs manual pairing. You may use wired USB MIDI controller as well or even typing keyboard. Check
-file start.sh for details of using keyboard.
+file [start.sh](start.sh) and [kbd_notes.json](etc/count/kbd_notes.json) for details.
 
 ## Looper modes - "direct" and "indirect"
 
@@ -67,12 +67,12 @@ Using this method one button may send 6-7 times more MIDI notes.
 
 Multi tapping mode needs a delay to decide if there will be next tap. Because of this it should not be used for time
 critical commands e.g. start recording/playing. But for other commands like changing looper settings it is
-indispensable.
+indispensable. Midi count is configured in [mapped_notes.json](etc/count/mapped_notes.json)
 
 ### Notes about installation of LCD:
 
 Connect LCD and run scripts coming with it. Without X11 on Raspberry Pi OS Lite there may be some errors reported but
-after reboot you should see boot messages and command prompt. Check files in etc/lcd/ directory: config.txt, cmdline.txt
-This is configuration working for my version of LCD screen.
+after reboot you should see boot messages and command prompt. Check files [config.txt](etc/lcd/config.txt)
+and [cmdline.txt](etc/lcd/cmdline.txt) - working for my version of LCD screen.
 
 
