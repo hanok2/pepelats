@@ -36,7 +36,9 @@ class ScreenUpdater(MsgProcessor):
             self.__description = description
         msg_delay = time.time() - time_stamp
         self.__idx = idx + round(msg_delay * SD_RATE)
-        print_at(2, 1, ' ' * (SCR_ROWS - 1) * SCR_COLS)
+        if not __debug__:
+            # clear all if NOT debug
+            print_at(2, 1, ' ' * (SCR_ROWS - 1) * SCR_COLS)
         print_at(2, 1, info)
         print(self.__description)
 
