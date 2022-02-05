@@ -5,7 +5,7 @@ from typing import Dict
 import mido
 
 from midi._midicontroller import MidiController
-from utils import always_true, ConfigName, MainLoader
+from utils import always_true, ConfigName, JsonDictLoader
 
 
 def is_midi_ctrl_chg(msg):
@@ -85,7 +85,8 @@ class MidiConverter(MidiController):
 
     def __init__(self, s_conn: Connection, in_port):
         super().__init__(s_conn, in_port)
-        self.__mapped_notes: Dict[str, int] = MainLoader.get(ConfigName.mapped_notes, dict())
+        self.__mapped_notes: Dict[str, int] = \
+            JsonDictLoader("etc/count/mapped_notes.json").get(ConfigName.mapped_notes, None)
 
         self.__on_count: int = 0
         self.__off_count: int = 0
