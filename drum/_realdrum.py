@@ -16,26 +16,6 @@ class Intensity(IntEnum):
     END = 4
 
 
-def get_ending_intensity(i: Intensity) -> Intensity:
-    """Intensity for drum ending"""
-    if i == Intensity.SILENT:
-        return Intensity.LVL1
-    if i == Intensity.LVL1:
-        return Intensity.LVL1 + Intensity.END
-    elif i == Intensity.LVL2:
-        return Intensity.LVL2 + Intensity.END
-    else:
-        return Intensity.LVL2
-
-
-def get_next_intensity(i: Intensity) -> Intensity:
-    """Cycle over intensities 1,2 only"""
-    if i >= Intensity.LVL2:
-        return Intensity.LVL1
-    else:
-        return Intensity.LVL2
-
-
 class RealDrum:
     """Drums generated from patterns with random changes"""
 
@@ -44,7 +24,7 @@ class RealDrum:
     def __init__(self):
         self.__change_after_samples: int = MAX_32_INT
         self.__sample_counter: int = 0
-        self.__intensity: Intensity = Intensity.SILENT
+        self.__i: Intensity = Intensity.SILENT
         self.__level2: int = 0
         self.__level1: int = 0
         self.__end: int = 0
@@ -52,6 +32,33 @@ class RealDrum:
         self.__file_finder = FileFinder("etc/drums", False, "", MainLoader.get(ConfigName.drum_type, "pop"))
         tmp = self.__file_finder.get_path_now()
         DrumLoader.load(tmp)
+
+    def elevated_intensity(self) -> None:
+        """Intensity for drum break"""
+        if self.__i == Intensity.SILENT:
+            self.__i = Intensity.LVL1
+        elif self.__i == Intensity.LVL1:
+            self.__i = Intensity.LVL1 + Intensity.END
+        elif self.__i == Intensity.LVL2:
+            self.__i = Intensity.LVL2 + Intensity.END
+        else:
+            self.__i = Intensity.LVL2
+
+    def normal_intensity(self) -> None:
+        """Intensity for drum break"""
+        if self.__i & Intensity.LVL1:
+            self.__i = Intensity.LVL1
+        elif self.__i & Intensity.LVL2:
+            self.__i = Intensity.LVL2
+        else:
+            self.__i = Intensity.LVL1
+
+    def next_intensity(self) -> None:
+        """Cycle over intensities 1,2 only"""
+        if self.__i >= Intensity.LVL2:
+            self.__i = Intensity.LVL1
+        else:
+            self.__i = Intensity.LVL2
 
     @staticmethod
     def clear() -> None:
@@ -80,7 +87,7 @@ class RealDrum:
         self.__file_finder.iterate_dir(go_fwd)
 
     def silence_drum(self) -> None:
-        self.__intensity = Intensity.SILENT
+        self.__i = Intensity.SILENT
 
     def load_drum_type(self) -> None:
         if self.__file_finder.now == self.__file_finder.next:
@@ -98,10 +105,10 @@ class RealDrum:
         """ Non blocking drum init in another thread, length is one bar long and holds drum pattern """
         Timer(0.2, DrumLoader.prepare_all, [length]).start()
         self.__change_after_samples = RealDrum.change_after_bars * length
-        self.__intensity = Intensity.LVL2
+        self.__i = Intensity.LVL2
 
     def play_samples(self, out_data: np.ndarray, idx: int) -> None:
-        if self.__intensity == Intensity.SILENT or self.is_empty:
+        if self.__i == Intensity.SILENT or self.is_empty:
             return
 
         self.__sample_counter += len(out_data)
@@ -111,35 +118,28 @@ class RealDrum:
             self.__level1 = random.randrange(len(DrumLoader.level1))
             self.__end = random.randrange(len(DrumLoader.ends))
 
-        if self.__intensity & Intensity.LVL1 == Intensity.LVL1:
+        if self.__i & Intensity.LVL1:
             play_sound_buff(DrumLoader.level1[self.__level1], out_data, idx)
-        if self.__intensity & Intensity.LVL2 == Intensity.LVL2:
+        if self.__i & Intensity.LVL2:
             play_sound_buff(DrumLoader.level2[self.__level2], out_data, idx)
-        if self.__intensity & Intensity.END == Intensity.END:
+        if self.__i & Intensity.END:
             play_sound_buff(DrumLoader.ends[self.__end], out_data, idx)
 
     def play_ending_later(self, part_len: int, idx: int) -> None:
-        bars = 0.5 if random.random() < 0.5 else 1
+        bars = 0.5
         samples = self.length * bars
         idx %= part_len
         start_at = (part_len - idx) - samples
         if start_at > 0:
             Timer(start_at / SD_RATE, self.play_ending_now, (bars,)).start()
 
-    def __set_intensity(self, i: Intensity) -> None:
-        self.__intensity = i
-
     def play_ending_now(self, bars: float = 0) -> None:
-        saved, elevated = self.__intensity, get_ending_intensity(self.__intensity)
         self.__sample_counter = 0
-        self.__intensity = elevated
+        self.elevated_intensity()
         if bars <= 0:
             bars = 0.5 if random.random() < 0.5 else 1
         samples = self.length * bars
-        Timer(samples / SD_RATE, self.__set_intensity, (saved,)).start()
-
-    def set_next_intensity(self) -> None:
-        self.__intensity = get_next_intensity(self.__intensity)
+        Timer(samples / SD_RATE, self.normal_intensity).start()
 
     @staticmethod
     def change_drum_volume(change_by) -> None:
@@ -164,4 +164,4 @@ class RealDrum:
             DrumLoader.prepare_all(DrumLoader.length)
 
     def __str__(self):
-        return f"RealDrum length: {self.length} empty: {self.is_empty} intensity: {self.__intensity}"
+        return f"RealDrum length: {self.length} empty: {self.is_empty} intensity: {self.__i}"
