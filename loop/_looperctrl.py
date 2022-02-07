@@ -43,7 +43,7 @@ class LooperCtrl(OneLoopCtrl, Song, MsgProcessor):
         self.drum.clear()
 
     def _stop_song(self):
-        self.is_rec = False
+        self._is_rec = False
         self._go_play.clear()
         self.stop_now()
 
@@ -62,7 +62,7 @@ class LooperCtrl(OneLoopCtrl, Song, MsgProcessor):
         part = self.get_item_now()
         loop = part.get_item_now()
         loop.is_silent = False
-        if not self.is_rec:
+        if not self._is_rec:
             if part.now == 0:
                 part.items.append(LoopWithDrum(self))
                 part.now = part.next = part.items_len - 1
@@ -72,7 +72,7 @@ class LooperCtrl(OneLoopCtrl, Song, MsgProcessor):
             if loop.is_empty:
                 loop.trim_buffer(self.idx, self.get_item_now().length)
 
-        self.is_rec = not self.is_rec
+        self._is_rec = not self._is_rec
 
     def _play_part_id(self, part_id: int) -> None:
         self.next = part_id
@@ -82,9 +82,9 @@ class LooperCtrl(OneLoopCtrl, Song, MsgProcessor):
             return
 
         if self.next == self.now:
-            if not self.is_rec:
+            if not self._is_rec:
                 self.get_item_now().save_undo()
-            self.is_rec = not self.is_rec
+            self._is_rec = not self._is_rec
         self.__stop_quantized()
 
     def __playback(self) -> None:
@@ -98,7 +98,7 @@ class LooperCtrl(OneLoopCtrl, Song, MsgProcessor):
             self.get_stop_event().clear()
             self._stop_never()
             self.idx = 0
-            self.is_rec = part.is_empty
+            self._is_rec = part.is_empty
             self._redraw(ConfigName.show_all_parts, "")
             part.play_buffer()
 

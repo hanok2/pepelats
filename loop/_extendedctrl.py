@@ -124,7 +124,7 @@ class ExtendedCtrl(LooperCtrl):
     #  ============ All song parts view and related commands
 
     def _clear_part_id(self, part_id: int) -> None:
-        self.is_rec = False
+        self._is_rec = False
         part = self.items[part_id]
         self.next = self.now
         self._stop_never()
@@ -132,23 +132,23 @@ class ExtendedCtrl(LooperCtrl):
             self.items[part_id] = SongPart(self)
 
     def _undo_part(self) -> None:
-        self.is_rec = False
+        self._is_rec = False
         self.get_item_now().undo()
 
     def _redo_part(self) -> None:
-        self.is_rec = False
+        self._is_rec = False
         self.get_item_now().redo()
 
     #  ================= One song part view and related commands
 
     def _change_loop(self, *params) -> None:
-        if self.is_rec:
+        if self._is_rec:
             return
         part = self.get_item_now()
         if params[0] == "add":
             part.items.append(LoopWithDrum(self, part.length))
             part.now = part.next = part.items_len - 1
-            self.is_rec = True
+            self._is_rec = True
         elif params[0] == "change":
             new_id = part.now + params[1]
             new_id %= part.items_len
@@ -169,12 +169,12 @@ class ExtendedCtrl(LooperCtrl):
             part.now = part.next = part.items_len - 1
 
     def _undo_loop(self):
-        self.is_rec = False
+        self._is_rec = False
         loop = self.get_item_now().get_item_now()
         loop.undo()
 
     def _redo_loop(self):
-        self.is_rec = False
+        self._is_rec = False
         loop = self.get_item_now().get_item_now()
         loop.redo()
 

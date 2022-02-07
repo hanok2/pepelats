@@ -12,7 +12,7 @@ from utils import SD_RATE
 
 def record_with_drum(samples: int, control: OneLoopCtrl) -> Tuple[int, int]:
     control.get_stop_event().clear()
-    control.is_rec = True
+    control._is_rec = True
     loop = LoopWithDrum(control)
     Timer(samples / SD_RATE, control.stop_now).start()
     loop.play_buffer()

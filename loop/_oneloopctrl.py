@@ -10,11 +10,15 @@ class OneLoopCtrl:
     max_late_samples = 5000
 
     def __init__(self):
-        self.is_rec: bool = False
+        self._is_rec: bool = False
         self.__drum = RealDrum()
         self.idx: int = 0
         self.__stop_len: int = MAX_32_INT
         self.__stop_event: Event = Event()
+
+    @property
+    def is_rec(self) -> bool:
+        return self._is_rec
 
     @property
     def drum(self) -> RealDrum:
