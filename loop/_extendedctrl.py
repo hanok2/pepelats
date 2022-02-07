@@ -21,8 +21,12 @@ class ExtendedCtrl(LooperCtrl):
 
     def _redraw(self, update_method: str, description: str) -> None:
         """used by children to _redraw itself on screen"""
-        method = getattr(self, update_method)
-        info = method()
+        if update_method:
+            method = getattr(self, update_method)
+            info = method()
+        else:
+            info = ""
+
         part = self.get_item_now()
         self.__scr_conn.send(
             [ConfigName.redraw, info, description, part.length, self.idx, time.time(), self._go_play.is_set()])
