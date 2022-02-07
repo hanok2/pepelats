@@ -42,15 +42,18 @@ class LooperCtrl(OneLoopCtrl, Song, MsgProcessor):
         self.items.clear()
         self.drum.clear()
 
-    def _stop_song(self):
+    def _stop_song(self, wait: int = 0):
         self._is_rec = False
         self._go_play.clear()
-        self.stop_now()
+        if not wait:
+            self.stop_now()
+        else:
+            self._stop_at_bound(self.get_item_now().length)
 
     def _pause_and_clear(self) -> None:
         if self._go_play.is_set():
             self._go_play.clear()
-            self._stop_at_bound(self.get_item_now().length)
+
         else:
             self._prepare_song()
 

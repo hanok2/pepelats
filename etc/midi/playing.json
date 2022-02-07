@@ -5,8 +5,8 @@
     "42": ["_change_drum_intensity"],
     "43": ["_silence_drum"],
     "47": ["_change_map", "params_0"],
-    "53": ["_fade_and_stop", 8],
-    "56": ["_pause_and_clear"],
+    "53": ["_fade_and_stop", 0],
+    "56": ["_change_map", "actions_0"],
     "57": ["_change_map", "settings_0"]
   },
   "playing_0": {

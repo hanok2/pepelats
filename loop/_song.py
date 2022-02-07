@@ -22,7 +22,7 @@ class Song(CollectionOwner[SongPart]):
         pass
 
     @abstractmethod
-    def _stop_song(self) -> None:
+    def _stop_song(self, wait: int = 0) -> None:
         pass
 
     @abstractmethod
