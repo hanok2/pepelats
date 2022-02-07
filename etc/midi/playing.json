@@ -25,7 +25,7 @@
     "116": ["_clear_part_id", 3]
   },
   "playing_1": {
-    "description": "One part: A-record B/C-scroll D-silence Dx2-reverse DH-delete",
+    "description": "One part: A-rec. B/C-scroll D-silence Dx2-reverse DH-del.",
     "update_method": "_show_one_part",
     "46": ["_change_map", "playing_0"],
     "51": ["_undo_loop"],

@@ -9,14 +9,7 @@
     "57": ["_change_map", "settings_0"]
   },
   "actions_0": {
-    "description": "Stop: A-instant B-part_end, DH-clear_all",
-    "update_method": "",
-    "60": ["_stop_song", 0],
-    "62": ["_stop_song", 1],
-    "65": ["_prepare_song"]
-  },
-  "actions_1": {
-    "description": "???????",
+    "description": "Actions: A-stop_now B-stop_end, DH-clear_all",
     "update_method": "",
     "60": ["_stop_song", 0],
     "62": ["_stop_song", 1],
