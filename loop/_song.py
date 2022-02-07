@@ -3,12 +3,11 @@ import pickle
 from abc import abstractmethod
 from datetime import datetime
 
-from loop._oneloopctrl import OneLoopCtrl
 from loop._songpart import SongPart
 from utils import CollectionOwner, FileFinder
 
 
-class Song(CollectionOwner[SongPart], OneLoopCtrl):
+class Song(CollectionOwner[SongPart]):
     """Song keeps SongParts as CollectionOwner, can save and load from file"""
 
     def __init__(self):

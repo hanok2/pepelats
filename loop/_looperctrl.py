@@ -7,7 +7,7 @@ from loop._song import Song
 from utils import MsgProcessor, ConfigName
 
 
-class LooperCtrl(Song, MsgProcessor):
+class LooperCtrl(OneLoopCtrl, Song, MsgProcessor):
     """added playback thread, message thread via MsgListener.
      Song is collection of song parts with related methods"""
 
