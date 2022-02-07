@@ -39,6 +39,11 @@ class SongPart(CollectionOwner[LoopWithDrum], LoopWithDrum):
         for loop in [x for x in self.items if not x.is_silent and not x.is_empty]:
             WrapBuffer.play_samples(loop, out_data, idx)
 
+    @property
+    def is_empty(self) -> bool:
+        loop = self.get_item_now()
+        return super(LoopWithDrum, loop).is_empty
+
     def record_samples(self, in_data: np.ndarray, idx: int) -> None:
         loop = self.get_item_now()
         WrapBuffer.record_samples(loop, in_data, idx)
