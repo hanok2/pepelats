@@ -18,6 +18,9 @@ class LooperCtrl(OneLoopCtrl, Song, MsgProcessor):
         Song.__init__(self)
         self.__t1: Thread = Thread(target=self.__playback, name="playback_thread", daemon=True)
 
+    def get_control(self) -> OneLoopCtrl:
+        return self
+
     def start(self):
         self.__t1.start()
         self._redraw(ConfigName.show_all_parts, "")

@@ -3,8 +3,10 @@ import unittest
 from threading import Timer
 from typing import Tuple
 
-from loop import LoopWithDrum
-from loop import OneLoopCtrl
+# noinspection PyProtectedMember
+from loop._loopsimple import LoopWithDrum
+# noinspection PyProtectedMember
+from loop._oneloopctrl import OneLoopCtrl
 from utils import SD_RATE
 
 

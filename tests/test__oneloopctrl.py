@@ -1,7 +1,8 @@
 import unittest
 from unittest import TestCase
 
-from loop import OneLoopCtrl
+# noinspection PyProtectedMember
+from loop._oneloopctrl import OneLoopCtrl
 from utils import MAX_32_INT
 
 

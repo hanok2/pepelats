@@ -3,6 +3,7 @@ import pickle
 from abc import abstractmethod
 from datetime import datetime
 
+from loop._oneloopctrl import OneLoopCtrl
 from loop._songpart import SongPart
 from utils import CollectionOwner, FileFinder
 
@@ -32,6 +33,10 @@ class Song(CollectionOwner[SongPart]):
     def get_drum_length(self) -> int:
         pass
 
+    @abstractmethod
+    def get_control(self) -> OneLoopCtrl:
+        pass
+
     def _load_song(self) -> None:
         self._stop_song()
         self._file_finder.now = self._file_finder.next
@@ -40,8 +45,9 @@ class Song(CollectionOwner[SongPart]):
             length, load_list = pickle.load(f)
 
         self.items.clear()
+        ctrl = self.get_control()
         for k in load_list:
-            self.items.append(k if k is not None else SongPart(self))
+            self.items.append(k if k is not None else SongPart(ctrl))
         for a in self.items:
             for b in a.items:
                 b._ctrl = self
