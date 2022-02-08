@@ -7,7 +7,7 @@ import numpy as np
 import soundfile as sf
 
 from utils import JsonDictLoader, make_zero_buffer, record_sound_buff, MainLoader, SD_TYPE
-from utils import MAX_SD, always_true, ConfigName
+from utils import SD_MAX, always_true, ConfigName
 
 
 def extend_list(some_list: Union[List, str], new_len: int) -> List:
@@ -56,7 +56,7 @@ class DrumLoader:
             assert sound.shape[1] == 2
             v2: float = np.max(sound)
             cls.max_volume = max(cls.max_volume, v1 * v2)
-            assert cls.max_volume < MAX_SD
+            assert cls.max_volume < SD_MAX
             #  assert always_true(f"Loaded sound {file_name}")
             cls.__sounds[name] = (sound, v1)
 

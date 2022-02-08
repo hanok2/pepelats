@@ -3,6 +3,8 @@ import sys
 import time
 from multiprocessing.connection import Connection
 
+import sounddevice as sd
+
 from loop._looperctrl import LooperCtrl
 from loop._loopsimple import LoopWithDrum
 from loop._songpart import SongPart
@@ -71,7 +73,16 @@ class ExtendedCtrl(LooperCtrl):
     def _silence_drum(self) -> None:
         self.drum.silence_drum()
 
+    @staticmethod
+    def _transpose(self, change_by: int) -> None:
+        """One semitone pitch shift, speed changes too"""
+        sd.default.samplerate *= (1.05946309436 ** change_by)
+
     # ================ show methods
+
+    @staticmethod
+    def _show_sample_rate(self) -> str:
+        return str(sd.default.samplerate)
 
     def _show_song(self) -> str:
         ff = self._file_finder

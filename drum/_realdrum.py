@@ -5,7 +5,7 @@ from threading import Timer
 import numpy as np
 
 from drum._drumloader import DrumLoader
-from utils import MAX_32_INT, ConfigName, MainLoader, FileFinder, MAX_SD
+from utils import MAX_32_INT, ConfigName, MainLoader, FileFinder, SD_MAX
 from utils import SD_RATE, play_sound_buff
 
 
@@ -74,7 +74,7 @@ class RealDrum:
 
     @property
     def volume(self) -> float:
-        return MainLoader.get(ConfigName.drum_volume, 1) * DrumLoader.max_volume / MAX_SD
+        return MainLoader.get(ConfigName.drum_volume, 1) * DrumLoader.max_volume / SD_MAX
 
     @property
     def swing(self) -> float:
@@ -145,9 +145,9 @@ class RealDrum:
     def change_drum_volume(change_by) -> None:
         factor = 1.41 if change_by >= 0 else (1 / 1.41)
         v = MainLoader.get(ConfigName.drum_volume, 1) * factor
-        if v * DrumLoader.max_volume >= MAX_SD:
+        if v * DrumLoader.max_volume >= SD_MAX:
             return
-        if v * DrumLoader.max_volume < 0.01 * MAX_SD:
+        if v * DrumLoader.max_volume < 0.01 * SD_MAX:
             return
         MainLoader.set(ConfigName.drum_volume, v)
         MainLoader.save()

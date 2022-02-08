@@ -4,7 +4,7 @@ from typing import List, Any
 import numpy as np
 
 from utils import record_sound_buff, play_sound_buff, SD_RATE, ScrColors
-from utils import sound_test, make_zero_buffer, MAX_LEN, MAX_SD
+from utils import sound_test, make_zero_buffer, MAX_LEN, SD_MAX
 
 
 class WrapBuffer:
@@ -26,7 +26,7 @@ class WrapBuffer:
             return 0
         if self.__volume < 0:
             tmp = np.max(self.__buff)
-            self.__volume = round(float(tmp) / MAX_SD, 3)
+            self.__volume = round(float(tmp) / SD_MAX, 3)
         return self.__volume
 
     @property

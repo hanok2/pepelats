@@ -29,8 +29,6 @@ if OUT_CHANNELS != 2:
 if IN_CHANNELS not in [1, 2]:
     raise RuntimeError(f"ALSA audio device must have 1 or 2 input channels, got {IN_CHANNELS}")
 
-SD_TYPE: str = 'int16'
-
 
 def calc_slices(buff_len: int, data_len: int, idx: int) -> Tuple[slice, Union[slice, None]]:
     assert 0 < data_len <= buff_len, f"Must be: 0 < data_len {data_len} <= buff_len {buff_len}"
@@ -72,11 +70,12 @@ def play_sound_buff(buff: np.ndarray, np_data: np.ndarray, idx: int) -> None:
 SD_RATE: int = int(os.getenv("SD_RATE", "48000"))
 sd.default.samplerate = SD_RATE
 sd.default.channels = IN_CHANNELS, OUT_CHANNELS
+SD_TYPE: str = 'int16'
 sd.default.dtype = [SD_TYPE, SD_TYPE]
 sd.default.latency = ('low', 'low')
 MAX_LEN: int = int(os.getenv("MAX_LEN_SECONDS", "60")) * SD_RATE
 MAX_32_INT = 2 ** 32 - 1
-MAX_SD: int = np.iinfo(SD_TYPE).max
+SD_MAX: int = np.iinfo(SD_TYPE).max
 
 
 def make_zero_buffer(buff_len: int) -> np.ndarray:
