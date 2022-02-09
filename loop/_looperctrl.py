@@ -102,7 +102,7 @@ class LooperCtrl(OneLoopCtrl, Song, MsgProcessor):
             self._stop_never()
             self.idx = 0
             self._is_rec = part.is_empty
-            # self._redraw(ConfigName.show_all_parts, "")
+            self._redraw(ConfigName.show_all_parts, "")
             part.play_buffer()
 
     def __stop_quantized(self) -> None:

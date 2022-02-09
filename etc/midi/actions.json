@@ -17,7 +17,7 @@
   },
   "actions_1": {
     "description": "Transpose: A-lower B-higher",
-    "update_method": "_show_sample_rate",
+    "update_method": "_show_transpose",
     "60": ["_transpose", -1],
     "62": ["_transpose", 1]
   }

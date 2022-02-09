@@ -1,6 +1,7 @@
 import os
 import sys
 import time
+from math import log
 from multiprocessing.connection import Connection
 
 import sounddevice as sd
@@ -9,7 +10,7 @@ from loop._looperctrl import LooperCtrl
 from loop._loopsimple import LoopWithDrum
 from loop._songpart import SongPart
 from mixer import Mixer
-from utils import IN_CHANNELS, OUT_CHANNELS, val_str, ConfigName, SCR_COLS, CURRENT_VERSION, STATE_COLS
+from utils import IN_CHANNELS, OUT_CHANNELS, val_str, ConfigName, SCR_COLS, CURRENT_VERSION, STATE_COLS, SD_RATE
 from utils import run_os_cmd
 
 
@@ -75,14 +76,17 @@ class ExtendedCtrl(LooperCtrl):
 
     def _transpose(self, change_by: int) -> None:
         """One semitone pitch shift, speed changes too"""
+        self._stop_song()
         sd.default.samplerate *= (1.05946309436 ** change_by)
-        self.stop_now()
 
     # ================ show methods
 
     @staticmethod
-    def _show_sample_rate() -> str:
-        return f" Sample rate: {sd.default.samplerate}"
+    def _show_transpose() -> str:
+        delta = sd.default.samplerate / SD_RATE
+        shift = log(delta) / log(1.05946309436)
+        shift = round(shift)
+        return f" Semitones: {shift}"
 
     def _show_song(self) -> str:
         ff = self._file_finder
