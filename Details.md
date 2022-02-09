@@ -72,7 +72,7 @@ indispensable. Midi count is configured in [mapped_notes.json](etc/count/mapped_
 ### Notes about installation of LCD:
 
 Connect LCD and run scripts coming with it. Without X11 on Raspberry Pi OS Lite there may be some errors reported but
-after reboot you should see boot messages and command prompt. Check files [config.txt](etc/lcd/config.txt)
-and [cmdline.txt](etc/lcd/cmdline.txt) - working for my version of LCD screen.
+after reboot you should see boot messages and command prompt. Check files [config.txt](etc/txt/config.txt)
+and [cmdline.txt](etc/txt/cmdline.txt) - working for my version of LCD screen.
 
 

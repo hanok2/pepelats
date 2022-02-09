@@ -120,4 +120,13 @@ def make_changing_sound() -> np.ndarray:
 
 
 if __name__ == "__main__":
-    pass
+    def main():
+        result1 = sd.query_devices()
+        result2 = sd.query_hostapis()
+
+        print(result1)
+        print("=========================")
+        print(result2)
+
+
+    main()
