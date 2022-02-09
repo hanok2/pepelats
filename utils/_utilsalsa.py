@@ -140,5 +140,11 @@ if __name__ == "__main__":
         print(result1)
         print("=========================")
 
+        result1 = sd.query_devices(sd.default.device)
+
+        print("=========================")
+        print(result1)
+        print("=========================")
+
 
     main()
