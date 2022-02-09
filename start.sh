@@ -9,8 +9,10 @@
 # --debug - show debug info, works for python version only
 
 # Looper parameters passed via env.
-#export MAX_LEN_SECONDS=60
-#export SD_RATE=48000
+export MAX_LEN_SECONDS=60
+export SD_RATE=48000
+export SD_IN="USB Audio"
+export SD_OUT="USB Audio"
 
 # Part of MIDI controller name that you want to connect; To check use: aconnect -l
 PEDAL_NAME="BlueBoard"
@@ -66,13 +68,11 @@ if [[ -z "$USE_KBD" && -f mimap5 && -f rules.txt ]]; then
   fi
 fi
 
-
 python_command="$USE_KBD python3 $CODE_OPTIMIZE ./start.py $CONVERTER $*"
-
 
 # keep past 100 lines only
 touch ./log.log
-tail -n 100 ./log.log > ./tmp.log
+tail -n 100 ./log.log >./tmp.log
 mv -f ./tmp.log ./log.log
 
 #export PYTHONPATH="$THIS_DIR:$THIS_DIR/tests"

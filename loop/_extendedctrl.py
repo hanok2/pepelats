@@ -75,9 +75,8 @@ class ExtendedCtrl(LooperCtrl):
         self.drum.silence_drum()
 
     def _transpose(self, change_by: int) -> None:
-        """One semitone pitch shift, speed changes too"""
-        self._stop_song()
-        sd.default.samplerate *= (1.05946309436 ** change_by)
+        """One semitone pitch shift, not implemented"""
+        pass
 
     # ================ show methods
 
