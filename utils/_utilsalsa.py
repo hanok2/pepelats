@@ -7,12 +7,17 @@ import sounddevice as sd
 
 def set_alsa_default_device() -> None:
     """Look for USB Audio device and set it default"""
-    all_dev = sd.query_devices()
-    for k, dev in enumerate(all_dev):
-        dev_name = dev["name"].upper()
-        if "USB AUDIO" in dev_name:
-            sd.default.device = k
-            return
+    sd_in = os.getenv("SD_IN", "USB Audio")
+    sd_out = os.getenv("SD_OUT", "USB Audio")
+    sd_in_out = sd.default.device
+    in_found = out_found = False
+    for k, dev in enumerate(sd.query_devices()):
+        if not in_found and sd_in in dev["name"]:
+            sd_in_out[0] = k
+        if not out_found and sd_out in dev["name"]:
+            sd_in_out[1] = k
+
+    sd.default.device = sd_in_out
 
 
 def get_max_channels() -> Tuple[int, int]:
