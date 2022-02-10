@@ -4,17 +4,17 @@
     - 1 tap + hold: clear part
 - Buttons E1 and E2 affect the whole looper or currently playing song part:
     - Button E1
-        - 1 tap: play drum ending then change pattern and fill
-        - 2 taps: mute drum
-        - 3 taps: stop at the end of current song part
-        - 1 tap + hold: switch between "one part" / "all parts" view
-        - 2 taps + hold: switch between "all parts" / "looper parameters" view
+        - 1 tap: play drum break then change pattern
+        - 2 taps: change drum intensity low/high
+        - 3 taps: silence drum
+        - 1 tap + hold: switch to "one part" view
+        - 2 taps + hold: switch to "looper parameters" view
     - Button E2
         - 1 tap: undo current part/loop, if available
         - 2 taps: redo current part/loop if available
-        - 3 taps: volume decay and stop after 8 seconds
-        - 1 tap + hold: stop all, if stopped clear all
-        - 2 taps + hold: switch between "all parts" / "looper settings" view
+        - 3 taps: stop
+        - 1 tap + hold: switch to "actions" view
+        - 2 taps + hold: switch to "looper settings" view
 ## Configuration for "one part" view
 - Buttons A,B,C,D manipulate loops of one song parts.
     - Button A - 1 tap: selected loop: play, record if empty, overdub if playing
