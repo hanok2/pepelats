@@ -31,8 +31,9 @@ class ExtendedCtrl(LooperCtrl):
             info = ""
 
         part = self.get_item_now()
-        self.__scr_conn.send(
-            [ConfigName.redraw, info, description, part.length, self.idx, time.time(), self._go_play.is_set()])
+        self.__scr_conn.send([ConfigName.redraw,
+                              info, description, part.length, self.idx, time.time(),
+                              self._go_play.is_set(), self.get_stop_event().is_set()])
 
     def _prepare_song(self) -> None:
         super()._prepare_song()

@@ -2,7 +2,7 @@ import time
 from threading import Thread
 from typing import Tuple
 
-from utils import SCR_COLS, print_at, MsgProcessor, SD_RATE, SCR_ROWS, IS_LINUX
+from utils import SCR_COLS, print_at, MsgProcessor, SD_RATE, SCR_ROWS, IS_LINUX, ScrColors
 
 UPDATES_PER_LOOP = 8
 
@@ -17,6 +17,7 @@ class ScreenUpdater(MsgProcessor):
     def __init__(self):
         super().__init__()
         self.__is_play: bool = False
+        self.__is_stop: bool = True
         self.__delta: float = 1000000
         self.__sleep_time: float = 1
         self.__loop_len: int = 1000000
@@ -27,8 +28,10 @@ class ScreenUpdater(MsgProcessor):
     def start(self):
         self.__t1.start()
 
-    def _redraw(self, info: str, description: str, loop_len: int, idx: int, time_stamp: float, is_play: bool) -> None:
+    def _redraw(self, info: str, description: str, loop_len: int, idx: int,
+                time_stamp: float, is_play: bool, is_stop: bool) -> None:
         self.__is_play = is_play
+        self.__is_stop = is_stop
         self.__delta = loop_len / UPDATES_PER_LOOP
         self.__sleep_time = self.__delta / SD_RATE
         self.__loop_len = loop_len
@@ -45,12 +48,16 @@ class ScreenUpdater(MsgProcessor):
     def __progress_update(self):
         while IS_LINUX:
             time.sleep(self.__sleep_time)
-            if self.__is_play:
+            if not self.__is_stop:
                 self.__idx += self.__delta
                 self.__idx %= self.__loop_len
                 pos = round(self.__idx / self.__loop_len * SCR_COLS)
                 # cursor position starts at 1,1
-                print_at(1, 1, "■" * pos + " " * (SCR_COLS - pos))
+                s1 = "■" * pos + " " * (SCR_COLS - pos)
+                if not self.__is_play:
+                    print_at(1, 1, ScrColors['blink'] + s1 + ScrColors['end'])
+                else:
+                    print_at(1, 1, s1)
 
 
 if __name__ == "__main__":
