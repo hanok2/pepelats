@@ -31,7 +31,6 @@ ScrColors: Dict[str, str] = {
     'y': '\x1b[1;33m',
     'v': '\x1b[1;34m',
     'w': '\x1b[37m',
-    'blink': '\033[33;5m',
     'end': '\x1b[0m',
     'reverse': '\x1b[7m'
 }

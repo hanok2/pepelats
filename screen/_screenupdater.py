@@ -55,7 +55,7 @@ class ScreenUpdater(MsgProcessor):
                 # cursor position starts at 1,1
                 s1 = "■" * pos + " " * (SCR_COLS - pos)
                 if not self.__is_play:
-                    print_at(1, 1, ScrColors['blink'] + s1 + ScrColors['end'])
+                    print_at(1, 1, ScrColors['y'] + s1 + ScrColors['end'])
                 else:
                     print_at(1, 1, s1)
 
