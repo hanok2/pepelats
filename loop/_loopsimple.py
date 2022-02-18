@@ -75,7 +75,7 @@ class LoopWithDrum(LoopSimple):
 
     def play_samples(self, out_data: np.ndarray, idx: int) -> None:
         self._ctrl.drum.play_samples(out_data, idx)
-        if not self.is_silent and not self.is_empty:
+        if not self.is_silent:
             super().play_samples(out_data, idx)
 
     def trim_buffer(self, idx, trim_len: int) -> None:

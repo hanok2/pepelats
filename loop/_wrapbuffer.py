@@ -54,6 +54,8 @@ class WrapBuffer:
         record_sound_buff(self.__buff, in_data, idx)
 
     def play_samples(self, out_data: np.ndarray, idx: int) -> None:
+        if self.__is_empty:
+            return
         tmp = self.__buff[::-1] if self.is_reverse else self.__buff
         play_sound_buff(tmp, out_data, idx)
 
