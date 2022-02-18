@@ -151,7 +151,7 @@ class RealDrum:
 
     def next_intensity(self) -> None:
         """Cycle over intensities 1,2 only"""
-        self.__i = 1 if self.__i == 2 else 1
+        self.__i = 1 if self.__i == 2 else 2
 
     def __str__(self):
         return f"RealDrum length: {self.length} empty: {self.is_empty} intensity: {self.__i}"
