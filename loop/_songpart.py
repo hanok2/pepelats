@@ -37,7 +37,7 @@ class SongPart(CollectionOwner[LoopWithDrum], LoopWithDrum):
     def play_samples(self, out_data: np.ndarray, idx: int) -> None:
         self._ctrl.drum.play_samples(out_data, idx)
         for loop in self.items:
-            if not self.is_silent:
+            if not loop.is_silent:
                 WrapBuffer.play_samples(loop, out_data, idx)
 
     @property
