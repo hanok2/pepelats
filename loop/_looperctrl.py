@@ -53,7 +53,6 @@ class LooperCtrl(OneLoopCtrl, Song, MsgProcessor):
     def _pause_and_clear(self) -> None:
         if self._go_play.is_set():
             self._go_play.clear()
-
         else:
             self._prepare_song()
 

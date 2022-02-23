@@ -13,7 +13,7 @@ logging.basicConfig(level=logging.ERROR, filename=Path(ROOT_DIR, 'log.log'), fil
 
 IS_LINUX = os.name == "posix"
 START_TIME = time.time()
-CURRENT_VERSION = 'Jan 2022'
+CURRENT_VERSION = 'Feb 2022'
 
 # noinspection PyBroadException
 try:

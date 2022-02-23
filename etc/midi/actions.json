@@ -13,7 +13,7 @@
     "update_method": "",
     "60": ["_stop_song", 0],
     "62": ["_stop_song", 1],
-    "64": ["_fade_and_stop", 7],
+    "64": ["_fade_and_stop", 11],
     "65": ["_prepare_song"]
   },
   "actions_1": {
