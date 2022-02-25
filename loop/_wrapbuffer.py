@@ -1,10 +1,9 @@
-from math import log
 from typing import List, Any
 
 import numpy as np
 
-from utils import record_sound_buff, play_sound_buff, SD_RATE, ScrColors
-from utils import sound_test, make_zero_buffer, MAX_LEN, SD_MAX
+from utils import record_sound_buff, play_sound_buff, SD_RATE, ScrColors, SD_MAX
+from utils import sound_test, make_zero_buffer, MAX_LEN
 
 
 class WrapBuffer:
@@ -19,15 +18,6 @@ class WrapBuffer:
         self.__start: int = -1
         self.__undo: List[Any] = []
         self.__redo: List[Any] = []
-
-    @property
-    def volume(self) -> float:
-        if self.__is_empty:
-            return 0
-        if self.__volume < 0:
-            tmp = np.max(self.__buff)
-            self.__volume = round(float(tmp) / SD_MAX, 3)
-        return self.__volume
 
     @property
     def length(self) -> int:
@@ -94,7 +84,6 @@ class WrapBuffer:
         assert trim_len <= 0 or self.__length % trim_len == 0, \
             f"self.__length {self.__length} trim_len {trim_len} self.__start {self.__start} idx {idx}"
         self.__is_empty = False
-        self.__volume = -1
 
     def redo(self) -> None:
         if len(self.__redo) > 0:
@@ -119,12 +108,17 @@ class WrapBuffer:
             self.__undo.append(self.__buff.copy())
 
     def info_str(self, cols: int) -> str:
-        """Colored string to show volume and length. Volume uses color inversion"""
-        volume_db = 20 * log(max(self.volume, 0.001), 10)  # from -60 decibel to 0 decibel
-        volume_db += 60  # from 0 to +60
-        assert 0 <= volume_db <= 60, "Must be: 0 <= volume_db <= 60"
-        len_pos: int = 0 if self.is_empty else round(self.length / MAX_LEN * cols)
-        vol_pos: int = round(volume_db / 60 * cols)
+        """Colored string to show volume and length"""
+        if self.__is_empty:
+            vol_pos = 0
+            len_pos = 0
+        else:
+            if self.__volume < 0:
+                self.__volume = np.max(self.__buff) / SD_MAX
+
+            len_pos = round(self.length / MAX_LEN * cols)
+            vol_pos = round(self.__volume * cols)
+
         tmp = '—' * vol_pos + '╬' + '-' * (cols - vol_pos - 1)
         if len_pos > 0:
             tmp = ScrColors['reverse'] + tmp[:len_pos] + ScrColors['end'] + tmp[len_pos:]
@@ -132,7 +126,7 @@ class WrapBuffer:
 
     def __str__(self):
         return f"{self.__class__.__name__} sec={self.length / SD_RATE:.2f} " \
-               f"vol={self.volume:.2f} undo={len(self.__undo)} redo={len(self.__redo)}"
+               f"vol={self.__volume:.2f} undo={len(self.__undo)} redo={len(self.__redo)}"
 
 
 if __name__ == "__main__":
