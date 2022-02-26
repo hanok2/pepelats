@@ -71,6 +71,7 @@ class RealDrum:
             return
         self.__file_finder.now = self.__file_finder.next
         tmp = self.__file_finder.get_path_now()
+        self.__level1 = self.__level2 = self.__break = 0
         DrumLoader.load(tmp)
         MainLoader.set(ConfigName.drum_type, self.__file_finder.get_item_now())
         MainLoader.save()
