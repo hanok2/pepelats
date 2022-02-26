@@ -47,10 +47,10 @@ def print_at(row, col, text=""):
 
 
 def val_str(val: float, min_val: float, max_val: float, cols: int) -> str:
-    fill_str: str = "■"
     assert min_val <= val <= max_val, f"Must be: {min_val} <= {val} <= {max_val}"
-    val = round(cols * (val - min_val) / (max_val - min_val))
-    return fill_str * val
+    assert min_val < max_val, f"Must be: {min_val} < {max_val}"
+    val = int(cols * (val - min_val) / (max_val - min_val))
+    return ('-' * val + '╬').ljust(cols, '-')
 
 
 def run_os_cmd(cmd_list: list[str]) -> int:
