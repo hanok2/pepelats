@@ -49,8 +49,9 @@ def print_at(row, col, text=""):
 def val_str(val: float, min_val: float, max_val: float, cols: int) -> str:
     assert min_val <= val <= max_val, f"Must be: {min_val} <= {val} <= {max_val}"
     assert min_val < max_val, f"Must be: {min_val} < {max_val}"
-    val = int(cols * (val - min_val) / (max_val - min_val))
-    return ('-' * val + '╬').ljust(cols, '-')
+    k = round(cols * (val - min_val) / (max_val - min_val))
+    k = max(k, cols - 1)
+    return ('-' * k + '╬').ljust(cols, '-')
 
 
 def run_os_cmd(cmd_list: list[str]) -> int:

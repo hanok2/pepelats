@@ -105,14 +105,16 @@ class ExtendedCtrl(LooperCtrl):
         return tmp + f"  Song: {self._song_name}"
 
     def _show_drum_param(self) -> str:
-        tmp = "vol:".ljust(STATE_COLS) + val_str(self.drum.volume, 0, 1, SCR_COLS - STATE_COLS) + "\n"
-        tmp += "swing:".ljust(STATE_COLS) + val_str(self.drum.swing, 0.5, 0.75, SCR_COLS - STATE_COLS)
+        cols = SCR_COLS - STATE_COLS
+        tmp = "vol:".ljust(STATE_COLS) + val_str(self.drum.volume, 0, 1, cols) + "\n"
+        tmp += "swing:".ljust(STATE_COLS) + val_str(self.drum.swing, 0.5, 0.75, cols)
         return tmp
 
     @staticmethod
     def _show_mixer_volume() -> str:
-        tmp = "out:".ljust(STATE_COLS) + val_str(ExtendedCtrl.__mixer.getvolume(out=True), 0, 100, SCR_COLS) + "\n"
-        tmp += "in:".ljust(STATE_COLS) + val_str(ExtendedCtrl.__mixer.getvolume(out=False), 0, 100, SCR_COLS) + "\n"
+        cols = SCR_COLS - STATE_COLS
+        tmp = "out:".ljust(STATE_COLS) + val_str(ExtendedCtrl.__mixer.getvolume(out=True), 0, 100, cols) + "\n"
+        tmp += "in:".ljust(STATE_COLS) + val_str(ExtendedCtrl.__mixer.getvolume(out=False), 0, 100, cols) + "\n"
         tmp += f"  ALSA channels in={IN_CHANNELS} out={OUT_CHANNELS}"
         return tmp
 
