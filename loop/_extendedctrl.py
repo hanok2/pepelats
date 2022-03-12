@@ -100,8 +100,9 @@ class ExtendedCtrl(LooperCtrl):
 
     def _show_all_parts(self) -> str:
         tmp = ""
-        for part in self.items:
-            tmp += part.state_str(self) + LoopWithDrum.info_str(part, SCR_COLS - STATE_COLS) + "\n"
+        for k, part in enumerate(self.items):
+            tmp += part.state_str(k == self.now, k == self.next) + \
+                   LoopWithDrum.info_str(part, SCR_COLS - STATE_COLS) + "\n"
         return tmp[:-1]
 
     def _show_drum_param(self) -> str:
