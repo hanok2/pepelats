@@ -144,11 +144,14 @@ class RealDrum:
     def change_swing(change_by) -> None:
         v = MainLoader.get(ConfigName.drum_swing, 0.625)
         v += (0.25 / 4) if change_by >= 0 else (-0.25 / 4)
-        v = max(min(v, 0.75), 0.5)
-        if v != MainLoader.get(ConfigName.drum_swing, 0.625):
-            MainLoader.set(ConfigName.drum_swing, v)
-            MainLoader.save()
-            DrumLoader.prepare_all(DrumLoader.length)
+        if v > 0.80:
+            v = 0.50
+        elif v < 0.45:
+            v = 0.75
+
+        MainLoader.set(ConfigName.drum_swing, v)
+        MainLoader.save()
+        DrumLoader.prepare_all(DrumLoader.length)
 
     def next_intensity(self) -> None:
         """Cycle over intensities 1,2 only"""
