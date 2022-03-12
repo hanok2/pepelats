@@ -102,7 +102,7 @@ class ExtendedCtrl(LooperCtrl):
         tmp = ""
         for part in self.items:
             tmp += part.state_str(self) + LoopWithDrum.info_str(part, SCR_COLS - STATE_COLS) + "\n"
-        return tmp
+        return tmp[:-1]
 
     def _show_drum_param(self) -> str:
         cols = SCR_COLS - STATE_COLS
