@@ -77,6 +77,7 @@ class CollectionOwner(Generic[T]):
 
     def __init__(self):
         self.items: List[T] = []
+        self.backup: List[T] = []
         self.now: int = 0
         self.next: int = 0
 

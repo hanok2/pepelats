@@ -1,5 +1,3 @@
-from typing import List
-
 import numpy as np
 
 from loop._loopsimple import LoopWithDrum
@@ -18,7 +16,6 @@ class SongPart(CollectionOwner[LoopWithDrum], Player):
         Player.__init__(self, ctrl)
         CollectionOwner.__init__(self)
         self.__length = length
-        self.__redo: List[LoopWithDrum] = []
         self.items.append(LoopWithDrum(ctrl))
 
     def trim_buffer(self, idx: int, trim_len: int) -> None:
@@ -31,21 +28,6 @@ class SongPart(CollectionOwner[LoopWithDrum], Player):
     @property
     def length(self) -> int:
         return self.get_item_now().length
-
-    def save_undo(self) -> None:
-        if not self.is_empty:
-            self.__redo.clear()
-            self.items.append(LoopWithDrum(self._ctrl, self.length))
-            self.now = self.next = self.items_len - 1
-
-    def undo(self) -> None:
-        if self.items_len > 1:
-            self.now = self.next = 0
-            self.__redo.append(self.items.pop())
-
-    def redo(self) -> None:
-        if len(self.__redo) > 0:
-            self.items.append(self.__redo.pop())
 
     def play_samples(self, out_data: np.ndarray, idx: int) -> None:
         self._ctrl.drum.play_samples(out_data, idx)
@@ -73,7 +55,7 @@ class SongPart(CollectionOwner[LoopWithDrum], Player):
         return tmp + ScrColors['end']
 
     def __str__(self):
-        return f"{self.__class__.__name__} items={self.items_len} redo={len(self.__redo)}"
+        return f"{self.__class__.__name__} items={self.items_len} redo={len(self.backup)}"
 
 
 if __name__ == "__main__":

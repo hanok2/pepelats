@@ -160,11 +160,17 @@ class ExtendedCtrl(LooperCtrl):
 
     def _undo_part(self) -> None:
         self._is_rec = False
-        self.get_item_now().undo()
+        part = self.get_item_now()
+        part.now = part.next = 0
+        part.backup.append(part.items.pop())
+        if part.items_len == 0:
+            part.items.append(LoopWithDrum(self))
 
     def _redo_part(self) -> None:
         self._is_rec = False
-        self.get_item_now().redo()
+        part = self.get_item_now()
+        if len(part.backup) > 0:
+            part.items.append(part.backup.pop())
 
     #  ================= One song part view and related commands
 
