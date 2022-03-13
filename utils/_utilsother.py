@@ -13,7 +13,7 @@ logging.basicConfig(level=logging.ERROR, filename=Path(ROOT_DIR, 'log.log'), fil
 
 IS_LINUX = os.name == "posix"
 START_TIME = time.time()
-CURRENT_VERSION = 'Feb 2022'
+CURRENT_VERSION = 'Mar 2022'
 
 # noinspection PyBroadException
 try:
@@ -64,11 +64,15 @@ class MsgProcessor:
     def process_message(self, msg: List[Any]) -> None:
         assert type(msg) == list and len(msg) > 0
         method_name, *params = msg
-        try:
+        if __debug__:
             method = getattr(self, method_name)
             method(*params)
-        except Exception as err:
-            logging.error(f"{self.__class__.__name__} message {msg} error {err}")
+        else:
+            try:
+                method = getattr(self, method_name)
+                method(*params)
+            except Exception as err:
+                logging.error(f"{self.__class__.__name__} message {msg} error {err}")
 
 
 class CollectionOwner(Generic[T]):
@@ -114,6 +118,9 @@ class FileFinder(CollectionOwner[str]):
 
     def get_path_now(self) -> Path:
         return Path(self.__dir_name, self.get_item_now())
+
+    def get_end_with(self) -> str:
+        return self.__end_with
 
     def iterate_dir(self, go_fwd: bool) -> None:
         self.next += 1 if go_fwd else -1

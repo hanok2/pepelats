@@ -13,6 +13,8 @@ from mixer import Mixer
 from utils import IN_CHANNELS, OUT_CHANNELS, val_str, ConfigName, SCR_COLS, CURRENT_VERSION, STATE_COLS, SD_RATE
 from utils import run_os_cmd
 
+USE_COLS = SCR_COLS - STATE_COLS
+
 
 class ExtendedCtrl(LooperCtrl):
     """added more commands"""
@@ -97,30 +99,31 @@ class ExtendedCtrl(LooperCtrl):
 
     def _show_one_part(self) -> str:
         tmp = ""
+
         part = self.get_item_now()
         for k, loop in enumerate(part.items):
-            tmp += loop.state_str(k == part.now, k == part.next) + \
-                   loop.info_str(SCR_COLS - STATE_COLS) + "\n"
+            tmp += loop.state_str(k == part.now, k == part.next)
+            tmp += loop.info_str(USE_COLS)
+            tmp += "\n"
         return tmp[:-1]
 
     def _show_all_parts(self) -> str:
         tmp = ""
         for k, part in enumerate(self.items):
-            tmp += part.state_str(k == self.now, k == self.next) + \
-                   part.items[0].info_str(SCR_COLS - STATE_COLS) + "\n"
+            tmp += part.state_str(k == self.now, k == self.next)
+            tmp += part.items[0].info_str(USE_COLS) if part.items_len else "-" * USE_COLS
+            tmp += "\n"
         return tmp[:-1]
 
     def _show_drum_param(self) -> str:
-        cols = SCR_COLS - STATE_COLS
-        tmp = "vol:".ljust(STATE_COLS) + val_str(self.drum.volume, 0, 1, cols) + "\n"
-        tmp += "swing:".ljust(STATE_COLS) + val_str(self.drum.swing, 0.5, 0.75, cols)
+        tmp = "vol:".ljust(STATE_COLS) + val_str(self.drum.volume, 0, 1, USE_COLS) + "\n"
+        tmp += "swing:".ljust(STATE_COLS) + val_str(self.drum.swing, 0.5, 0.75, USE_COLS)
         return tmp
 
     @staticmethod
     def _show_mixer_volume() -> str:
-        cols = SCR_COLS - STATE_COLS
-        tmp = "out:".ljust(STATE_COLS) + val_str(ExtendedCtrl.__mixer.getvolume(out=True), 0, 100, cols) + "\n"
-        tmp += "in:".ljust(STATE_COLS) + val_str(ExtendedCtrl.__mixer.getvolume(out=False), 0, 100, cols) + "\n"
+        tmp = "out:".ljust(STATE_COLS) + val_str(ExtendedCtrl.__mixer.getvolume(out=True), 0, 100, USE_COLS) + "\n"
+        tmp += "in:".ljust(STATE_COLS) + val_str(ExtendedCtrl.__mixer.getvolume(out=False), 0, 100, USE_COLS) + "\n"
         tmp += f"  ALSA channels in={IN_CHANNELS} out={OUT_CHANNELS}"
         return tmp
 
@@ -161,16 +164,22 @@ class ExtendedCtrl(LooperCtrl):
     def _undo_part(self) -> None:
         self._is_rec = False
         part = self.get_item_now()
-        part.now = part.next = 0
-        part.backup.append(part.items.pop())
-        if part.items_len == 0:
-            part.items.append(LoopWithDrum(self))
+        loop = part.items[part.items_len - 1]
+        if not loop.is_empty:
+            part.now = part.next = 0
+            part.items.remove(loop)
+            part.backup.append(loop)
+            if part.items_len == 0:  # do not leave items empty
+                part.items.append(LoopWithDrum(self))
 
     def _redo_part(self) -> None:
         self._is_rec = False
         part = self.get_item_now()
         if len(part.backup) > 0:
             part.items.append(part.backup.pop())
+            loop = part.items[0]
+            if part.items_len > 0 and loop.is_empty:
+                part.items.remove(loop)
 
     #  ================= One song part view and related commands
 
@@ -203,13 +212,21 @@ class ExtendedCtrl(LooperCtrl):
 
     def _undo_loop(self):
         self._is_rec = False
-        loop = self.get_item_now().get_item_now()
-        loop.undo()
+        part = self.get_item_now()
+        if part.now == 0:
+            self._undo_part()
+        else:
+            loop = part.get_item_now()
+            loop.undo()
 
     def _redo_loop(self):
         self._is_rec = False
-        loop = self.get_item_now().get_item_now()
-        loop.redo()
+        part = self.get_item_now()
+        if part.now == 0:
+            self._redo_part()
+        else:
+            loop = part.get_item_now()
+            loop.redo()
 
 
 if __name__ == "__main__":

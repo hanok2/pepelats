@@ -4,19 +4,20 @@ from loop._loopsimple import LoopWithDrum
 from loop._oneloopctrl import OneLoopCtrl
 from loop._player import Player
 from loop._wrapbuffer import WrapBuffer
-from utils import CollectionOwner, ScrColors
-from utils import MAX_LEN
+from utils import CollectionOwner, ScrColors, MAX_LEN
 from utils import STATE_COLS
 
 
 class SongPart(CollectionOwner[LoopWithDrum], Player):
     """Loop that includes many more simple loops to play together"""
 
-    def __init__(self, ctrl: OneLoopCtrl, length: int = MAX_LEN):
+    def __init__(self, ctrl: OneLoopCtrl):
         Player.__init__(self, ctrl)
         CollectionOwner.__init__(self)
-        self.__length = length
         self.items.append(LoopWithDrum(ctrl))
+
+    def get_init_len(self):
+        return self.items[0].length
 
     def trim_buffer(self, idx: int, trim_len: int) -> None:
         self.get_item_now().trim_buffer(idx, trim_len)
@@ -27,7 +28,10 @@ class SongPart(CollectionOwner[LoopWithDrum], Player):
 
     @property
     def length(self) -> int:
-        return self.get_item_now().length
+        if self.items_len == 0:
+            return MAX_LEN
+        else:
+            return self.get_item_now().length
 
     def play_samples(self, out_data: np.ndarray, idx: int) -> None:
         self._ctrl.drum.play_samples(out_data, idx)

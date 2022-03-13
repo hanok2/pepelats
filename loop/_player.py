@@ -58,3 +58,9 @@ class Player:
     @abstractmethod
     def state_str(self, is_now: bool, is_next: bool) -> str:
         pass
+
+    def __getstate__(self):
+        state = self.__dict__.copy()
+        # Don't pickle some fields
+        del state["_ctrl"]
+        return state
