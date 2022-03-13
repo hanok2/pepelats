@@ -4,20 +4,33 @@ import numpy as np
 
 from loop._loopsimple import LoopWithDrum
 from loop._oneloopctrl import OneLoopCtrl
+from loop._player import Player
 from loop._wrapbuffer import WrapBuffer
 from utils import CollectionOwner, ScrColors
 from utils import MAX_LEN
 from utils import STATE_COLS
 
 
-class SongPart(CollectionOwner[LoopWithDrum], LoopWithDrum):
+class SongPart(CollectionOwner[LoopWithDrum], Player):
     """Loop that includes many more simple loops to play together"""
 
     def __init__(self, ctrl: OneLoopCtrl, length: int = MAX_LEN):
-        LoopWithDrum.__init__(self, ctrl, length)
+        Player.__init__(self, ctrl)
         CollectionOwner.__init__(self)
+        self.__length = length
         self.__redo: List[LoopWithDrum] = []
-        self.items.append(self)
+        self.items.append(LoopWithDrum(ctrl))
+
+    def trim_buffer(self, idx: int, trim_len: int) -> None:
+        self.get_item_now().trim_buffer(idx, trim_len)
+
+    @property
+    def is_empty(self) -> bool:
+        return self.get_item_now().is_empty
+
+    @property
+    def length(self) -> int:
+        return self.get_item_now().length
 
     def save_undo(self) -> None:
         if not self.is_empty:
@@ -40,22 +53,9 @@ class SongPart(CollectionOwner[LoopWithDrum], LoopWithDrum):
             if not loop.is_silent:
                 WrapBuffer.play_samples(loop, out_data, idx)
 
-    @property
-    def is_empty(self) -> bool:
-        loop = self.get_item_now()
-        return super(LoopWithDrum, loop).is_empty
-
     def record_samples(self, in_data: np.ndarray, idx: int) -> None:
         loop = self.get_item_now()
         WrapBuffer.record_samples(loop, in_data, idx)
-
-    def info_str(self, cols: int) -> str:
-        """colored string to show volume and length"""
-        tmp = ""
-        for k, loop in enumerate(self.items):
-            state_str = LoopWithDrum.state_str(loop, k == self.now, k == self.next)
-            tmp += state_str + LoopWithDrum.info_str(loop, cols) + "\n"
-        return tmp[:-1]
 
     def state_str(self, is_now: bool, is_next: bool) -> str:
         """colored string to show state of loops"""
@@ -73,7 +73,7 @@ class SongPart(CollectionOwner[LoopWithDrum], LoopWithDrum):
         return tmp + ScrColors['end']
 
     def __str__(self):
-        return f"{LoopWithDrum.__str__(self)} items={self.items_len} redo={len(self.__redo)}"
+        return f"{self.__class__.__name__} items={self.items_len} redo={len(self.__redo)}"
 
 
 if __name__ == "__main__":

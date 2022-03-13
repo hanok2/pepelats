@@ -1,48 +1,24 @@
 import numpy as np
-import sounddevice as sd
 
 from loop._oneloopctrl import OneLoopCtrl
+from loop._player import Player
 from loop._wrapbuffer import WrapBuffer
-from utils import MAX_LEN, always_true, STATE_COLS, ScrColors
+from utils import MAX_LEN, STATE_COLS, ScrColors
 
 
-class LoopSimple(WrapBuffer):
+class LoopSimple(WrapBuffer, Player):
     """Loop that may play and record itself. Has Control object to stop and keep loop index"""
 
     def __init__(self, ctrl: OneLoopCtrl, length: int = MAX_LEN):
-        super().__init__(length)
+        WrapBuffer.__init__(self, length)
+        Player.__init__(self, ctrl)
         self.is_silent: bool = False
-        self._ctrl: OneLoopCtrl = ctrl
 
     def trim_buffer(self, idx, trim_len: int) -> None:
         """trim buffer to the length at stop event = idx. Overridden by child class"""
         WrapBuffer.trim_buffer(self, idx, -1)
 
-    def play_buffer(self):
-        assert always_true(f"======Start {self}")
-
-        # noinspection PyUnusedLocal
-        def callback(in_data, out_data, frame_count, time_info, status):
-
-            out_data[:] = 0
-            assert len(out_data) == len(in_data) == frame_count
-            self.play_samples(out_data, self._ctrl.idx)
-
-            if self._ctrl.is_rec:
-                self.record_samples(in_data, self._ctrl.idx)
-
-            self._ctrl.idx += frame_count
-            if self._ctrl.idx >= self._ctrl.get_stop_len():
-                self._ctrl.stop_now()
-
-        with sd.Stream(callback=callback):
-            self._ctrl.get_stop_event().wait()
-
-        if self.is_empty:
-            self.trim_buffer(self._ctrl.idx, -1)
-
-        assert always_true(f"======Stop {self}")
-
+    # noinspection PyUnusedLocal
     def state_str(self, is_now: bool, is_next: bool) -> str:
         """colored string to show state of loops"""
         if self.is_silent:

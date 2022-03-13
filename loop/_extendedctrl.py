@@ -96,13 +96,18 @@ class ExtendedCtrl(LooperCtrl):
         return self.drum.show_drum_type()
 
     def _show_one_part(self) -> str:
-        return self.get_item_now().info_str(SCR_COLS - STATE_COLS)
+        tmp = ""
+        part = self.get_item_now()
+        for k, loop in enumerate(part.items):
+            tmp += loop.state_str(k == part.now, k == part.next) + \
+                   loop.info_str(SCR_COLS - STATE_COLS) + "\n"
+        return tmp[:-1]
 
     def _show_all_parts(self) -> str:
         tmp = ""
         for k, part in enumerate(self.items):
             tmp += part.state_str(k == self.now, k == self.next) + \
-                   LoopWithDrum.info_str(part, SCR_COLS - STATE_COLS) + "\n"
+                   part.items[0].info_str(SCR_COLS - STATE_COLS) + "\n"
         return tmp[:-1]
 
     def _show_drum_param(self) -> str:
