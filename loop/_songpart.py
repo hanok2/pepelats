@@ -5,7 +5,7 @@ import numpy as np
 from loop._loopsimple import LoopWithDrum
 from loop._oneloopctrl import OneLoopCtrl
 from loop._wrapbuffer import WrapBuffer
-from utils import CollectionOwner, SCR_COLS, ScrColors
+from utils import CollectionOwner, ScrColors
 from utils import MAX_LEN
 from utils import STATE_COLS
 
@@ -52,22 +52,20 @@ class SongPart(CollectionOwner[LoopWithDrum], LoopWithDrum):
     def info_str(self, cols: int) -> str:
         """colored string to show volume and length"""
         tmp = ""
-        for loop in self.items:
-            assert self._ctrl.drum.is_empty or loop.is_empty or loop.length % self._ctrl.drum.length == 0, \
-                f"loop: {loop.length} drum: {self._ctrl.drum.length}"
-            state_str = LoopWithDrum.state_str(loop, self)
-            tmp += state_str + LoopWithDrum.info_str(loop, SCR_COLS - STATE_COLS) + "\n"
+        for k, loop in enumerate(self.items):
+            state_str = LoopWithDrum.state_str(loop, k == self.now, k == self.next)
+            tmp += state_str + LoopWithDrum.info_str(loop, cols) + "\n"
         return tmp[:-1]
 
-    def state_str(self, owner: CollectionOwner) -> str:
+    def state_str(self, is_now: bool, is_next: bool) -> str:
         """colored string to show state of loops"""
         count = min(self.items_len, STATE_COLS)
         full_str = '■' * count
         full_str = full_str.rjust(STATE_COLS, '░')
-        part_id = owner.items.index(self)
-        if part_id == owner.now:
+
+        if is_now:
             tmp = (ScrColors['r'] if self._ctrl.is_rec else ScrColors['g']) + full_str
-        elif part_id == owner.next:
+        elif is_next:
             tmp = (ScrColors['y'] if self._ctrl.is_stop_len_set() else ScrColors['v']) + full_str
         else:
             tmp = ScrColors['w'] + full_str

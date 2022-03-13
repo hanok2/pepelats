@@ -3,7 +3,7 @@ import sounddevice as sd
 
 from loop._oneloopctrl import OneLoopCtrl
 from loop._wrapbuffer import WrapBuffer
-from utils import MAX_LEN, CollectionOwner, always_true, STATE_COLS, ScrColors
+from utils import MAX_LEN, always_true, STATE_COLS, ScrColors
 
 
 class LoopSimple(WrapBuffer):
@@ -43,7 +43,7 @@ class LoopSimple(WrapBuffer):
 
         assert always_true(f"======Stop {self}")
 
-    def state_str(self, owner: CollectionOwner) -> str:
+    def state_str(self, is_now: bool, is_next: bool) -> str:
         """colored string to show state of loops"""
         if self.is_silent:
             full_str = '='
@@ -54,8 +54,8 @@ class LoopSimple(WrapBuffer):
 
         count = min(STATE_COLS, self.get_undo_len() + 1)
         full_str = (full_str * count).rjust(STATE_COLS, '░')
-        part_id = owner.items.index(self)
-        if part_id == owner.now:
+
+        if is_now:
             tmp = (ScrColors['r'] if self._ctrl.is_rec else ScrColors['g']) + full_str
         else:
             tmp = ScrColors['w'] + full_str
