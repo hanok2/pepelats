@@ -64,6 +64,7 @@ class MsgProcessor:
     def process_message(self, msg: List[Any]) -> None:
         assert type(msg) == list and len(msg) > 0
         method_name, *params = msg
+        # noinspection PyUnreachableCode
         if __debug__:
             method = getattr(self, method_name)
             method(*params)
