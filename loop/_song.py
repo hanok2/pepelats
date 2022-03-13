@@ -5,7 +5,7 @@ from datetime import datetime
 
 from loop._oneloopctrl import OneLoopCtrl
 from loop._songpart import SongPart
-from utils import CollectionOwner, FileFinder
+from utils import CollectionOwner, FileFinder, always_true
 
 
 class Song(CollectionOwner[SongPart]):
@@ -13,7 +13,7 @@ class Song(CollectionOwner[SongPart]):
 
     def __init__(self):
         super().__init__()
-        self._file_finder: FileFinder = FileFinder("save_song", True, "", "")
+        self._file_finder: FileFinder = FileFinder("save_song", True, ".sng", "")
         self._song_name = ""
         self.__set_song_name()
 
@@ -26,7 +26,8 @@ class Song(CollectionOwner[SongPart]):
         pass
 
     @abstractmethod
-    def set_drum_length(self, length: int) -> None:
+    def \
+            set_drum_length(self, length: int) -> None:
         pass
 
     @abstractmethod
@@ -41,6 +42,7 @@ class Song(CollectionOwner[SongPart]):
         self._stop_song()
         self._file_finder.now = self._file_finder.next
         full_name = self._file_finder.get_path_now()
+        assert always_true(f"Loading song file {full_name}")
         with open(full_name, 'rb') as f:
             length, load_list = pickle.load(f)
 
@@ -48,9 +50,11 @@ class Song(CollectionOwner[SongPart]):
         ctrl = self.get_control()
         for k in load_list:
             self.items.append(k if k is not None else SongPart(ctrl))
+
         for a in self.items:
+            a._ctrl = ctrl
             for b in a.items:
-                b._ctrl = self
+                b._ctrl = ctrl
 
         self.set_drum_length(length)
 
@@ -62,6 +66,7 @@ class Song(CollectionOwner[SongPart]):
             save_list.append(k if not k.is_empty else None)
 
         full_name = self._file_finder.get_path_now()
+        assert always_true(f"Saving song file {full_name}")
         with open(full_name, 'wb') as f:
             pickle.dump((length, save_list), f)
 
@@ -81,9 +86,8 @@ class Song(CollectionOwner[SongPart]):
         self._file_finder.now = self._file_finder.next = 0
         self.__set_song_name()
 
-    @staticmethod
-    def __new_song_name() -> str:
-        return datetime.now().strftime("%m-%d-%H-%M-%S")
+    def __new_song_name(self) -> str:
+        return datetime.now().strftime("%m-%d-%H-%M-%S") + self._file_finder.get_end_with()
 
     def __set_song_name(self):
         """create empty song or select latest saved song"""
