@@ -4,7 +4,7 @@ from loop._loopsimple import LoopWithDrum
 from loop._oneloopctrl import OneLoopCtrl
 from loop._player import Player
 from loop._wrapbuffer import WrapBuffer
-from utils import CollectionOwner, ScrColors, MAX_LEN
+from utils import CollectionOwner, ScrColors
 from utils import STATE_COLS
 
 
@@ -28,10 +28,7 @@ class SongPart(CollectionOwner[LoopWithDrum], Player):
 
     @property
     def length(self) -> int:
-        if self.items_len == 0:
-            return MAX_LEN
-        else:
-            return self.get_item_now().length
+        return self.items[0].length
 
     def play_samples(self, out_data: np.ndarray, idx: int) -> None:
         self._ctrl.drum.play_samples(out_data, idx)
