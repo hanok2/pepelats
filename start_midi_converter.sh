@@ -18,8 +18,6 @@ if [[ -f rules.txt ]]; then
   fi
 fi
 
-fi
-
 if [[ -f mimap5 ]]; then
   wget -O mimap5 https://github.com/slmnv5/mimap5/blob/master/mimap5?raw=true
   if [[ ! -f mimap5 ]]; then
