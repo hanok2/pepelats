@@ -1,21 +1,16 @@
 #!/bin/bash
 # This script starts pepelats audio looper
-# There are two version - python file and executable file
-# for python version use: $HOME/pepelats/start.sh
-# for executable version use: $HOME/pepelatsexe/start.sh
-
-# Two optional parameters:
+# Optional parameters:
 # --use_typing - use typing keys 1,2,3,4,q,w to send MIDI notes 60,62,64,65,12,13
-# --debug - show debug info, works for python version only
+# --debug - show debug info
 
 # Looper parameters passed via env.
 export MAX_LEN_SECONDS=60
 export SD_RATE=48000
+# Part of sound device name that you want to connect; To check use: aplay -l
 export SD_IN="USB Audio"
 export SD_OUT="USB Audio"
 
-# Part of MIDI controller name that you want to connect; To check use: aconnect -l
-PEDAL_NAME="BlueBoard"
 
 cd_to_script_dir() {
   THIS_DIR=$(dirname "$0")
@@ -51,24 +46,7 @@ for var in "$@"; do
   fi
 done
 
-CONVERTER=""
-# who will convert MIDI messages - pepelats or binary app. mimap5
-if [[ -z "$USE_KBD" && -f mimap5 && -f rules.txt ]]; then
-  killall -9 mimap5
-  aconnect -x
-  ./mimap5 -r rules.txt -n note_counter &
-  time sleep 2
-  PEDAL_OUT=$(aconnect -l | awk -v nm="$PEDAL_NAME" '$0 ~ nm {print $2;exit}')
-  CLIENT_IN=$(aconnect -l | awk '/note_counter/ {print $2;exit}')
-  if aconnect -e "${PEDAL_OUT}0" "${CLIENT_IN}0"; then
-    CONVERTER="--no_converter"
-    echo "========= using external converter for MIDI - mimap5 =============="
-  else
-    CONVERTER=""
-  fi
-fi
-
-python_command="$USE_KBD python3 $CODE_OPTIMIZE ./start.py $CONVERTER $*"
+python_command="$USE_KBD python3 $CODE_OPTIMIZE ./start.py  $*"
 
 # keep past 100 lines only
 touch ./log.log

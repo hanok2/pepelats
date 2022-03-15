@@ -41,7 +41,7 @@ if __name__ == "__main__":
     p_upd.start()
     p_ctrl.start()
 
-    if ConfigName.no_converter in sys.argv:
+    if ConfigName.counter_name in in_midi_port.name:
         """use external MIDI note counter converter module"""
         midi_control = MidiController(s_ctrl, in_midi_port)
     else:
