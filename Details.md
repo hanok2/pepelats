@@ -6,7 +6,7 @@ patterns change every three bars. Drum ends (aka breaks) play when loop is switc
 accompaniment is created after the first loop is recorded and BPM is defined by length of this loop. Drum volume and
 swing may be changed on the run. Swing settings is same as Linn's LM-1, from 0.5 to 0.75.
 
-## MIDI foot controller to use
+## MIDI foot controller
 
 Any MIDI controller sending notes may be configured to work with the looper. MIDI commands and looper actions are
 configured in a text files (e.g. [etc/midi/playing.json](etc/midi/playing.json)) for Irig Blueboard foot controller.
@@ -27,26 +27,35 @@ configuration takes more button pushes and is much slower.
 
 Direct configuration is used to for song parts and indirect for loops in a part, exact details are below.
 
-## Looper views - "all parts", "one part", "looper settings", "looper parameters"
+## Looper views - All parts, One part, Settings, Parameters, Actions
 
-Most often "all parts" view is used. It shows all song parts and allows switching between them.
+### All parts
 
-To see what a song part is made of there is "one part" view. It shows all loops inside part and can scroll over them.
-Some buttons overdub, delete, mute, reverse selected loop.
+- commands to play / record four song parts and allows switching between them.
 
-Looper parameters view has:
+### One part
+
+- commands to scroll over loops making one part. It can overdub, delete, mute, reverse selected loop.
+
+### Parameters
 
 - drum volume and drum swing
 - mixer volume for recording and playback
 
-Settings view includes screens:
+### Settings
 
 - save as new/load/delete song (song name is just a time stamp: mm-dd-hh-MM-ss)
 - restart/update application (download the latest branch form GitHub)
 - load drum style (e.g. pop/rock/....)
 
+
+### Actions
+
+- commands to stop looper and clear loops content.
+
+    
 MIDI commands assigned to buttons are different for these views and are listed in [commands.md](etc/midi/commands.md)
-located along with JSON files in [etc/midi/](etc/midi)
+located alongside JSON files in [etc/midi/](etc/midi)
 
 ## Extending MIDI foot controller commands
 
