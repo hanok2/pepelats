@@ -11,7 +11,7 @@ THIS_DIR=$(dirname "$0")
 cd "$THIS_DIR" || exit 1
 
 if [[ -f rules.txt ]]; then
-  wget https://github.com/slmnv5/mimap5/blob/master/rules.txt?raw=true
+  wget -O rules.txt https://github.com/slmnv5/mimap5/raw/master/rules.txt
   if [[ ! -f rules.txt ]]; then
     echo "!!!!!!!! Error downloading rules.txt !!!!!!!!!!!!!"
     exit 1
@@ -21,11 +21,12 @@ fi
 fi
 
 if [[ -f mimap5 ]]; then
-  wget https://github.com/slmnv5/mimap5/blob/master/mimap5?raw=true
+  wget -O mimap5 https://github.com/slmnv5/mimap5/blob/master/mimap5?raw=true
   if [[ ! -f mimap5 ]]; then
     echo "!!!!!!!! Error downloading mimap5 !!!!!!!!!!!!!"
     exit 1
   fi
+  chmod a+x mimap5
 fi
 
 # Start mimap5 and create MIDI port $CONVERTED_NAME
