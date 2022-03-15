@@ -95,7 +95,7 @@ class MidiConverter(MidiController):
         self.__midi_cc_to_note = MidiCcToNote()
 
     def start(self) -> None:
-        assert always_true("Started MIDI note counter")
+        assert always_true("Started MidiConverter")
         while True:
             msg = self._in_port.receive()
             msg = self.__midi_cc_to_note.convert(msg)

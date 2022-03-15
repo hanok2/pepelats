@@ -12,7 +12,7 @@ class MidiController:
         self._in_port = in_port
 
     def start(self) -> None:
-        assert always_true("Started MIDI note counter")
+        assert always_true("Started MidiController")
         while True:
             msg = self._in_port.receive()
             if msg is None:
