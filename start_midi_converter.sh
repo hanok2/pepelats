@@ -1,27 +1,36 @@
 #!/bin/bash
-# This script starts optional MIDI converter (found at https://github.com/slmnv5/mimap5.git)
+# This script starts optional MIDI converter mimap5 (link below)
+
+
 # Part of MIDI port name that is source of RAW messages; To check use: aconnect -l
 RAW_NAME="BlueBoard"
 # Full MIDI port name that is source of CONVERTED messages
 CONVERTED_NAME="note_counter"
 
-cd_to_script_dir() {
-  THIS_DIR=$(dirname "$0")
-  cd "$THIS_DIR" || exit 1
-}
-
-cd_to_script_dir
+THIS_DIR=$(dirname "$0")
+cd "$THIS_DIR" || exit 1
 
 if [[ -f rules.txt ]]; then
-  wget https://raw.githubusercontent.com/slmnv5/mimap5/rules.txt
+  wget https://github.com/slmnv5/mimap5/blob/master/rules.txt?raw=true
+  if [[ ! -f rules.txt ]]; then
+    echo "!!!!!!!! Error downloading rules.txt !!!!!!!!!!!!!"
+    exit 1
+  fi
+fi
+
 fi
 
 if [[ -f mimap5 ]]; then
-  wget https://raw.githubusercontent.com/slmnv5/mimap5/mimap5
+  wget https://github.com/slmnv5/mimap5/blob/master/mimap5?raw=true
+  if [[ ! -f mimap5 ]]; then
+    echo "!!!!!!!! Error downloading mimap5 !!!!!!!!!!!!!"
+    exit 1
+  fi
 fi
 
 # Start mimap5 and create MIDI port $CONVERTED_NAME
 # This port must be #1 in the MIDI port names list for the looper
+
 
 killall -9 mimap5
 aconnect -x
