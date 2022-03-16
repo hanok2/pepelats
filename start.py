@@ -1,4 +1,6 @@
+import logging
 import sys
+from datetime import datetime
 from multiprocessing import Pipe, Process
 from multiprocessing.connection import Connection
 
@@ -26,6 +28,9 @@ def proc_updater(r_conn: Connection):
 
 if __name__ == "__main__":
     #  freeze_support()
+    dtm = datetime.now()
+    logging.critical(f"Starting Pepelats looper: {dtm}")
+
     in_midi_port = get_midi_port()
     if in_midi_port is None:
         print("Failed to connecting to MIDI input ports")
