@@ -2,9 +2,9 @@
 # This script starts optional MIDI converter mimap5 (link below)
 
 
-# Part of MIDI port name that is source of RAW messages; To check use: aconnect -l
-RAW_NAME="BlueBoard"
-# Full MIDI port name that is source of CONVERTED messages
+# Part of hardware MIDI port name that is source of original messages; To check names use: aconnect -l
+HARDWARE_NAME="BlueBoard"
+# Full MIDI port name that is source of converted messages
 CONVERTED_NAME="note_counter"
 
 THIS_DIR=$(dirname "$0")
@@ -27,17 +27,33 @@ if [[ ! -f mimap5 ]]; then
   chmod a+x mimap5
 fi
 
-# Start mimap5 and create MIDI port $CONVERTED_NAME
-# This port must be #1 in the MIDI port names list for the looper
+HARDWARE_OUT=""
+while true; do
+  echo "Waiting for MIDI port $HARDWARE_NAME"
+  HARDWARE_OUT=$(aconnect -l | awk -v nm="$HARDWARE_NAME" '$0 ~ nm {print $2;exit}')
+  if [ -z "$HARDWARE_OUT" ]; then
+    sleep 5
+  else
+    break
+  fi
+done
+
+if [ -z "$HARDWARE_OUT" ]; then
+    echo "!!!!!!!! Error opening port $HARDWARE_NAME !!!!!!!!!!!!!"
+    exit 1
+fi
 
 
+# Kill and disconnect all
 killall -9 mimap5
 aconnect -x
-./mimap5 -r rules.txt -n note_counter &
+# Start client and create MIDI port $CONVERTED_NAME
+# This port must be #1 in the MIDI port names list for the looper
+
+./mimap5 -r rules.txt -n $CONVERTED_NAME &
 time sleep 2
-PEDAL_OUT=$(aconnect -l | awk -v nm="$RAW_NAME"        '$0 ~ nm {print $2;exit}')
-CLIENT_IN=$(aconnect -l | awk -v nm="$CONVERTED_NAME"  '$0 ~ nm {print $2;exit}')
-if aconnect -e "${PEDAL_OUT}0" "${CLIENT_IN}0"; then
+CLIENT_IN=$(aconnect -l | awk -v nm="$CONVERTED_NAME" '$0 ~ nm {print $2;exit}')
+if aconnect -e "${HARDWARE_OUT}0" "${CLIENT_IN}0"; then
   echo "========= started MIDI converter mimap5, MIDI port name $CONVERTED_NAME =============="
   exit 0
 else
