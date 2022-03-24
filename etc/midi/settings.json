@@ -9,23 +9,27 @@
     "57": ["_change_map", "settings_0"]
   },
   "settings_0": {
-    "description": "Song: A/B-scroll Cx2-save CH-save_new Dx2-load DH-delete",
-    "update_method": "_show_song",
-    "60": ["_change_song", -1],
-    "62": ["_change_song", 1],
-    "102": ["_save_song"],
-    "106": ["_save_new_song"],
-    "112": ["_load_song"],
+    "description": "Song: Ax2-save Bx2-save_as_new DH-delete",
+    "update_method": "_show_song_now",
+    "82": ["_save_song"],
+    "92": ["_save_new_song"],
     "116": ["_delete_song"]
   },
-  "settings_1": {
-    "description": "Drum_Type: A/B-scroll Dx2-load",
-    "update_method": "_show_drum_type",
-    "60": ["_change_drum_type", -1],
-    "62": ["_change_drum_type", 1],
-    "112": ["_load_drum_type"]
+   "settings_1": {
+    "description": "Next: A/B-scroll Dx2-load",
+    "update_method": "_show_song_next",
+    "81": ["_change_song", -1],
+    "91": ["_change_song", 1],
+    "112": ["_load_song"]
   },
   "settings_2": {
+    "description": "Drum_Type: A/B-scroll Dx2-load",
+    "update_method": "_show_drum_type",
+    "81": ["_change_drum_type", -1],
+    "91": ["_change_drum_type", 1],
+    "112": ["_load_drum_type"]
+  },
+  "settings_3": {
     "description": "App: Dx2-update DH-restart",
     "update_method": "_show_version",
     "112": ["_check_updates"],

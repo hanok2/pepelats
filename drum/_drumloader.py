@@ -27,7 +27,7 @@ class DrumLoader:
     __sounds: Dict[str, Tuple[np.ndarray, float]] = dict()
     __level2: List[Dict[str, Any]] = []
     __level1: List[Dict[str, Any]] = []
-    __ends: List[Dict[str, Any]] = []
+    __break: List[Dict[str, Any]] = []
 
     @classmethod
     def load(cls, dir_name: Path) -> None:
@@ -36,7 +36,7 @@ class DrumLoader:
             cls.__load_sounds(dir_name)
         cls.__load_all_patterns(dir_name, "drum_level2", cls.__level2)
         cls.__load_all_patterns(dir_name, "drum_level1", cls.__level1)
-        cls.__load_all_patterns(dir_name, "drum_ends", cls.__ends)
+        cls.__load_all_patterns(dir_name, "drum_break", cls.__break)
 
     @classmethod
     def __load_sounds(cls, dir_name: Path) -> None:
@@ -94,7 +94,7 @@ class DrumLoader:
         for i in cls.__level2:
             cls.level2.append(cls.__prepare_one(i, length))
 
-        for i in cls.__ends:
+        for i in cls.__break:
             cls.ends.append(cls.__prepare_one(i, length))
 
         cls.length = length

@@ -90,9 +90,13 @@ class ExtendedCtrl(LooperCtrl):
         shift = round(shift)
         return f" Semitones: {shift}"
 
-    def _show_song(self) -> str:
+    def _show_song_now(self) -> str:
         ff = self._file_finder
-        return f"  now  {ff.get_item_now()}\n  next {ff.get_item_next()}"
+        return f"  now: {ff.get_item_now()}"
+
+    def _show_song_next(self) -> str:
+        ff = self._file_finder
+        return f"  next: {ff.get_item_next()}"
 
     def _show_drum_type(self) -> str:
         return self.drum.show_drum_type()
