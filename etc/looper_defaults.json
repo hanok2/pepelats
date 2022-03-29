@@ -1,7 +1,7 @@
 {
   "DRUM_SWING": 0.5625,
   "DRUM_VOLUME": 0.5,
-  "DRUM_TYPE": "pop",
+  "DRUM_TYPE": "no_drums",
   "MIDI_PORT_NAMES": [
     "note_counter",
     "BlueBoard",

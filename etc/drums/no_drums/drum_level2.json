@@ -1,5 +1,5 @@
 {
-  "comment": {
+ "comment": {
     "1": "The default pattern defines properties that may be changed by a specific pattern",
     "2": "adjust volume using accents (from 0 to 9) at each pattern step",
     "3": "example: 563 means 50%, 60% 30% at first 3 steps",
@@ -8,30 +8,10 @@
   },
   "default_pattern": {
     "steps": 16,
-    "accents": "5"
+    "accents": "65658565"
   },
   "0":  {
     "___": "1234567812345678",
-    "sst": "......!...!!....",
-    "kdr": "!..!..!.!.......",
-    "hhc": "!..."
-  },
-  "1":  {
-    "___": "1234567812345678",
-    "sst": "....!!!....!....",
-    "kdr": "!..!..!.!.......",
-    "hhc": "!..."
-  },
-  "2": {
-    "___": "1234567812345678",
-    "sst": "!!...........!..",
-    "kdr": "!..!..!.!.......",
-    "hhc": "!..."
-  },
-  "3":  {
-    "___": "1234567812345678",
-    "hhc": "!...",
-    "kdr": "!..!..!.!.......",
-    "sst": "...!..!....!!..."
+    "kdr": "."
   }
 }
