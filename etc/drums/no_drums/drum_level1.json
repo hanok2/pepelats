@@ -8,7 +8,7 @@
   },
   "default_pattern": {
     "steps": 16,
-    "accents": "5"
+    "accents": "0"
   },
   "0":  {
     "___": "1234567812345678",
