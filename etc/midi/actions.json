@@ -15,11 +15,5 @@
     "62": ["_stop_song", 1],
     "64": ["_fade_and_stop", 11],
     "65": ["_prepare_song"]
-  },
-  "actions_1": {
-    "description": "Transpose: Not implemented",
-    "update_method": "_show_transpose",
-    "60": ["_transpose", -1],
-    "62": ["_transpose", 1]
   }
 }
