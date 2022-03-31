@@ -1,8 +1,9 @@
+import os
 import time
 from threading import Thread
 from typing import Tuple
 
-from utils import SCR_COLS, print_at, MsgProcessor, SD_RATE, SCR_ROWS, IS_LINUX, ScrColors
+from utils import SCR_COLS, print_at, MsgProcessor, SD_RATE, SCR_ROWS, ScrColors
 
 UPDATES_PER_LOOP = 8
 
@@ -46,7 +47,7 @@ class ScreenUpdater(MsgProcessor):
         print(self.__description)
 
     def __progress_update(self):
-        while IS_LINUX:
+        while os.name == "posix":
             time.sleep(self.__sleep_time)
             if not self.__is_stop:
                 self.__idx += self.__delta

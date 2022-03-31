@@ -1,9 +1,40 @@
 import logging
+import os
+import sys
 from json import load, dump
 from pathlib import Path
-from typing import Any, List, Dict, Union
+from time import sleep
+from typing import Any, Dict, Union
+from typing import List
 
-from utils._utilsother import ROOT_DIR, ConfigName, FileFinder, always_true
+import mido
+
+from utils._utilsother import ConfigName, ROOT_DIR, FileFinder, always_true
+
+
+def get_midi_port():
+    """wait for one of MIDI ports for 3 minutes, open and return input port or None"""
+
+    # noinspection PyUnresolvedReferences
+    def wait_for_midi_ports(port_names: List[str]):
+        for k in range(3):
+            print("Waiting for MIDI port to appear:", port_names)
+            port_list = mido.get_input_names()
+            for name in port_names:
+                for port_name in port_list:
+                    if name in port_name:
+                        print("opening:", port_name)
+                        port_in = mido.open_input(port_name)
+                        return port_in
+            sleep(5)
+
+    if ConfigName.use_typing in sys.argv or not os.name == "posix":
+        from midi import KbdMidiPort
+        kbd_map = JsonDictLoader("etc/count/kbd_notes.json").get(ConfigName.kbd_notes, dict())
+        return KbdMidiPort(kbd_map)
+    else:
+        tmp = MainLoader.get(ConfigName.midi_port_names, [])
+        return wait_for_midi_ports(tmp)
 
 
 class JsonDictLoader:

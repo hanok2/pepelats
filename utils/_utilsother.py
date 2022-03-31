@@ -11,7 +11,6 @@ ROOT_DIR = Path(__file__).parent.parent
 
 logging.basicConfig(level=logging.ERROR, filename=Path(ROOT_DIR, 'log.log'), filemode='a')
 
-IS_LINUX = os.name == "posix"
 START_TIME = time.time()
 CURRENT_VERSION = 'Mar 2022'
 
