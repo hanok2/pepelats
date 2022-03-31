@@ -95,7 +95,6 @@ class MidiConfigLoader:
     It parses etc/midi directory for JSON files """
 
     __items: Dict[str, Dict] = load_all_dics()
-    print(__items)
     __map_name: str = ConfigName.playing
     __map_id: str = "0"
 
