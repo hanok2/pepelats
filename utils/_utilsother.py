@@ -133,7 +133,7 @@ class ConfigName:
     default_config: str = "default_config"
     update_method: str = "update_method"
     description: str = "description"
-    playing_0: str = "playing_0"
+    playing: str = "playing"
     change_map: str = "_change_map"
     show_all_parts: str = "_show_all_parts"
     #  drum related

@@ -1,7 +1,6 @@
 from multiprocessing.connection import Connection
 
-from midi._midiconfigloader import MidiConfigLoader
-from utils import ConfigName, always_true
+from utils import ConfigName, always_true, MidiConfigLoader
 
 
 class MidiTranslator:
