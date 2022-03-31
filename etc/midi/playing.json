@@ -4,7 +4,7 @@
     "41": ["_change_drum"],
     "42": ["_change_drum_intensity"],
     "43": ["_silence_drum"],
-    "47": ["_change_map", "params_0"],
+    "47": ["_change_map", "0","params"],
     "53": ["_fade_and_stop", 0],
     "56": ["_change_map", "0", "actions" ],
     "57": ["_change_map", "0", "settings" ]
@@ -12,7 +12,7 @@
   "0": {
     "description": "All parts: A/B/C/D-play part",
     "update_method": "_show_all_parts",
-    "46": ["_change_map", "1"],
+    "46": ["_change_map", "1", "playing"],
     "51": ["_undo_part"],
     "52": ["_redo_part"],
     "60": ["_play_part_id", 0],
@@ -27,7 +27,7 @@
   "1": {
     "description": "One part: A-rec. B/C-scroll D-silence Dx2-reverse DH-del.",
     "update_method": "_show_one_part",
-    "46": ["_change_map", "0"],
+    "46": ["_change_map", "0", "playing"],
     "51": ["_undo_loop"],
     "52": ["_redo_loop"],
     "60": ["_play_loop_next"],

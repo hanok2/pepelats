@@ -78,11 +78,11 @@ class ExtendedCtrl(LooperCtrl):
 
     def _show_song_now(self) -> str:
         ff = self._file_finder
-        return f"  now: {ff.get_item_now()}"
+        return ff.get_item_now()
 
     def _show_song_next(self) -> str:
         ff = self._file_finder
-        return f"  next: {ff.get_item_next()}"
+        return ff.get_item_next()
 
     def _show_drum_type(self) -> str:
         return self.drum.show_drum_type()

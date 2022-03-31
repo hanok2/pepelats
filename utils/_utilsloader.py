@@ -136,19 +136,18 @@ class MidiConfigLoader:
         return tmp2.get(key, None)
 
     @staticmethod
-    def change_map(new_id: str, new_name: str = "") -> None:
-        if new_name:
-            if new_name not in MidiConfigLoader.__items:
-                logging.error(f"Incorrect MIDI map name: {new_name}")
-                return
-            else:
-                MidiConfigLoader.__map_name = new_name
+    def change_map(new_id: str, new_name: str) -> None:
+        if new_name not in MidiConfigLoader.__items:
+            logging.error(f"Incorrect MIDI map name: {new_name}")
+            return
+        else:
+            MidiConfigLoader.__map_name = new_name
 
         tmp: Dict = MidiConfigLoader.__items[MidiConfigLoader.__map_name]
         if new_id in tmp:
             MidiConfigLoader.__map_id = new_id
         elif new_id in ["prev", "next"]:
-            lst = list(tmp.values())
+            lst = list(tmp.keys())
             k = lst.index(MidiConfigLoader.__map_id) + (1 if new_id == "next" else -1)
             k %= len(lst)
             MidiConfigLoader.__map_id = lst[k]
