@@ -65,7 +65,7 @@ class MainLoader:
         MainLoader.__dl.add_if_missing(ConfigName.drum_type, "pop")
 
 
-def load_dic() -> Dict[str, Dict[str, Dict]]:
+def load_all_dics() -> Dict[str, Dict[str, Dict]]:
     dic = dict()
     ff: FileFinder = FileFinder("etc/midi", True, ".json", "")
     for _ in range(ff.items_len):
@@ -94,33 +94,33 @@ class MidiConfigLoader:
     MIDI notes mapping dict. from JSON files
     It parses etc/midi directory for JSON files """
 
-    __items: Dict[str, Dict] = load_dic()
+    __items: Dict[str, Dict] = load_all_dics()
     __map_name: str = ConfigName.playing
     __map_id: str = "0"
 
-    @classmethod
-    def get(cls, key: str) -> Union[List, None]:
-        tmp: Dict = cls.__items[cls.__map_name]
+    @staticmethod
+    def get(key: str) -> Union[List, None]:
+        tmp: Dict = MidiConfigLoader.__items[MidiConfigLoader.__map_name]
         return tmp.get(key, None)
 
-    @classmethod
-    def change_map(cls, new_id: str, new_name: str = "") -> None:
-        if new_name in cls.__items:
-            cls.__map_name = new_name
+    @staticmethod
+    def change_map(new_id: str, new_name: str = "") -> None:
+        if new_name in MidiConfigLoader.__items:
+            MidiConfigLoader.__map_name = new_name
         else:
             logging.error(f"Incorrect MIDI map name: {new_name}")
             return
 
-        tmp: Dict = cls.__items[cls.__map_name]
+        tmp: Dict = MidiConfigLoader.__items[MidiConfigLoader.__map_name]
         if new_id in tmp:
-            cls.__map_id = new_id
+            MidiConfigLoader.__map_id = new_id
         elif new_id in ["prev", "next"]:
             lst = list(tmp.values())
-            k = lst.index(cls.__map_id) + (1 if new_id == "next" else -1)
+            k = lst.index(MidiConfigLoader.__map_id) + (1 if new_id == "next" else -1)
             k %= len(lst)
-            cls.__map_id = lst[k]
+            MidiConfigLoader.__map_id = lst[k]
         else:
-            logging.error(f"Incorrect MIDI map id: {new_id} for map {cls.__map_name}")
+            logging.error(f"Incorrect MIDI map id: {new_id} for map {MidiConfigLoader.__map_name}")
 
 
 if __name__ == "__main__":
