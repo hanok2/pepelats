@@ -58,7 +58,7 @@ class RealDrum:
         return MainLoader.get(ConfigName.drum_swing, 0.75)
 
     def show_drum_type(self) -> str:
-        return f"  now  {self.__file_finder.get_item_now()}\n  next {self.__file_finder.get_item_next()}"
+        return f"Now: {self.__file_finder.get_item_now()}   Next: {self.__file_finder.get_item_next()}"
 
     def change_drum_type(self, go_fwd: bool) -> None:
         self.__file_finder.iterate_dir(go_fwd)
