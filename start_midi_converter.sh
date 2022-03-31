@@ -1,11 +1,13 @@
 #!/bin/bash
-# This script starts optional MIDI converter mimap5 (link below)
+# This optional script starts optional MIDI converter mimap5 (link below)
+# If this is not used MIDI event conversion is handled by the looper
+# If this is used
 
 
 # Part of hardware MIDI port name that is source of original messages; To check names use: aconnect -l
 HARDWARE_NAME="BlueBoard"
 # Full MIDI port name that is source of converted messages
-CONVERTED_NAME="note_counter"
+CONVERTED_NAME="external_converter"
 
 THIS_DIR=$(dirname "$0")
 cd "$THIS_DIR" || exit 1

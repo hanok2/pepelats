@@ -141,7 +141,7 @@ class ConfigName:
     #  other
     use_typing: str = "--use_typing"
     redraw: str = "_redraw"
-    counter_name: str = "note_counter"
+    external_converter: str = "external_converter"
     #  main loader
     drum_swing: str = "DRUM_SWING"
     drum_type: str = "DRUM_TYPE"

@@ -3,7 +3,7 @@
   "DRUM_VOLUME": 0.5,
   "DRUM_TYPE": "pop",
   "MIDI_PORT_NAMES": [
-    "note_counter",
+    "external_converter",
     "BlueBoard",
     "Livid"
   ],
