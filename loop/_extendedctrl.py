@@ -1,5 +1,4 @@
 import os
-import sys
 import time
 from multiprocessing.connection import Connection
 
@@ -119,8 +118,7 @@ class ExtendedCtrl(LooperCtrl):
 
     @staticmethod
     def _show_version() -> str:
-        tmp = sys.argv
-        return f"  Ver: {CURRENT_VERSION}  args: {tmp}"
+        return f"Version: {CURRENT_VERSION}"
 
     # ================ other methods
 
