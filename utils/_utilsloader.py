@@ -95,21 +95,24 @@ class MidiConfigLoader:
     It parses etc/midi directory for JSON files """
 
     __items: Dict[str, Dict] = load_all_dics()
+    print(__items)
     __map_name: str = ConfigName.playing
     __map_id: str = "0"
 
     @staticmethod
     def get(key: str) -> Union[List, None]:
-        tmp: Dict = MidiConfigLoader.__items[MidiConfigLoader.__map_name]
-        return tmp.get(key, None)
+        tmp1: Dict = MidiConfigLoader.__items[MidiConfigLoader.__map_name]
+        tmp2: Dict = tmp1[MidiConfigLoader.__map_id]
+        return tmp2.get(key, None)
 
     @staticmethod
     def change_map(new_id: str, new_name: str = "") -> None:
-        if new_name in MidiConfigLoader.__items:
-            MidiConfigLoader.__map_name = new_name
-        else:
-            logging.error(f"Incorrect MIDI map name: {new_name}")
-            return
+        if new_name:
+            if new_name not in MidiConfigLoader.__items:
+                logging.error(f"Incorrect MIDI map name: {new_name}")
+                return
+            else:
+                MidiConfigLoader.__map_name = new_name
 
         tmp: Dict = MidiConfigLoader.__items[MidiConfigLoader.__map_name]
         if new_id in tmp:

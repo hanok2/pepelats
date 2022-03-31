@@ -8,7 +8,7 @@
     "56": ["_change_map", "0", "playing"],
     "57": ["_change_map", "0", "settings"]
   },
-  "actions_0": {
+  "0": {
     "description": "Stop: A-stop_now B-stop_end, C-fade, DH-clear_all",
     "update_method": "",
     "81": ["_stop_song", 0],
