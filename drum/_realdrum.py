@@ -29,9 +29,6 @@ class RealDrum:
         self.__change_after_samples: int = MAX_32_INT
         self.__sample_counter: int = 0
         self.__i: Intensity = Intensity.SILENT
-        self.__level2: int = 0
-        self.__level1: int = 0
-        self.__break: int = 0
 
         self.__file_finder = FileFinder("etc/drums", False, "", MainLoader.get(ConfigName.drum_type, "pop"))
         tmp = self.__file_finder.get_path_now()
@@ -71,7 +68,7 @@ class RealDrum:
             return
         self.__file_finder.now = self.__file_finder.next
         tmp = self.__file_finder.get_path_now()
-        self.__level1 = self.__level2 = self.__break = 0
+
         DrumLoader.load(tmp)
         MainLoader.set(ConfigName.drum_type, self.__file_finder.get_item_now())
         MainLoader.save()
@@ -94,11 +91,11 @@ class RealDrum:
             self.__random_samples()
 
         if self.__i & Intensity.LVL1:
-            play_sound_buff(DrumLoader.level1[self.__level1], out_data, idx)
+            play_sound_buff(DrumLoader.get_l1(), out_data, idx)
         if self.__i & Intensity.LVL2:
-            play_sound_buff(DrumLoader.level2[self.__level2], out_data, idx)
+            play_sound_buff(DrumLoader.get_l2(), out_data, idx)
         if self.__i & Intensity.BREAK:
-            play_sound_buff(DrumLoader.ends[self.__break], out_data, idx)
+            play_sound_buff(DrumLoader.get_bk(), out_data, idx)
 
     def play_ending_later(self, part_len: int, idx: int) -> None:
         bars = 0.5
@@ -110,9 +107,7 @@ class RealDrum:
 
     def __random_samples(self):
         self.__sample_counter = 0
-        self.__level2 = random.randrange(len(DrumLoader.level2))
-        self.__level1 = random.randrange(len(DrumLoader.level1))
-        self.__break = random.randrange(len(DrumLoader.ends))
+        DrumLoader.random_samples()
 
     def play_ending_now(self, bars: float = 0) -> None:
         if self.__i == Intensity.SILENT:

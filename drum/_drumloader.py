@@ -1,5 +1,6 @@
 import logging
 import os
+import random
 from pathlib import Path
 from typing import List, Any, Dict, Union, Tuple
 
@@ -17,29 +18,50 @@ def extend_list(some_list: Union[List, str], new_len: int) -> List:
 
 
 class DrumLoader:
-    """Load drums"""
+    """ class will only static methods to load drum patterns """
 
-    level2: List[np.ndarray] = []
-    level1: List[np.ndarray] = []
-    ends: List[np.ndarray] = []
     max_volume: float = 0
     length: int = 0
     __sounds: Dict[str, Tuple[np.ndarray, float]] = dict()
-    __level2: List[Dict[str, Any]] = []
-    __level1: List[Dict[str, Any]] = []
-    __break: List[Dict[str, Any]] = []
+    __l1: int = 0
+    __l2: int = 0
+    __bk: int = 0
+    __ptn_l1: List[Dict[str, Any]] = []
+    __ptn_l2: List[Dict[str, Any]] = []
+    __ptn_bk: List[Dict[str, Any]] = []
+    __snd_l1: List[np.ndarray] = []
+    __snd_l2: List[np.ndarray] = []
+    __snd_bk: List[np.ndarray] = []
 
-    @classmethod
-    def load(cls, dir_name: Path) -> None:
+    @staticmethod
+    def random_samples():
+        DrumLoader.__l2 = random.randrange(len(DrumLoader.__snd_l2))
+        DrumLoader.__l1 = random.randrange(len(DrumLoader.__snd_l1))
+        DrumLoader.__bk = random.randrange(len(DrumLoader.__snd_bk))
+
+    @staticmethod
+    def get_l1() -> np.ndarray:
+        return DrumLoader.__snd_l1[DrumLoader.__l1]
+
+    @staticmethod
+    def get_l2() -> np.ndarray:
+        return DrumLoader.__snd_l2[DrumLoader.__l2]
+
+    @staticmethod
+    def get_bk() -> np.ndarray:
+        return DrumLoader.__snd_bk[DrumLoader.__bk]
+
+    @staticmethod
+    def load(dir_name: Path) -> None:
         assert always_true(f"Loading drum {dir_name}")
-        if len(cls.__sounds) == 0:
-            cls.__load_sounds(dir_name)
-        cls.__load_all_patterns(dir_name, "drum_level2", cls.__level2)
-        cls.__load_all_patterns(dir_name, "drum_level1", cls.__level1)
-        cls.__load_all_patterns(dir_name, "drum_break", cls.__break)
+        if len(DrumLoader.__sounds) == 0:
+            DrumLoader.__load_sounds(dir_name)
+        DrumLoader.__load_all_patterns(dir_name, "drum_level1", DrumLoader.__ptn_l1)
+        DrumLoader.__load_all_patterns(dir_name, "drum_level2", DrumLoader.__ptn_l2)
+        DrumLoader.__load_all_patterns(dir_name, "drum_break", DrumLoader.__ptn_bk)
 
-    @classmethod
-    def __load_sounds(cls, dir_name: Path) -> None:
+    @staticmethod
+    def __load_sounds(dir_name: Path) -> None:
         """Loads WAV sounds"""
         path = os.path.join(dir_name.parent, "drum_sounds.json")
         loader = JsonDictLoader(path)
@@ -55,13 +77,13 @@ class DrumLoader:
             assert sound.ndim == 2
             assert sound.shape[1] == 2
             v2: float = np.max(sound)
-            cls.max_volume = max(cls.max_volume, v1 * v2)
-            assert cls.max_volume < SD_MAX
+            DrumLoader.max_volume = max(DrumLoader.max_volume, v1 * v2)
+            assert DrumLoader.max_volume < SD_MAX
             #  assert always_true(f"Loaded sound {file_name}")
-            cls.__sounds[name] = (sound, v1)
+            DrumLoader.__sounds[name] = (sound, v1)
 
-    @classmethod
-    def __load_all_patterns(cls, dir_name: Path, file_name: str, storage: List[Dict]) -> None:
+    @staticmethod
+    def __load_all_patterns(dir_name: Path, file_name: str, storage: List[Dict]) -> None:
         storage.clear()
         path = os.path.join(dir_name, file_name + ".json")
         loader = JsonDictLoader(path)
@@ -76,31 +98,32 @@ class DrumLoader:
             steps: int = value["steps"]
             accents: str = value["accents"]
             value["accents"] = extend_list(accents, steps)
-            for sound_name in [x for x in cls.__sounds if x in value]:
+            for sound_name in [x for x in DrumLoader.__sounds if x in value]:
                 value[sound_name] = extend_list(value[sound_name], steps)
             storage.append(value)
 
-    @classmethod
-    def prepare_all(cls, length: int) -> None:
+    @staticmethod
+    def prepare_all(length: int) -> None:
         assert length > 0, f"Length must be > 0: {length}"
-        cls.length = 0
+        DrumLoader.length = 0
 
-        for i in [cls.level1, cls.level2, cls.ends]:
+        for i in [DrumLoader.__snd_l1, DrumLoader.__snd_l2, DrumLoader.__snd_bk]:
             i.clear()
 
-        for i in cls.__level1:
-            cls.level1.append(cls.__prepare_one(i, length))
+        for i in DrumLoader.__ptn_l1:
+            DrumLoader.__snd_l1.append(DrumLoader.__prepare_one(i, length))
 
-        for i in cls.__level2:
-            cls.level2.append(cls.__prepare_one(i, length))
+        for i in DrumLoader.__ptn_l2:
+            DrumLoader.__snd_l2.append(DrumLoader.__prepare_one(i, length))
 
-        for i in cls.__break:
-            cls.ends.append(cls.__prepare_one(i, length))
+        for i in DrumLoader.__ptn_bk:
+            DrumLoader.__snd_bk.append(DrumLoader.__prepare_one(i, length))
 
-        cls.length = length
+        DrumLoader.random_samples()
+        DrumLoader.length = length
 
-    @classmethod
-    def __prepare_one(cls, pattern, length: int) -> np.ndarray:
+    @staticmethod
+    def __prepare_one(pattern, length: int) -> np.ndarray:
         accents = pattern["accents"]
         ndarr = make_zero_buffer(length)
         drum_volume = MainLoader.get(ConfigName.drum_volume, 1)
@@ -120,25 +143,20 @@ class DrumLoader:
                 if notes[step_number] != '.':
                     step_accent = int(accents[step_number])
                     step_volume = sound_volume * step_accent * drum_volume / 9.0
-                    pos = cls.__pos_with_swing(step_number, step_len)
+                    pos = DrumLoader.__pos_with_swing(step_number, step_len)
                     tmp = (sound * step_volume).astype(SD_TYPE)
                     record_sound_buff(ndarr, tmp, pos)
 
         return ndarr
 
-    @classmethod
-    def __pos_with_swing(cls, step_number, step_len) -> int:
+    @staticmethod
+    def __pos_with_swing(step_number, step_len) -> int:
         """shift every even 16th note to make it swing like"""
         if step_number % 2 == 0:
             return round(step_number * step_len)
         else:
             swing_delta = step_len * (MainLoader.get(ConfigName.drum_swing, 0.625) - 0.5)
             return round(step_number * step_len + swing_delta)
-
-    @classmethod
-    def to_str(cls) -> str:
-        return f"DrumLoader length: {cls.length}  patterns: {len(cls.level2)} fills: {len(cls.level1)} " \
-               f"ends: {len(cls.ends)} sounds: {len(cls.__sounds)} max_volume: {cls.max_volume}"
 
 
 if __name__ == "__main__":
