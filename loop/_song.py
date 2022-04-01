@@ -26,8 +26,7 @@ class Song(CollectionOwner[SongPart]):
         pass
 
     @abstractmethod
-    def \
-            set_drum_length(self, length: int) -> None:
+    def set_drum_length(self, length: int) -> None:
         pass
 
     @abstractmethod

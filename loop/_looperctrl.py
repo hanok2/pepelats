@@ -123,7 +123,7 @@ class LooperCtrl(OneLoopCtrl, Song, MsgProcessor):
                     self._stop_at_bound(self.drum.length)
                 else:
                     self._stop_at_bound(part.length)
-                    self.drum.play_ending_later(part.length, self.idx)
+                    self.drum.play_break_later(part.length, self.idx)
             else:
                 self._stop_never()
 

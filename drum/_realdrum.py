@@ -15,10 +15,6 @@ class Intensity(IntEnum):
     LVL2 = 2
     BREAK = 4
 
-    @staticmethod
-    def next(i: int) -> int:
-        return 2 if i == 1 else 1
-
 
 class RealDrum:
     """Drums generated from patterns with random changes"""
@@ -60,9 +56,6 @@ class RealDrum:
     def change_drum_type(self, go_fwd: bool) -> None:
         self.__file_finder.iterate_dir(go_fwd)
 
-    def silence_drum(self) -> None:
-        self.__i = Intensity.SILENT
-
     def load_drum_type(self) -> None:
         if self.__file_finder.now == self.__file_finder.next:
             return
@@ -97,21 +90,21 @@ class RealDrum:
         if self.__i & Intensity.BREAK:
             play_sound_buff(DrumLoader.get_bk(), out_data, idx)
 
-    def play_ending_later(self, part_len: int, idx: int) -> None:
+    def play_break_later(self, part_len: int, idx: int) -> None:
         bars = 0.5
         samples = self.length * bars
         idx %= part_len
         start_at = (part_len - idx) - samples
         if start_at > 0:
-            Timer(start_at / SD_RATE, self.play_ending_now, (bars,)).start()
+            Timer(start_at / SD_RATE, self.play_break_now, [bars]).start()
 
     def __random_samples(self):
         self.__sample_counter = 0
         DrumLoader.random_samples()
 
-    def play_ending_now(self, bars: float = 0) -> None:
+    def play_break_now(self, bars: float = 0) -> None:
         if self.__i == Intensity.SILENT:
-            self.__i = Intensity.LVL1
+            self.__i = Intensity.LVL2
 
         def revert():
             self.__i &= ~Intensity.BREAK
@@ -148,9 +141,11 @@ class RealDrum:
         MainLoader.save()
         DrumLoader.prepare_all(DrumLoader.length)
 
-    def next_intensity(self) -> None:
-        """Cycle over intensities 1,2 only"""
-        self.__i = 1 if self.__i == 2 else 2
+    def change_intensity(self, change_by: int) -> None:
+        i = self.__i + change_by
+        i = min(3, i)
+        i = max(0, i)
+        self.__i = i
 
     def __str__(self):
         return f"RealDrum length: {self.length} empty: {self.is_empty} intensity: {self.__i}"

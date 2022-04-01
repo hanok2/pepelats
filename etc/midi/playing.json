@@ -2,10 +2,10 @@
   "default_config": {
     "description": "Parent for playing maps\n",
     "41": ["_change_drum"],
-    "42": ["_change_drum_intensity"],
-    "43": ["_silence_drum"],
+    "42": ["_change_drum_intensity", -1],
+    "43": ["_change_drum_intensity", 1],
     "47": ["_change_map", "0","params"],
-    "53": ["_fade_and_stop", 0],
+    "53": ["_change_drum_intensity", -100],
     "56": ["_change_map", "0", "actions" ],
     "57": ["_change_map", "0", "settings" ]
   },

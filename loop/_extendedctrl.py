@@ -59,7 +59,7 @@ class ExtendedCtrl(LooperCtrl):
             raise ValueError("Looper message drum_param has incorrect parameter: " + params[1])
 
     def _change_drum(self) -> None:
-        self.drum.play_ending_now()
+        self.drum.play_break_now()
 
     def _change_song(self, *params) -> None:
         self._file_finder.iterate_dir(go_fwd=params[0] > 0)
@@ -67,11 +67,8 @@ class ExtendedCtrl(LooperCtrl):
     def _change_drum_type(self, *params) -> None:
         self.drum.change_drum_type(go_fwd=params[0] >= 0)
 
-    def _change_drum_intensity(self) -> None:
-        self.drum.next_intensity()
-
-    def _silence_drum(self) -> None:
-        self.drum.silence_drum()
+    def _change_drum_intensity(self, change_by: int) -> None:
+        self.drum.change_intensity(change_by)
 
     # ================ show methods
 
