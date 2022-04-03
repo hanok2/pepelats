@@ -1,4 +1,3 @@
-from abc import abstractmethod
 from threading import Thread, Event
 
 from loop._loopsimple import LoopWithDrum
@@ -32,7 +31,6 @@ class LooperCtrl(OneLoopCtrl, Song, MsgProcessor):
     def get_drum_length(self) -> int:
         return self.drum.length
 
-    @abstractmethod
     def _redraw(self, update_method: str, description: str) -> None:
         """used by children to _redraw itself on screen"""
         pass

@@ -40,7 +40,7 @@ class OneLoopCtrl:
         self.__stop_len = MAX_32_INT
 
     def _stop_record(self) -> None:
-        self.is_rec = False
+        self._is_rec = False
 
     def _stop_at_bound(self, bound_value: int) -> None:
         over = self.idx % bound_value
