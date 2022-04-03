@@ -76,13 +76,13 @@ class MidiTranslator:
             method_name, *params = msg
             assert always_true(f"Sending message: {msg}")
             if method_name == ConfigName.change_map:
+                self.__s_conn.send([ConfigName.stop_record])
                 MidiConfigLoader.change_map(params[0], params[1])
             else:
                 self.__s_conn.send(msg)
             update_method = MidiConfigLoader.get(ConfigName.update_method)
             description = MidiConfigLoader.get(ConfigName.description)
-            msg = [ConfigName.redraw, update_method, description]
-            assert always_true(f"Sending message: {msg}")
-            self.__s_conn.send(msg)
+            assert always_true(f"Sending message: {ConfigName.redraw}")
+            self.__s_conn.send([ConfigName.redraw, update_method, description])
         else:
             pass

@@ -129,6 +129,7 @@ class FileFinder(CollectionOwner[str]):
 
 class ConfigName:
     #  midi config related
+    stop_record: str = "_stop_record"
     default_config: str = "default_config"
     update_method: str = "update_method"
     description: str = "description"

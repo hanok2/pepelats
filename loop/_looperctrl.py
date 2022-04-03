@@ -56,6 +56,14 @@ class LooperCtrl(OneLoopCtrl, Song, MsgProcessor):
         else:
             self._prepare_song()
 
+    def _stop_record(self) -> None:
+        if self._is_rec:
+            self._is_rec = False
+            part = self.get_item_now()
+            loop = part.get_item_now()
+            if loop.is_empty:
+                loop.trim_buffer(self.idx, self.get_item_now().length)
+
     def _play_loop_next(self) -> None:
         if not self._go_play.is_set():
             self._go_play.set()
@@ -64,17 +72,17 @@ class LooperCtrl(OneLoopCtrl, Song, MsgProcessor):
         part = self.get_item_now()
         loop = part.get_item_now()
         loop.is_silent = False
-        if not self._is_rec:
+        if self._is_rec:
+            self._is_rec = False
+            if loop.is_empty:
+                loop.trim_buffer(self.idx, self.get_item_now().length)
+        else:
+            self._is_rec = True
             if part.now == 0:
                 part.items.append(LoopWithDrum(self))
                 part.now = part.next = part.items_len - 1
             else:
                 loop.save_undo()
-        else:
-            if loop.is_empty:
-                loop.trim_buffer(self.idx, self.get_item_now().length)
-
-        self._is_rec = not self._is_rec
 
     def _play_part_id(self, part_id: int) -> None:
         self.next = part_id
