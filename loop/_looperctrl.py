@@ -23,7 +23,6 @@ class LooperCtrl(OneLoopCtrl, Song, MsgProcessor):
     def start(self):
         self.__t1.start()
         self._set_redraw(ConfigName.show_all_parts, "")
-        self._redraw()
 
     def set_drum_length(self, length: int) -> None:
         if length > 0:
@@ -33,11 +32,11 @@ class LooperCtrl(OneLoopCtrl, Song, MsgProcessor):
         return self.drum.length
 
     def _redraw(self) -> None:
-        """used by children to _redraw itself on screen"""
+        """used by children to redraw itself on screen"""
         pass
 
     def _set_redraw(self, update_method: str, description: str) -> None:
-        """used by children to prepare method and description for _redraw"""
+        """used by children to prepare method and description for redraw"""
         pass
 
     def _prepare_song(self) -> None:
