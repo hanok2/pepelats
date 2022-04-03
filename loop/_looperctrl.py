@@ -22,7 +22,8 @@ class LooperCtrl(OneLoopCtrl, Song, MsgProcessor):
 
     def start(self):
         self.__t1.start()
-        self._redraw(ConfigName.show_all_parts, "")
+        self._set_redraw(ConfigName.show_all_parts, "")
+        self._redraw()
 
     def set_drum_length(self, length: int) -> None:
         if length > 0:
@@ -31,8 +32,12 @@ class LooperCtrl(OneLoopCtrl, Song, MsgProcessor):
     def get_drum_length(self) -> int:
         return self.drum.length
 
-    def _redraw(self, update_method: str, description: str) -> None:
+    def _redraw(self) -> None:
         """used by children to _redraw itself on screen"""
+        pass
+
+    def _set_redraw(self, update_method: str, description: str) -> None:
+        """used by children to prepare method and description for _redraw"""
         pass
 
     def _prepare_song(self) -> None:
@@ -54,14 +59,6 @@ class LooperCtrl(OneLoopCtrl, Song, MsgProcessor):
         else:
             self._prepare_song()
 
-    def _stop_record(self) -> None:
-        if self._is_rec:
-            self._is_rec = False
-            part = self.get_item_now()
-            loop = part.get_item_now()
-            if loop.is_empty:
-                loop.trim_buffer(self.idx, self.get_item_now().length)
-
     def _play_loop_next(self) -> None:
         if not self._go_play.is_set():
             self._go_play.set()
@@ -82,6 +79,8 @@ class LooperCtrl(OneLoopCtrl, Song, MsgProcessor):
             else:
                 loop.save_undo()
 
+        self._redraw()
+
     def _play_part_id(self, part_id: int) -> None:
         self.next = part_id
 
@@ -98,6 +97,7 @@ class LooperCtrl(OneLoopCtrl, Song, MsgProcessor):
 
             self._is_rec = not self._is_rec
         self.__stop_quantized()
+        self._redraw()
 
     def __playback(self) -> None:
         """runs in a thread, play and record current song part"""
@@ -111,7 +111,7 @@ class LooperCtrl(OneLoopCtrl, Song, MsgProcessor):
             self._stop_never()
             self.idx = 0
             self._is_rec = part.is_empty
-            self._redraw(ConfigName.show_all_parts, "")
+            self._redraw()
             part.play_buffer()
 
     def __stop_quantized(self) -> None:

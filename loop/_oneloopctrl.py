@@ -39,9 +39,6 @@ class OneLoopCtrl:
     def _stop_never(self) -> None:
         self.__stop_len = MAX_32_INT
 
-    def _stop_record(self) -> None:
-        self._is_rec = False
-
     def _stop_at_bound(self, bound_value: int) -> None:
         over = self.idx % bound_value
         if over < OneLoopCtrl.max_late_samples:

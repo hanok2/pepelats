@@ -18,20 +18,34 @@ class ExtendedCtrl(LooperCtrl):
 
     def __init__(self, scr_conn: Connection):
         LooperCtrl.__init__(self)
+        self.__update_method: str = ""
+        self.__description: str = ""
         self.__scr_conn: Connection = scr_conn
 
-    def _redraw(self, update_method: str, description: str) -> None:
+    def _redraw(self) -> None:
         """used by children to _redraw itself on screen"""
-        if update_method:
-            method = getattr(self, update_method)
+        if self.__update_method:
+            method = getattr(self, self.__update_method)
             info = method()
         else:
             info = ""
 
         part = self.get_item_now()
         self.__scr_conn.send([ConfigName.redraw,
-                              info, description, part.length, self.idx, time.time(),
+                              info, self.__description, part.length, self.idx, time.time(),
                               self._go_play.is_set(), self.get_stop_event().is_set()])
+
+    def _set_redraw(self, update_method: str, description: str) -> None:
+        self.__update_method = update_method
+        self.__description = description
+        if self._is_rec:
+            self._is_rec = False
+            part = self.get_item_now()
+            loop = part.get_item_now()
+            if loop.is_empty:
+                loop.trim_buffer(self.idx, self.get_item_now().length)
+
+        self._redraw()
 
     def _prepare_song(self) -> None:
         super()._prepare_song()
@@ -39,16 +53,17 @@ class ExtendedCtrl(LooperCtrl):
         self.items.append(SongPart(self))
         self.items.append(SongPart(self))
         self.items.append(SongPart(self))
+        self._redraw()
 
     #  ========= change methods
 
     def _load_drum_type(self):
         self.drum.load_drum_type()
 
-    @staticmethod
-    def _change_mixer_volume(*params) -> None:
+    def _change_mixer_volume(self, *params) -> None:
         out_vol: bool = params[1] == "out"
         ExtendedCtrl.__mixer.change_volume(params[0], out_vol)
+        self._redraw()
 
     def _change_drum_param(self, *params) -> None:
         if params[1] == "volume":
@@ -57,15 +72,18 @@ class ExtendedCtrl(LooperCtrl):
             self.drum.change_swing(change_by=params[0])
         else:
             raise ValueError("Looper message drum_param has incorrect parameter: " + params[1])
+        self._redraw()
 
     def _change_drum(self) -> None:
         self.drum.play_break_now()
 
     def _change_song(self, *params) -> None:
         self._file_finder.iterate_dir(go_fwd=params[0] > 0)
+        self._redraw()
 
     def _change_drum_type(self, *params) -> None:
         self.drum.change_drum_type(go_fwd=params[0] >= 0)
+        self._redraw()
 
     def _change_drum_intensity(self, change_by: int) -> None:
         self.drum.change_intensity(change_by)

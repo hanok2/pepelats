@@ -129,7 +129,6 @@ class FileFinder(CollectionOwner[str]):
 
 class ConfigName:
     #  midi config related
-    stop_record: str = "_stop_record"
     default_config: str = "default_config"
     update_method: str = "update_method"
     description: str = "description"
@@ -141,8 +140,10 @@ class ConfigName:
     comment: str = "comment"
     #  other
     use_typing: str = "--use_typing"
-    redraw: str = "_redraw"
     external_converter: str = "external_converter"
+    # redraw
+    set_redraw: str = "_set_redraw"
+    redraw: str = "_redraw"
     #  main loader
     drum_swing: str = "DRUM_SWING"
     drum_type: str = "DRUM_TYPE"
