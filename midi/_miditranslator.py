@@ -69,6 +69,9 @@ class MidiTranslator:
 
     def __init__(self, s_conn: Connection):
         self.__s_conn = s_conn
+        update_method = MidiConfigLoader.get(ConfigName.update_method)
+        description = MidiConfigLoader.get(ConfigName.description)
+        self.__s_conn.send([ConfigName.set_redraw, update_method, description])
 
     def translate_and_send(self, note: str) -> None:
         msg = MidiConfigLoader.get(note)

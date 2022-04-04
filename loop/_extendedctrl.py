@@ -53,12 +53,12 @@ class ExtendedCtrl(LooperCtrl):
         self.items.append(SongPart(self))
         self.items.append(SongPart(self))
         self.items.append(SongPart(self))
-        self._redraw()
 
     #  ========= change methods
 
     def _load_drum_type(self):
         self.drum.load_drum_type()
+        self._redraw()
 
     def _change_mixer_volume(self, *params) -> None:
         out_vol: bool = params[1] == "out"
@@ -217,7 +217,7 @@ class ExtendedCtrl(LooperCtrl):
             part.items.append(loop)
             part.now = part.next = part.items_len - 1
 
-        self.redraw()
+        self._redraw()
 
     def _undo_loop(self):
         self._is_rec = False

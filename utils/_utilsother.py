@@ -12,7 +12,7 @@ ROOT_DIR = Path(__file__).parent.parent
 logging.basicConfig(level=logging.ERROR, filename=Path(ROOT_DIR, 'log.log'), filemode='a')
 
 START_TIME = time.time()
-CURRENT_VERSION = 'Mar 2022'
+CURRENT_VERSION = 'Apr 2022'
 
 # noinspection PyBroadException
 try:
