@@ -2,6 +2,7 @@ import time
 import unittest
 from multiprocessing.connection import Pipe
 from typing import Dict
+from unittest import TestCase
 
 import mido
 
@@ -38,7 +39,7 @@ class MockMidiPort:
         return self.__notes.pop(k)
 
 
-class TestMidiCounter(unittest.TestCase):
+class TestMidiCounter(TestCase):
 
     def test_1(self):
 

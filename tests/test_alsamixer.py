@@ -1,9 +1,10 @@
 import unittest
+from unittest import TestCase
 
 from mixer import Mixer
 
 
-class TestAlsaMixer(unittest.TestCase):
+class TestAlsaMixer(TestCase):
     """integration test, volume is saved in file"""
 
     def test_1(self):

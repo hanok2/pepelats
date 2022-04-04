@@ -1,11 +1,12 @@
 import unittest
+from unittest import TestCase
 
 from drum import RealDrum
 
 drum = RealDrum()
 
 
-class TestRealDrum(unittest.TestCase):
+class TestRealDrum(TestCase):
 
     def test_1(self):
         """prepare and print"""

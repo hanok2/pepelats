@@ -1,4 +1,4 @@
-import unittest
+from unittest import TestCase
 
 from loop import WrapBuffer
 from utils import make_sin_sound, SD_RATE, STATE_COLS, SCR_COLS
@@ -7,7 +7,7 @@ sound_len = 500_000  # samples
 sound = make_sin_sound(440, sound_len / SD_RATE)
 
 
-class TestWrapBuffer(unittest.TestCase):
+class TestWrapBuffer(TestCase):
 
     def test_1(self):
         test_buff = WrapBuffer()

@@ -1,5 +1,6 @@
 import unittest
 from multiprocessing import Pipe
+from unittest import TestCase
 from unittest.mock import MagicMock
 
 # noinspection PyProtectedMember
@@ -8,7 +9,7 @@ from loop._looperctrl import LooperCtrl
 r_conn, s_conn = Pipe(False)
 
 
-class TestLooperCtrl(unittest.TestCase):
+class TestLooperCtrl(TestCase):
 
     def test_1(self):
         control = LooperCtrl()

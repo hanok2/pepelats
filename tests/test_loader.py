@@ -1,10 +1,10 @@
-import unittest
 from pathlib import Path
+from unittest import TestCase
 
 from utils import JsonDictLoader, ConfigName
 
 
-class TestLoader(unittest.TestCase):
+class TestLoader(TestCase):
 
     def test_1(self):
         loader = JsonDictLoader("./etc/count/kbd_notes.json")

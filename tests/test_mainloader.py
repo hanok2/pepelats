@@ -1,9 +1,10 @@
 import unittest
+from unittest import TestCase
 
 from utils import MainLoader, ConfigName
 
 
-class TestMainLoader(unittest.TestCase):
+class TestMainLoader(TestCase):
 
     def test_1(self):
         val = MainLoader.get(ConfigName.drum_swing, -1)

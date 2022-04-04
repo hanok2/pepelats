@@ -1,11 +1,12 @@
 import unittest
+from unittest import TestCase
 from unittest.mock import MagicMock
 
 from screen import ScreenUpdater
 from utils import ConfigName
 
 
-class TestScreenUpdater(unittest.TestCase):
+class TestScreenUpdater(TestCase):
 
     def test_1(self):
         updater = ScreenUpdater()

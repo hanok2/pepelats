@@ -2,6 +2,7 @@ import time
 import unittest
 from threading import Timer
 from typing import Tuple
+from unittest import TestCase
 
 # noinspection PyProtectedMember
 from loop._loopsimple import LoopWithDrum
@@ -21,7 +22,7 @@ def record_with_drum(samples: int, control: OneLoopCtrl) -> Tuple[int, int]:
     return loop.length, control.idx
 
 
-class TestLoopWithDrum(unittest.TestCase):
+class TestLoopWithDrum(TestCase):
     """integration test of 2 classes"""
 
     def test_1(self):

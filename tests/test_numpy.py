@@ -1,11 +1,12 @@
 import unittest
+from unittest import TestCase
 
 import numpy as np
 
 from utils import record_sound_buff
 
 
-class TestNumpy(unittest.TestCase):
+class TestNumpy(TestCase):
     def test_simple(self):
         long_arr = np.arange(1, 13).reshape(12, 1)
         short_arr = np.arange(1, 6).reshape(5, 1)
