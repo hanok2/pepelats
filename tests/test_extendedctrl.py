@@ -1,3 +1,4 @@
+import unittest
 from multiprocessing.connection import Pipe
 from unittest import TestCase
 from unittest.mock import patch

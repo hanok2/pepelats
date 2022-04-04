@@ -1,3 +1,4 @@
+import unittest
 from unittest import TestCase
 
 from loop import WrapBuffer
