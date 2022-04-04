@@ -1,3 +1,4 @@
+import copy
 import os
 import time
 from multiprocessing.connection import Connection
@@ -167,14 +168,14 @@ class ExtendedCtrl(LooperCtrl):
         self._redraw()
 
     def _duplicate_part(self) -> None:
-        self._is_rec = False
         part = self.get_item_now()
+        if part.is_empty:
+            return
         for x in self.items:
-            if x is not part and x.is_empty:
-                x.items = part.items
+            if x.is_empty:
+                x.items = copy.deepcopy(part.items)
+                self._redraw()
                 break
-
-        self._redraw()
 
     def _undo_part(self) -> None:
         self._is_rec = False
