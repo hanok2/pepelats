@@ -80,7 +80,11 @@ class LooperCtrl(OneLoopCtrl, Song, MsgProcessor):
         self._redraw()
 
     def _play_part_id(self, part_id: int) -> None:
-        self.next = part_id
+        if self.next != part_id:
+            if self.next != self.now:
+                if self.is_stop_len_set():
+                    self._stop_never()
+            self.next = part_id
 
         if not self._go_play.is_set():
             self._go_play.set()
