@@ -11,18 +11,18 @@
   "0": {
     "description": "Mix_Volume: A/B-out  C/D-in",
     "update_method": "_show_mixer_volume",
-    "81": ["_change_mixer_volume", -7, "out"],
-    "91": ["_change_mixer_volume", 7, "out"],
-    "101": ["_change_mixer_volume", -7, "in"],
-    "111": ["_change_mixer_volume", 7, "in"]
+    "81": ["_change_mixer_out", -7],
+    "91": ["_change_mixer_out", 7],
+    "101": ["_change_mixer_in", -7],
+    "111": ["_change_mixer_in", 7]
   },
   "1": {
     "description": "Drum: A/B-volume C/D-swing",
     "update_method": "_show_drum_param",
-    "81": ["_change_drum_param", -1, "volume"],
-    "91": ["_change_drum_param", 1, "volume"],
-    "101": ["_change_drum_param", -1, "swing"],
-    "111": ["_change_drum_param", 1, "swing"]
+    "81": ["_change_drum_volume", -1],
+    "91": ["_change_drum_volume", 1],
+    "101": ["_change_drum_swing", -1],
+    "111": ["_change_drum_swing", 1]
   },
  "2": {
     "description": "Drum_Type: A/B-scroll Dx2-load",

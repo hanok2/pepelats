@@ -61,18 +61,22 @@ class ExtendedCtrl(LooperCtrl):
         self.drum.load_drum_type()
         self._redraw()
 
-    def _change_mixer_volume(self, *params) -> None:
-        out_vol: bool = params[1] == "out"
-        ExtendedCtrl.__mixer.change_volume(params[0], out_vol)
+    def _change_mixer_in(self, change_by: int) -> None:
+        out_vol: bool = False
+        ExtendedCtrl.__mixer.change_volume(change_by, out_vol)
         self._redraw()
 
-    def _change_drum_param(self, *params) -> None:
-        if params[1] == "volume":
-            self.drum.change_drum_volume(change_by=params[0])
-        elif params[1] == "swing":
-            self.drum.change_swing(change_by=params[0])
-        else:
-            raise ValueError("Looper message drum_param has incorrect parameter: " + params[1])
+    def _change_mixer_out(self, change_by: int) -> None:
+        out_vol: bool = True
+        ExtendedCtrl.__mixer.change_volume(change_by, out_vol)
+        self._redraw()
+
+    def _change_drum_volume(self, change_by: int) -> None:
+        self.drum.change_volume(change_by)
+        self._redraw()
+
+    def _change_drum_swing(self, change_by: int) -> None:
+        self.drum.change_swing(change_by)
         self._redraw()
 
     def _change_drum(self) -> None:

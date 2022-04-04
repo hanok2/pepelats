@@ -117,7 +117,7 @@ class RealDrum:
         Timer(samples / SD_RATE, revert).start()
 
     @staticmethod
-    def change_drum_volume(change_by) -> None:
+    def change_volume(change_by: int) -> None:
         factor = 1.41 if change_by >= 0 else (1 / 1.41)
         v = MainLoader.get(ConfigName.drum_volume, 1) * factor
         if v * DrumLoader.max_volume >= SD_MAX:
@@ -129,7 +129,7 @@ class RealDrum:
         DrumLoader.prepare_all(DrumLoader.length)
 
     @staticmethod
-    def change_swing(change_by) -> None:
+    def change_swing(change_by: int) -> None:
         v = MainLoader.get(ConfigName.drum_swing, 0.625)
         v += (0.25 / 4) if change_by >= 0 else (-0.25 / 4)
         if v > 0.80:

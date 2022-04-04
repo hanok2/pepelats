@@ -31,8 +31,8 @@ class MockedMixer:
         else:
             return self.__vol_in
 
-    def change_volume(self, vol: int, out: bool):
-        self.setvolume(self.getvolume(out) + vol, out)
+    def change_volume(self, change_by: int, out: bool):
+        self.setvolume(self.getvolume(out) + change_by, out)
 
     def mixer_info(self) -> str:
         return f"{self.__class__.__name__}"

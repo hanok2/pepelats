@@ -1,12 +1,12 @@
 {
-  "DRUM_SWING": 0.5625,
-  "DRUM_VOLUME": 0.5,
+  "DRUM_SWING": 0.75,
+  "DRUM_VOLUME": 0.9940499999999999,
   "DRUM_TYPE": "pop",
   "MIDI_PORT_NAMES": [
     "external_converter",
     "BlueBoard",
     "Livid"
   ],
-  "MIXER_IN": 33,
-  "MIXER_OUT": 98
+  "MIXER_IN": 5,
+  "MIXER_OUT": 84
 }
