@@ -5,7 +5,7 @@
     "42": ["_change_drum_intensity", -1],
     "43": ["_change_drum_intensity", 1],
     "47": ["_change_map", "0","params"],
-    "53": ["_change_drum_intensity", -100],
+    "53": ["_duplicate_part"],
     "56": ["_change_map", "0", "actions" ],
     "57": ["_change_map", "0", "settings" ]
   },

@@ -166,6 +166,16 @@ class ExtendedCtrl(LooperCtrl):
 
         self._redraw()
 
+    def _duplicate_part(self) -> None:
+        self._is_rec = False
+        part = self.get_item_now()
+        for x in self.items:
+            if x is not part and x.is_empty:
+                x.items = part.items
+                break
+
+        self._redraw()
+
     def _undo_part(self) -> None:
         self._is_rec = False
         part = self.get_item_now()
