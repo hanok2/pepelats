@@ -128,7 +128,7 @@ class ExtendedCtrl(LooperCtrl):
     def _show_mixer_volume() -> str:
         tmp = "out:".ljust(STATE_COLS) + val_str(ExtendedCtrl.__mixer.getvolume(out=True), 0, 100, USE_COLS) + "\n"
         tmp += "in:".ljust(STATE_COLS) + val_str(ExtendedCtrl.__mixer.getvolume(out=False), 0, 100, USE_COLS) + "\n"
-        tmp += f"  ALSA channels in={IN_CHANNELS} out={OUT_CHANNELS}"
+        tmp += f"ALSA channels in={IN_CHANNELS} out={OUT_CHANNELS}"
         return tmp
 
     @staticmethod
@@ -164,6 +164,8 @@ class ExtendedCtrl(LooperCtrl):
         if not part.is_empty:
             self.items[part_id] = SongPart(self)
 
+        self._redraw()
+
     def _undo_part(self) -> None:
         self._is_rec = False
         part = self.get_item_now()
@@ -172,11 +174,15 @@ class ExtendedCtrl(LooperCtrl):
             part.now = part.next = 0
             part.backup.append(loop)
 
+        self._redraw()
+
     def _redo_part(self) -> None:
         self._is_rec = False
         part = self.get_item_now()
         if len(part.backup) > 0:
             part.items.append(part.backup.pop())
+
+        self._redraw()
 
     #  ================= One song part view and related commands
 
@@ -188,8 +194,12 @@ class ExtendedCtrl(LooperCtrl):
             part.items.append(LoopWithDrum(self, part.length))
             part.now = part.next = part.items_len - 1
             self._is_rec = True
-        elif params[0] == "change":
-            new_id = part.now + params[1]
+        elif params[0] == "prev":
+            new_id = part.now - 1
+            new_id %= part.items_len
+            part.now = new_id
+        elif params[0] == "next":
+            new_id = part.now + 1
             new_id %= part.items_len
             part.now = new_id
         elif params[0] == "delete" and part.now != 0:
@@ -207,6 +217,8 @@ class ExtendedCtrl(LooperCtrl):
             part.items.append(loop)
             part.now = part.next = part.items_len - 1
 
+        self.redraw()
+
     def _undo_loop(self):
         self._is_rec = False
         part = self.get_item_now()
@@ -216,6 +228,8 @@ class ExtendedCtrl(LooperCtrl):
             loop = part.get_item_now()
             loop.undo()
 
+        self._redraw()
+
     def _redo_loop(self):
         self._is_rec = False
         part = self.get_item_now()
@@ -224,6 +238,8 @@ class ExtendedCtrl(LooperCtrl):
         else:
             loop = part.get_item_now()
             loop.redo()
+
+        self._redraw()
 
 
 if __name__ == "__main__":
