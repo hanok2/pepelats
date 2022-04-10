@@ -12,23 +12,19 @@
 - Text console shows loop position, state, length and volume of each part and loop
 - Menu to display, change looper parameters using only foot controller
 
-
 ## Installation:
 
-Install Raspberry Pi OS Lite, LCD screen and drivers.
+Install Raspberry Pi OS Lite, LCD screen and drivers. To make text readable on 3.5 inch LCD select font Terminus 16x32
+using command: sudo dpkg-reconfigure console-setup
 
 Install dependencies running script [install_dependencies.sh](etc/scripts/install_dependencies.sh)
 
-Clone this repository: 
+Clone this repository:
+
 - cd ~/; git clone https://github.com/slmnv5/pepelats
-
-To make text readable on 3.5 inch LCD select font Terminus 16x32 using command:
-
-- sudo dpkg-reconfigure console-setup
 
 To enable auto start edit ~/.bashrc file, append this line:
 
 - $HOME/pepelats/start.sh
-
 
 # [Pepelats details](./Details.md)
