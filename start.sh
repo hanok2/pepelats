@@ -1,8 +1,7 @@
 #!/bin/bash
 # This script starts pepelats audio looper
 # Optional parameters:
-# --use_typing - use typing keys 1,2,3,4,q,w to send MIDI notes 60,62,64,65,12,13
-# --debug - show debug info
+# --use_typing - use typing keys defined in ./etc/count/kbd_notes.json
 
 # Looper parameters passed via env.
 export MAX_LEN_SECONDS=60
@@ -10,7 +9,6 @@ export SD_RATE=48000
 # Part of sound device name that you want to connect; To check use: aplay -l
 export SD_IN="USB Audio"
 export SD_OUT="USB Audio"
-
 
 cd_to_script_dir() {
   THIS_DIR=$(dirname "$0")
@@ -52,8 +50,6 @@ python_command="$USE_KBD python3 $CODE_OPTIMIZE ./start.py  $*"
 touch ./log.log
 tail -n 100 ./log.log >./tmp.log
 mv -f ./tmp.log ./log.log
-
-#export PYTHONPATH="$THIS_DIR:$THIS_DIR/tests"
 
 echo "$python_command"
 
