@@ -35,9 +35,11 @@ if __name__ == "__main__":
     in_midi_port = get_midi_port()
     if in_midi_port is None:
         print("Failed to connecting to MIDI input ports")
+        logging.error("Failed to connecting to MIDI input ports")
         sys.exit(1)
     else:
         print(f"Connected to MIDI input port {in_midi_port.name}")
+        logging.info(f"Connected to MIDI input port {in_midi_port.name}")
 
     r_upd, s_upd = Pipe(False)  # screen update messages
     r_ctrl, s_ctrl = Pipe(False)  # looper control messages

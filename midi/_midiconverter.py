@@ -1,3 +1,4 @@
+import logging
 from multiprocessing.connection import Connection
 from threading import Timer
 from typing import Dict
@@ -5,7 +6,7 @@ from typing import Dict
 import mido
 
 from midi._midicontroller import MidiController
-from utils import always_true, ConfigName, JsonDictLoader
+from utils import ConfigName, JsonDictLoader
 
 
 def is_midi_ctrl_chg(msg):
@@ -95,7 +96,8 @@ class MidiConverter(MidiController):
         self.__midi_cc_to_note = MidiCcToNote()
 
     def start(self) -> None:
-        assert always_true("Started MidiConverter")
+        print("Started internal MidiConverter")
+        logging.info("Started internal MidiConverter")
         while True:
             msg = self._in_port.receive()
             msg = self.__midi_cc_to_note.convert(msg)
