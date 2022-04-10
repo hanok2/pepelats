@@ -11,8 +11,8 @@
   "0": {
     "description": "Song: Ax2-save Bx2-save_as_new DH-delete",
     "update_method": "_show_song_now",
-    "82": ["_save_song"],
-    "92": ["_save_new_song"],
+    "82": [["_save_song"], ["_change_map", "0", "playing"]],
+    "92": [["_save_new_song"], ["_change_map", "0", "playing"]],
     "116": ["_delete_song"]
   },
    "1": {
@@ -20,7 +20,7 @@
     "update_method": "_show_song_next",
     "81": ["_change_song", -1],
     "91": ["_change_song", 1],
-    "112": ["_load_song"]
+    "112": [["_load_song"], ["_change_map", "0", "playing"]]
   },
   "2": {
     "description": "App: Dx2-update DH-restart",

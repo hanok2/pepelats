@@ -11,9 +11,9 @@
   "0": {
     "description": "Stop: A-stop_now B-stop_end, C-fade, DH-clear_all",
     "update_method": "",
-    "81": ["_stop_song", 0],
-    "91": ["_stop_song", 1],
-    "101": ["_fade_and_stop", 11],
-    "116": ["_prepare_song"]
+    "81": [["_stop_song", 0], ["_change_map", "0", "playing"]],
+    "91": [["_stop_song", 1], ["_change_map", "0", "playing"]],
+    "101": [["_fade_and_stop", 11], ["_change_map", "0", "playing"]],
+    "116": [["_prepare_song"], ["_change_map", "0", "playing"]]
   }
 }

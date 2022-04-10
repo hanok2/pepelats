@@ -74,14 +74,31 @@ class MidiTranslator:
         self.__s_conn.send([ConfigName.set_redraw, update_method, description])
 
     def translate_and_send(self, note: str) -> None:
-        msg = MidiConfigLoader.get(note)
-        if msg is not None:
-            method_name, *params = msg
-            assert always_true(f"Sending message: {msg}")
-            if method_name == ConfigName.change_map:
-                MidiConfigLoader.change_map(params[0], params[1])
-                update_method = MidiConfigLoader.get(ConfigName.update_method)
-                description = MidiConfigLoader.get(ConfigName.description)
-                self.__s_conn.send([ConfigName.set_redraw, update_method, description])
-            else:
-                self.__s_conn.send(msg)
+        cmd = MidiConfigLoader.get(note)
+        self.__process_list(cmd)
+
+    def __process_list(self, cmd: list) -> None:
+        if not cmd:
+            return
+
+        if not isinstance(cmd, list):
+            logging.error(f"Command must be a list: {cmd}")
+            return
+
+        head, *tail = cmd
+        if isinstance(head, list):
+            self.__process_list(head)
+            self.__process_list(tail)
+        else:
+            self.__process_command(cmd)
+
+    def __process_command(self, cmd: list) -> None:
+        method_name, *params = cmd
+        assert always_true(f"Sending command: {cmd}")
+        if method_name == ConfigName.change_map:
+            MidiConfigLoader.change_map(params[0], params[1])
+            update_method = MidiConfigLoader.get(ConfigName.update_method)
+            description = MidiConfigLoader.get(ConfigName.description)
+            self.__s_conn.send([ConfigName.set_redraw, update_method, description])
+        else:
+            self.__s_conn.send(cmd)

@@ -29,7 +29,8 @@ def proc_updater(r_conn: Connection):
 if __name__ == "__main__":
     #  freeze_support()
     dtm = datetime.now()
-    logging.critical(f"Starting Pepelats looper: {dtm}")
+    logging.getLogger().setLevel(logging.INFO)
+    logging.info(f"Starting Pepelats looper: {dtm}")
 
     in_midi_port = get_midi_port()
     if in_midi_port is None:
