@@ -52,14 +52,15 @@ aconnect -x
 # Start client and create MIDI port $CONVERTED_NAME
 # This port must be #1 in the MIDI port names list for the looper
 
-./mimap5 -r rules.txt -n $CONVERTED_NAME &
+./mimap5 -r rules.txt -n "$CONVERTED_NAME" &
 time sleep 2
+
 CLIENT_IN=$(aconnect -l | awk -v nm="$CONVERTED_NAME" '$0 ~ nm {print $2;exit}')
 if aconnect -e "${HARDWARE_OUT}0" "${CLIENT_IN}0"; then
-  echo "========= started MIDI converter mimap5, MIDI port name $CONVERTED_NAME =============="
+  echo "========= Connected to MIDI port $CONVERTED_NAME =============="
   exit 0
 else
-  echo "!!!!!!!! Error starting MIDI converter mimap5 !!!!!!!!!!!!!"
+  echo "!!!!!!!! Failed connect to MIDI port $CONVERTED_NAME !!!!!!!!!!!!!"
   exit 1
 fi
 
