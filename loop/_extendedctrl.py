@@ -162,12 +162,13 @@ class ExtendedCtrl(LooperCtrl):
     #  ============ All song parts view and related commands
 
     def _clear_part_id(self, part_id: int) -> None:
-        self._is_rec = False
-        part = self.items[part_id]
-        self.next = self.now
-        self._stop_never()
-        if not part.is_empty:
-            self.items[part_id] = SongPart(self)
+        if part_id != self.now:
+            self._is_rec = False
+            part = self.items[part_id]
+            self.next = self.now
+            self._stop_never()
+            if not part.is_empty:
+                self.items[part_id] = SongPart(self)
 
         self._redraw()
 
