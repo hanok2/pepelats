@@ -22,6 +22,7 @@ def find_usb() -> None:
                 sd.default.device = k, k
 
 
+find_usb()
 IN_CH = sd.query_devices(sd.default.device[0])["max_input_channels"]
 OUT_CH = sd.query_devices(sd.default.device[1])["max_output_channels"]
 if OUT_CH != 2:
