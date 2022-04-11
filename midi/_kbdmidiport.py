@@ -9,7 +9,7 @@ class KbdMidiPort:
     """Using keyboard keys instead of MIDI notes"""
 
     def __init__(self, kbd_notes: Dict[str, int]):
-        self.name: str = "Typing keyboard as MIDI port"
+        self.name: str = "Typing keyboard"
         self.__kbd_notes = kbd_notes
         self.__queue = Queue()
         self.pressed_key = False

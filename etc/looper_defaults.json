@@ -7,6 +7,10 @@
     "BlueBoard",
     "Livid"
   ],
+  "USB_AUDIO_NAMES": [
+    "USB Audio",
+    "VALETON GP-100"
+  ],
   "MIXER_IN": 35,
   "MIXER_OUT": 99
 }

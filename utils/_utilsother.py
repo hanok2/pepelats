@@ -151,6 +151,7 @@ class ConfigName:
     kbd_notes: str = "KBD_NOTES"
     mapped_notes: str = "MAPPED_NOTES"
     midi_port_names: str = "MIDI_PORT_NAMES"
+    usb_audio_names: str = "USB_AUDIO_NAMES"
 
 
 if __name__ == "__main__":

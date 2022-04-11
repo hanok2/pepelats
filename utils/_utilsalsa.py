@@ -1,23 +1,19 @@
 import os
-from typing import Tuple, Union
+from typing import Tuple, Union, List
 
 import numpy as np
 import sounddevice as sd
 
 
-def set_alsa_default_device() -> None:
+def set_alsa_default_device(usb_audio_list: List[str]) -> Tuple[str, str]:
     """Look for USB Audio device and set it default"""
-    sd_in = os.getenv("SD_IN", "USB Audio")
-    sd_out = os.getenv("SD_OUT", "USB Audio")
-    sd_in_out = sd.default.device
-    in_found = out_found = False
     for k, dev in enumerate(sd.query_devices()):
-        if not in_found and sd_in in dev["name"]:
-            sd_in_out[0] = k
-        if not out_found and sd_out in dev["name"]:
-            sd_in_out[1] = k
-
-    sd.default.device = sd_in_out
+        for sd_name in usb_audio_list:
+            if sd_name in dev["name"]:
+                sd.default.device = (k, k)
+                in_str = sd.query_devices(sd.default.device[0])
+                out_str = sd.query_devices(sd.default.device[1])
+                return in_str, out_str
 
 
 def get_max_channels() -> Tuple[int, int]:
@@ -38,7 +34,6 @@ def get_max_channels() -> Tuple[int, int]:
     return in_d, out_d
 
 
-set_alsa_default_device()
 IN_CHANNELS, OUT_CHANNELS = get_max_channels()
 if OUT_CHANNELS != 2:
     raise RuntimeError(f"ALSA audio device must have 2 output channels, got {OUT_CHANNELS}")
@@ -136,20 +131,15 @@ def make_changing_sound() -> np.ndarray:
 
 
 if __name__ == "__main__":
-    def main():
-        set_alsa_default_device()
-
-        result1 = sd.query_devices()
-
+    def run():
         print("=========================")
-        print(result1)
+        print(sd.query_devices())
         print("=========================")
 
-        result1 = sd.query_devices(sd.default.device)
-
         print("=========================")
-        print(result1)
+        print(sd.query_devices(sd.default.device[0]))
+        print(sd.query_devices(sd.default.device[1]))
         print("=========================")
 
 
-    main()
+    run()

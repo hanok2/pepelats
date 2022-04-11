@@ -5,10 +5,7 @@
 
 # Looper parameters passed via env.
 export MAX_LEN_SECONDS=60
-export SD_RATE=48000
-# Part of sound device name that you want to connect; To check use: aplay -l
-export SD_IN="USB Audio"
-export SD_OUT="USB Audio"
+export SD_RATE=44100
 
 cd_to_script_dir() {
   THIS_DIR=$(dirname "$0")
