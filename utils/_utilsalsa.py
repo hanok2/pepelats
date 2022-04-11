@@ -1,44 +1,28 @@
+import logging
 import os
 from typing import Tuple, Union, List
 
 import numpy as np
 import sounddevice as sd
 
+from utils._utilsloader import MainLoader
+from utils._utilsother import ConfigName
 
-def set_alsa_default_device(usb_audio_list: List[str]) -> Tuple[str, str]:
-    """Look for USB Audio device and set it default"""
+"""Look for USB Audio device and set it default"""
+usb_audio_list: List[str] = MainLoader.get(ConfigName.usb_audio_names, ["USB Audio"])
+for sd_name in usb_audio_list:
     for k, dev in enumerate(sd.query_devices()):
-        for sd_name in usb_audio_list:
-            if sd_name in dev["name"]:
-                sd.default.device = (k, k)
-                in_str = sd.query_devices(sd.default.device[0])
-                out_str = sd.query_devices(sd.default.device[1])
-                return in_str, out_str
+        if sd_name in dev["name"]:
+            sd.default.device = (k, k)
+            logging.info(f"Found requested device {sd_name}")
+            break
 
-
-def get_max_channels() -> Tuple[int, int]:
-    in_d = sd.default.device[0]
-    out_d = sd.default.device[1]
-    assert type(in_d) == int
-    assert type(out_d) == int
-    in_d = sd.query_devices(in_d)
-    out_d = sd.query_devices(out_d)
-    assert type(in_d) == dict
-    assert type(out_d) == dict
-    assert "max_input_channels" in in_d
-    assert "max_output_channels" in out_d
-    in_d = in_d["max_input_channels"]
-    out_d = out_d["max_output_channels"]
-    assert type(in_d) == int
-    assert type(out_d) == int
-    return in_d, out_d
-
-
-IN_CHANNELS, OUT_CHANNELS = get_max_channels()
-if OUT_CHANNELS != 2:
-    raise RuntimeError(f"ALSA audio device must have 2 output channels, got {OUT_CHANNELS}")
-if IN_CHANNELS not in [1, 2]:
-    raise RuntimeError(f"ALSA audio device must have 1 or 2 input channels, got {IN_CHANNELS}")
+IN_CH = sd.query_devices(sd.default.device[0])["max_input_channels"]
+OUT_CH = sd.query_devices(sd.default.device[1])["max_output_channels"]
+if OUT_CH != 2:
+    raise RuntimeError(f"ALSA audio device must have 2 output channels, got {OUT_CH}")
+if IN_CH not in [1, 2]:
+    raise RuntimeError(f"ALSA audio device must have 1 or 2 input channels, got {IN_CH}")
 
 
 def calc_slices(buff_len: int, data_len: int, idx: int) -> Tuple[slice, Union[slice, None]]:
@@ -54,7 +38,7 @@ def calc_slices(buff_len: int, data_len: int, idx: int) -> Tuple[slice, Union[sl
 def record_sound_buff(buff: np.ndarray, np_data: np.ndarray, idx: int) -> None:
     assert buff.ndim == np_data.ndim
     data_len = len(np_data)
-    if IN_CHANNELS == 1:
+    if IN_CH == 1:
         np_data = np.broadcast_to(np_data, (data_len, 2))
     slice1, slice2 = calc_slices(len(buff), data_len, idx)
     if slice2 is None:
@@ -80,7 +64,6 @@ def play_sound_buff(buff: np.ndarray, np_data: np.ndarray, idx: int) -> None:
 
 SD_RATE: int = int(os.getenv("SD_RATE", "48000"))
 sd.default.samplerate = SD_RATE
-sd.default.channels = IN_CHANNELS, OUT_CHANNELS
 SD_TYPE: str = 'int16'
 sd.default.dtype = [SD_TYPE, SD_TYPE]
 sd.default.latency = ('low', 'low')
@@ -92,7 +75,7 @@ SD_MAX: int = np.iinfo(SD_TYPE).max
 def make_zero_buffer(buff_len: int) -> np.ndarray:
     if buff_len < 0 or buff_len > MAX_LEN:
         raise ValueError(f"make_zero_buffer() incorrect parameter: {buff_len}")
-    return np.zeros((buff_len, OUT_CHANNELS), SD_TYPE)
+    return np.zeros((buff_len, 2), SD_TYPE)
 
 
 def sound_test(buffer: np.ndarray, duration_sec: float, record: bool) -> None:

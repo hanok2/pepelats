@@ -3,12 +3,11 @@ import sys
 from datetime import datetime
 from multiprocessing import Pipe, Process
 from multiprocessing.connection import Connection
-from typing import List, Tuple
 
 from loop import ExtendedCtrl
 from midi import MidiController, MidiConverter
 from screen import ScreenUpdater
-from utils import ConfigName, get_midi_port, MainLoader, set_alsa_default_device
+from utils import ConfigName, get_midi_port
 
 
 def proc_ctrl(r_conn: Connection, s_conn: Connection):
@@ -32,10 +31,6 @@ if __name__ == "__main__":
     dtm = datetime.now()
     logging.getLogger().setLevel(logging.INFO)
     logging.info(f"Starting Pepelats looper: {dtm}")
-    usb_audio_list: List[str] = MainLoader.get(ConfigName.usb_audio_names, ["USB Audio"])
-    sd_used: Tuple[str, str] = set_alsa_default_device(usb_audio_list)
-
-    logging.info(f"Audio device: {sd_used}")
 
     in_midi_port = get_midi_port()
     if in_midi_port is None:

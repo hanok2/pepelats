@@ -7,8 +7,8 @@ from loop._looperctrl import LooperCtrl
 from loop._loopsimple import LoopWithDrum
 from loop._songpart import SongPart
 from mixer import Mixer
-from utils import IN_CHANNELS, OUT_CHANNELS, val_str, ConfigName, SCR_COLS, CURRENT_VERSION, STATE_COLS
 from utils import run_os_cmd
+from utils import val_str, ConfigName, SCR_COLS, CURRENT_VERSION, STATE_COLS
 
 USE_COLS = SCR_COLS - STATE_COLS
 
@@ -132,8 +132,8 @@ class ExtendedCtrl(LooperCtrl):
     @staticmethod
     def _show_mixer_volume() -> str:
         tmp = "out:".ljust(STATE_COLS) + val_str(ExtendedCtrl.__mixer.getvolume(out=True), 0, 100, USE_COLS) + "\n"
-        tmp += "in:".ljust(STATE_COLS) + val_str(ExtendedCtrl.__mixer.getvolume(out=False), 0, 100, USE_COLS) + "\n"
-        tmp += f"ALSA channels in={IN_CHANNELS} out={OUT_CHANNELS}"
+        tmp += "in:".ljust(STATE_COLS) + val_str(ExtendedCtrl.__mixer.getvolume(out=False), 0, 100, USE_COLS)
+
         return tmp
 
     @staticmethod
