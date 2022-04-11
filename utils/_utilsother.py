@@ -140,7 +140,7 @@ class ConfigName:
     comment: str = "comment"
     #  other
     use_typing: str = "--use_typing"
-    external_converter: str = "external_converter"
+    ext_conv: str = "ext_conv"
     # redraw
     set_redraw: str = "_set_redraw"
     redraw: str = "_redraw"

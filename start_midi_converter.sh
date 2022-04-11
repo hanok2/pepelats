@@ -7,7 +7,7 @@
 # Part of hardware MIDI port name that is source of original messages; To check names use: aconnect -l
 HARDWARE_NAME="BlueBoard"
 # Full MIDI port name that is source of converted messages
-CONVERTED_NAME="external_converter"
+EXT_CONV="ext_conv"
 
 THIS_DIR=$(dirname "$0")
 cd "$THIS_DIR" || exit 1
@@ -49,18 +49,18 @@ fi
 # Kill and disconnect all
 killall -9 mimap5
 aconnect -x
-# Start client and create MIDI port $CONVERTED_NAME
+# Start client and create MIDI port $EXT_CONV
 # This port must be #1 in the MIDI port names list for the looper
 
-./mimap5 -r rules.txt -n "$CONVERTED_NAME" &
+./mimap5 -r rules.txt -n "$EXT_CONV" &
 time sleep 2
 
-CLIENT_IN=$(aconnect -l | awk -v nm="$CONVERTED_NAME" '$0 ~ nm {print $2;exit}')
+CLIENT_IN=$(aconnect -l | awk -v nm="$EXT_CONV" '$0 ~ nm {print $2;exit}')
 if aconnect -e "${HARDWARE_OUT}0" "${CLIENT_IN}0"; then
-  echo "========= Connected to MIDI port $CONVERTED_NAME =============="
+  echo "========= Connected to MIDI port $EXT_CONV =============="
   exit 0
 else
-  echo "!!!!!!!! Failed connect to MIDI port $CONVERTED_NAME !!!!!!!!!!!!!"
+  echo "!!!!!!!! Failed connect to MIDI port $EXT_CONV !!!!!!!!!!!!!"
   exit 1
 fi
 

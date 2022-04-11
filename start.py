@@ -51,7 +51,7 @@ if __name__ == "__main__":
     p_upd.start()
     p_ctrl.start()
 
-    if ConfigName.external_converter in in_midi_port.name:
+    if ConfigName.ext_conv in in_midi_port.name:
         midi_control = MidiController(s_ctrl, in_midi_port)
     else:
         midi_control = MidiConverter(s_ctrl, in_midi_port)
