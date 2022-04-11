@@ -11,23 +11,16 @@ from utils._utilsother import ConfigName
 logging.getLogger().setLevel(logging.INFO)
 
 
-def find_usb() -> Union[int, None]:
+def find_usb() -> None:
     """Look for USB Audio device and set it default"""
     usb_audio_list: List[str] = MainLoader.get(ConfigName.usb_audio_names, ["USB Audio"])
     for sd_name in usb_audio_list:
         for k, dev in enumerate(sd.query_devices()):
-            if sd_name in dev["name"]:
-                logging.info(f"Found requested device {sd_name}")
-                return k
+            full_name = dev["name"]
+            if sd_name in full_name:
+                logging.info(f"Found requested device {sd_name} in {full_name}")
+                sd.default.device = k, k
 
-
-sd_id: int = find_usb()
-if sd_id:
-    sd.default.device = (sd_id, sd_id)
-else:
-    sd_name1 = sd.query_devices(sd.default.device[0])["name"]
-    sd_name2 = sd.query_devices(sd.default.device[1])["name"]
-    logging.warning(f"Not found requested devices, using {sd_name1, sd_name2}")
 
 IN_CH = sd.query_devices(sd.default.device[0])["max_input_channels"]
 OUT_CH = sd.query_devices(sd.default.device[1])["max_output_channels"]
