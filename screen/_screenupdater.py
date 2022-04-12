@@ -30,7 +30,7 @@ class ScreenUpdater(MsgProcessor):
         self.__t1.start()
 
     def _redraw(self, info: str, description: str, loop_len: int, idx: int,
-                time_stamp: float, is_play: bool, is_stop: bool) -> None:
+                is_play: bool, is_stop: bool) -> None:
         self.__is_play = is_play
         self.__is_stop = is_stop
         self.__delta = loop_len / UPDATES_PER_LOOP
@@ -38,8 +38,7 @@ class ScreenUpdater(MsgProcessor):
         self.__loop_len = loop_len
         if description:
             self.__description = description
-        msg_delay = time.time() - time_stamp
-        self.__idx = idx + round(msg_delay * SD_RATE)
+        self.__idx = idx
         if not __debug__:
             # clear all if NOT debug
             print_at(2, 1, ' ' * (SCR_ROWS - 1) * SCR_COLS)
