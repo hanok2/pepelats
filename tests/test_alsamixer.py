@@ -9,19 +9,21 @@ class TestAlsaMixer(TestCase):
 
     def test_1(self):
         mixer1 = Mixer()
+        out_v: int = mixer1.getvolume(out=True)
+        in_v: int = mixer1.getvolume(out=False)
+
         mixer1.setvolume(33, out=True)
         mixer1.setvolume(23, out=False)
 
-        mixer2 = Mixer()
-        self.assertEqual(mixer2.getvolume(out=True), 33)
-        self.assertEqual(mixer2.getvolume(out=False), 23)
+        self.assertEqual(mixer1.getvolume(out=True), 33)
+        self.assertEqual(mixer1.getvolume(out=False), 23)
 
-        mixer2.change_volume(65, out=True)
-        mixer2.change_volume(10, out=False)
+        mixer1.setvolume(out_v, out=True)
+        mixer1.setvolume(in_v, out=False)
 
         mixer3 = Mixer()
-        self.assertEqual(mixer3.getvolume(out=True), 98)
-        self.assertEqual(mixer3.getvolume(out=False), 33)
+        self.assertEqual(mixer3.getvolume(out=True), out_v)
+        self.assertEqual(mixer3.getvolume(out=False), in_v)
 
 
 if __name__ == "__main__":
