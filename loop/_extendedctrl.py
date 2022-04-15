@@ -3,7 +3,6 @@ import os
 from multiprocessing.connection import Connection
 
 from loop._looperctrl import LooperCtrl
-from loop._loopsimple import LoopWithDrum
 from loop._songpart import SongPart
 from mixer import Mixer
 from utils import run_os_cmd
@@ -13,7 +12,8 @@ USE_COLS = SCR_COLS - STATE_COLS
 
 
 class ExtendedCtrl(LooperCtrl):
-    """added screen connection and Mixer"""
+    """Add screen connection and Mixer.
+     Add looper commands"""
     __mixer: Mixer = Mixer()
 
     def __init__(self, scr_conn: Connection):
@@ -205,11 +205,7 @@ class ExtendedCtrl(LooperCtrl):
         if self._is_rec:
             return
         part = self.get_item_now()
-        if params[0] == "add":
-            part.items.append(LoopWithDrum(self, part.length))
-            part.now = part.next = part.items_len - 1
-            self._is_rec = True
-        elif params[0] == "prev":
+        if params[0] == "prev":
             new_id = part.now - 1
             new_id %= part.items_len
             part.now = new_id

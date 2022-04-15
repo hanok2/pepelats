@@ -16,9 +16,6 @@ class SongPart(CollectionOwner[LoopWithDrum], Player):
         CollectionOwner.__init__(self)
         self.items.append(LoopWithDrum(ctrl))
 
-    def get_init_len(self):
-        return self.items[0].length
-
     def trim_buffer(self, idx: int, trim_len: int) -> None:
         self.get_item_now().trim_buffer(idx, trim_len)
 
