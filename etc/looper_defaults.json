@@ -11,6 +11,6 @@
     "VALETON GP",
     "USB Audio"
   ],
-  "MIXER_IN": 33,
-  "MIXER_OUT": 98
+  "MIXER_IN": 99,
+  "MIXER_OUT": 99
 }
