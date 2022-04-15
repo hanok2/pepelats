@@ -53,7 +53,7 @@ class TestMidiCounter(TestCase):
             pass
 
         msg = r_conn.recv()
-        self.assertTrue(ConfigName.set_redraw == msg[0])
+        self.assertTrue(ConfigName.prepare_redraw == msg[0])
 
         msg = r_conn.recv()
         self.assertEqual(msg, ['_play_part_id', 0])

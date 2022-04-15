@@ -13,7 +13,7 @@ USE_COLS = SCR_COLS - STATE_COLS
 
 
 class ExtendedCtrl(LooperCtrl):
-    """added more commands"""
+    """added screen connection and Mixer"""
     __mixer: Mixer = Mixer()
 
     def __init__(self, scr_conn: Connection):
@@ -35,7 +35,7 @@ class ExtendedCtrl(LooperCtrl):
                               info, self.__description, part.length, self.idx,
                               self._go_play.is_set(), self.get_stop_event().is_set()])
 
-    def _set_redraw(self, update_method: str, description: str) -> None:
+    def _prepare_redraw(self, update_method: str, description: str) -> None:
         self.__update_method = update_method
         self.__description = description
         if self._is_rec:

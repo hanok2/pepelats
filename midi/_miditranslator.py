@@ -71,7 +71,7 @@ class MidiTranslator:
         self.__s_conn = s_conn
         update_method = MidiConfigLoader.get(ConfigName.update_method)
         description = MidiConfigLoader.get(ConfigName.description)
-        self.__s_conn.send([ConfigName.set_redraw, update_method, description])
+        self.__s_conn.send([ConfigName.prepare_redraw, update_method, description])
 
     def translate_and_send(self, note: str) -> None:
         cmd = MidiConfigLoader.get(note)
@@ -99,6 +99,6 @@ class MidiTranslator:
             MidiConfigLoader.change_map(params[0], params[1])
             update_method = MidiConfigLoader.get(ConfigName.update_method)
             description = MidiConfigLoader.get(ConfigName.description)
-            self.__s_conn.send([ConfigName.set_redraw, update_method, description])
+            self.__s_conn.send([ConfigName.prepare_redraw, update_method, description])
         else:
             self.__s_conn.send(cmd)

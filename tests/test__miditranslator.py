@@ -15,7 +15,7 @@ class TestMidiTranslator(TestCase):
         translator.translate_and_send("60")
 
         msg = r_conn.recv()
-        if msg[0] == ConfigName.set_redraw:
+        if msg[0] == ConfigName.prepare_redraw:
             msg = r_conn.recv()
         self.assertEqual(msg, ["_play_part_id", 0])
         self.assertFalse(r_conn.poll())
@@ -23,7 +23,7 @@ class TestMidiTranslator(TestCase):
     def test_2(self):
         translator.translate_and_send("96")
         msg = r_conn.recv()
-        if msg[0] == ConfigName.set_redraw:
+        if msg[0] == ConfigName.prepare_redraw:
             msg = r_conn.recv()
         self.assertEqual(msg, ["_clear_part_id", 1])
         self.assertFalse(r_conn.poll())

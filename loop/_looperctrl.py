@@ -7,7 +7,7 @@ from utils import MsgProcessor
 
 
 class LooperCtrl(OneLoopCtrl, Song, MsgProcessor):
-    """added playback thread, message thread via MsgListener.
+    """added playback thread, MsgProcessor and Song.
      Song is collection of song parts with related methods"""
 
     def __init__(self):
@@ -32,10 +32,6 @@ class LooperCtrl(OneLoopCtrl, Song, MsgProcessor):
 
     def _redraw(self) -> None:
         """used by children to redraw itself on screen"""
-        pass
-
-    def _set_redraw(self, update_method: str, description: str) -> None:
-        """used by children to prepare method and description for redraw"""
         pass
 
     def _prepare_song(self) -> None:

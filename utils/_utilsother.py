@@ -142,7 +142,7 @@ class ConfigName:
     use_typing: str = "--use_typing"
     ext_conv: str = "ext_conv"
     # redraw
-    set_redraw: str = "_set_redraw"
+    prepare_redraw: str = "_prepare_redraw"
     redraw: str = "_redraw"
     #  main loader
     drum_swing: str = "DRUM_SWING"
