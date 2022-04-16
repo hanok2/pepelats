@@ -23,6 +23,40 @@ class LooperCtrl(OneLoopCtrl, Song, MsgProcessor):
     def start(self):
         self.__t1.start()
 
+    def __playback(self) -> None:
+        """runs in a thread, play and record current song part"""
+        while True:
+            self._go_play.wait()
+            if self.next != self.now:
+                self.now = self.next
+
+            part = self.get_item_now()
+            self.get_stop_event().clear()
+            self._stop_never()
+            self.idx = 0
+            self._is_rec = part.is_empty
+            self._redraw()
+            part.play_buffer()
+
+    def __stop_quantized(self) -> None:
+        """the method for quantized playback and recording,
+        has logic when to stop playback"""
+        part = self.get_item_now()
+        if part.is_empty:
+            if self.drum.is_empty:
+                self.stop_now()
+            else:
+                self._stop_at_bound(self.drum.length)
+        else:
+            if self.next != self.now:
+                if self.is_stop_len_set():
+                    self._stop_at_bound(self.drum.length)
+                else:
+                    self._stop_at_bound(part.length)
+                    self.drum.play_break_later(part.length, self.idx)
+            else:
+                self._stop_never()
+
     def _set_drum_length(self, length: int) -> None:
         if length > 0:
             self.drum.prepare_drum(length)
@@ -88,50 +122,16 @@ class LooperCtrl(OneLoopCtrl, Song, MsgProcessor):
 
         if self.next == self.now:
             part = self.get_item_now()
-            if not self._is_rec:
-                part.items.append(LoopWithDrum(self, self.items[0].length))
-                part.now = part.next = part.items_len - 1
-                self._is_rec = True
-            else:
+            if self._is_rec:
                 part.backup.clear()
                 self._is_rec = False
+            else:
+                part.items.append(LoopWithDrum(self, part.items[0].length))
+                part.now = part.next = part.items_len - 1
+                self._is_rec = True
 
         self.__stop_quantized()
         self._redraw()
-
-    def __playback(self) -> None:
-        """runs in a thread, play and record current song part"""
-        while True:
-            self._go_play.wait()
-            if self.next != self.now:
-                self.now = self.next
-
-            part = self.get_item_now()
-            self.get_stop_event().clear()
-            self._stop_never()
-            self.idx = 0
-            self._is_rec = part.is_empty
-            self._redraw()
-            part.play_buffer()
-
-    def __stop_quantized(self) -> None:
-        """the method for quantized playback and recording,
-        has logic when to stop playback"""
-        part = self.get_item_now()
-        if part.is_empty:
-            if self.drum.is_empty:
-                self.stop_now()
-            else:
-                self._stop_at_bound(self.drum.length)
-        else:
-            if self.next != self.now:
-                if self.is_stop_len_set():
-                    self._stop_at_bound(self.drum.length)
-                else:
-                    self._stop_at_bound(part.length)
-                    self.drum.play_break_later(part.length, self.idx)
-            else:
-                self._stop_never()
 
 
 if __name__ == "__main__":
