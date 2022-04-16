@@ -1,6 +1,6 @@
 {
   "DRUM_SWING": 0.75,
-  "DRUM_VOLUME": 0.99,
+  "DRUM_VOLUME": 0.75,
   "DRUM_TYPE": "pop",
   "MIDI_PORT_NAMES": [
     "ext_conv",
