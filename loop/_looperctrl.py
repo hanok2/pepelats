@@ -17,17 +17,17 @@ class LooperCtrl(OneLoopCtrl, Song, MsgProcessor):
         Song.__init__(self)
         self.__t1: Thread = Thread(target=self.__playback, name="playback_thread", daemon=True)
 
-    def get_control(self) -> OneLoopCtrl:
+    def _get_control(self) -> OneLoopCtrl:
         return self
 
     def start(self):
         self.__t1.start()
 
-    def set_drum_length(self, length: int) -> None:
+    def _set_drum_length(self, length: int) -> None:
         if length > 0:
             self.drum.prepare_drum(length)
 
-    def get_drum_length(self) -> int:
+    def _get_drum_length(self) -> int:
         return self.drum.length
 
     def _redraw(self) -> None:
@@ -89,11 +89,13 @@ class LooperCtrl(OneLoopCtrl, Song, MsgProcessor):
         if self.next == self.now:
             part = self.get_item_now()
             if not self._is_rec:
-                part.backup.clear()
                 part.items.append(LoopWithDrum(self, self.items[0].length))
                 part.now = part.next = part.items_len - 1
+                self._is_rec = True
+            else:
+                part.backup.clear()
+                self._is_rec = False
 
-            self._is_rec = not self._is_rec
         self.__stop_quantized()
         self._redraw()
 

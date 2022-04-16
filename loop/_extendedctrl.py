@@ -182,12 +182,14 @@ class ExtendedCtrl(LooperCtrl):
                 break
 
     def _undo_part(self) -> None:
-        self._is_rec = False
         part = self.get_item_now()
         if part.items_len > 1:
             loop = part.items.pop()
             part.now = part.next = 0
-            part.backup.append(loop)
+            if self._is_rec:
+                self._is_rec = False
+            else:
+                part.backup.append(loop)
 
         self._redraw()
 

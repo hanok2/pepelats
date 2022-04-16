@@ -26,15 +26,15 @@ class Song(CollectionOwner[SongPart]):
         pass
 
     @abstractmethod
-    def set_drum_length(self, length: int) -> None:
+    def _set_drum_length(self, length: int) -> None:
         pass
 
     @abstractmethod
-    def get_drum_length(self) -> int:
+    def _get_drum_length(self) -> int:
         pass
 
     @abstractmethod
-    def get_control(self) -> OneLoopCtrl:
+    def _get_control(self) -> OneLoopCtrl:
         pass
 
     def _load_song(self) -> None:
@@ -46,7 +46,7 @@ class Song(CollectionOwner[SongPart]):
             length, load_list = pickle.load(f)
 
         self.items.clear()
-        ctrl = self.get_control()
+        ctrl = self._get_control()
         for k in load_list:
             self.items.append(k if k is not None else SongPart(ctrl))
 
@@ -55,11 +55,11 @@ class Song(CollectionOwner[SongPart]):
             for b in a.items:
                 b._ctrl = ctrl
 
-        self.set_drum_length(length)
+        self._set_drum_length(length)
 
     def _save_song(self) -> None:
         self._stop_song()
-        length = self.get_drum_length()
+        length = self._get_drum_length()
         save_list = []
         for k in self.items:
             save_list.append(k if not k.is_empty else None)
