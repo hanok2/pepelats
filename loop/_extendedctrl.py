@@ -239,7 +239,11 @@ class ExtendedCtrl(LooperCtrl):
             self._undo_part()
         else:
             loop = part.get_item_now()
-            loop.undo()
+            if loop.is_empty:
+                part.items.pop(part.now)
+                part.now = part.next = 0
+            else:
+                loop.undo()
 
         self._redraw()
 
