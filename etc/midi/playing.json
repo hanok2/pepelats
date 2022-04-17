@@ -1,13 +1,13 @@
 {
   "default_config": {
-    "description": "Parent for playing maps\n",
+    "description": "Parent for maps\n",
     "41": ["_change_drum"],
     "42": ["_change_drum_intensity", -1],
     "43": ["_change_drum_intensity", 1],
     "47": ["_change_map", "0","params"],
     "53": ["_duplicate_part"],
-    "56": ["_change_map", "0", "actions" ],
-    "57": ["_change_map", "0", "settings" ]
+    "56": ["_change_map", "0", "stop" ],
+    "57": ["_change_map", "0", "song" ]
   },
   "0": {
     "description": "All parts: A/B/C/D-play part",

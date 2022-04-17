@@ -1,12 +1,12 @@
 {
   "default_config": {
-    "description": "Parent for config maps\n",
+    "description": "Parent for maps\n",
     "41": ["_change_map", "prev", "params"],
     "51": ["_change_map", "next", "params"],
     "46": ["_change_map", "0", "playing"],
     "47": ["_change_map", "0", "params"],
-    "56": ["_change_map", "0", "actions"],
-    "57": ["_change_map", "0", "settings"]
+    "56": ["_change_map", "0", "stop"],
+    "57": ["_change_map", "0", "song"]
   },
   "0": {
     "description": "Mix_Volume: A/B-out  C/D-in",

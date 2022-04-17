@@ -13,7 +13,7 @@
         - 1 tap: undo current part/loop, if available
         - 2 taps: redo current part/loop if available
         - 3 taps: stop
-        - 1 tap + hold: switch to "actions" view
+        - 1 tap + hold: switch to "stop" view
         - 2 taps + hold: switch to "looper settings" view
 ## Configuration for "one part" view
 - Buttons A,B,C,D manipulate loops of one song parts.

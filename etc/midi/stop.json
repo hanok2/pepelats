@@ -1,12 +1,12 @@
 {
   "default_config": {
-    "description": "Parent for actions maps\n",
-    "41": ["_change_map", "prev", "actions"],
-    "51": ["_change_map", "next", "actions"],
+    "description": "Parent for maps\n",
+    "41": ["_change_map", "prev", "stop"],
+    "51": ["_change_map", "next", "stop"],
     "46": ["_change_map", "0", "playing"],
     "47": ["_change_map", "0", "params"],
     "56": ["_change_map", "0", "playing"],
-    "57": ["_change_map", "0", "settings"]
+    "57": ["_change_map", "0", "song"]
   },
   "0": {
     "description": "Stop: A-stop_now B-stop_end, C-fade, DH-clear_all",
