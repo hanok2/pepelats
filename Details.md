@@ -13,7 +13,7 @@ configured in a text files (e.g. [etc/midi/playing.json](etc/midi/playing.json))
 There are 4 buttons on this pedal named A,B,C,D and 2 extra buttons attached to MIDI expression inputs named E1 and E2.
 
 MIDI over Bluetooth needs manual pairing. You may use wired USB MIDI controller as well or even typing keyboard. Check
-file [start.sh](start.sh) and [kbd_notes.json](etc/count/kbd_notes.json) for details.
+file [start.sh](start.sh) and [looper_defaults.json](etc/looper_defaults.json) for details.
 
 ## Looper modes - "direct" and "indirect"
 
@@ -48,12 +48,10 @@ Direct configuration is used to for song parts and indirect for loops in a part,
 - restart/update application (download the latest branch form GitHub)
 - load drum style (e.g. pop/rock/....)
 
-
 ### Actions
 
 - commands to stop looper and clear loops content.
 
-    
 MIDI commands assigned to buttons are different for these views and are listed in [commands.md](etc/midi/commands.md)
 located alongside JSON files in [etc/midi/](etc/midi)
 
@@ -76,7 +74,7 @@ Using this method one button may send 6-7 times more MIDI notes.
 
 Multi tapping mode needs a delay to decide if there will be next tap. Because of this it should not be used for time
 critical commands e.g. start recording/playing. But for other commands like changing looper settings it is
-indispensable. Midi count is configured in [mapped_notes.json](etc/count/mapped_notes.json)
+indispensable. Midi count is configured in [looper_defaults.json](etc/looper_defaults.json)
 
 ### Notes about installation of LCD:
 

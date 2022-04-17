@@ -68,7 +68,7 @@ def play_sound_buff(buff: np.ndarray, np_data: np.ndarray, idx: int) -> None:
         np_data[s1:] += buff[slice2]
 
 
-SD_RATE: int = int(os.getenv("SD_RATE", "48000"))
+SD_RATE: int = int(os.getenv("SD_RATE", "44100"))
 sd.default.samplerate = SD_RATE
 SD_TYPE: str = 'int16'
 sd.default.dtype = [SD_TYPE, SD_TYPE]

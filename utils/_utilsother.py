@@ -152,6 +152,7 @@ class ConfigName:
     mapped_notes: str = "MAPPED_NOTES"
     midi_port_names: str = "MIDI_PORT_NAMES"
     usb_audio_names: str = "USB_AUDIO_NAMES"
+    max_late_seconds: str = "MAX_LATE_SECONDS"
 
 
 if __name__ == "__main__":

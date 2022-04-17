@@ -29,7 +29,7 @@ def get_midi_port():
 
     if ConfigName.use_typing in sys.argv or not os.name == "posix":
         from midi import KbdMidiPort
-        kbd_map = JsonDictLoader("etc/count/kbd_notes.json").get(ConfigName.kbd_notes, dict())
+        kbd_map = MainLoader.get(ConfigName.kbd_notes, dict())
         return KbdMidiPort(kbd_map)
     else:
         tmp = MainLoader.get(ConfigName.midi_port_names, [])

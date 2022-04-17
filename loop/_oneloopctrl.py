@@ -1,13 +1,13 @@
 from threading import Event
 
 from drum import RealDrum
-from utils import MAX_32_INT
+from utils import MAX_32_INT, ConfigName, MainLoader, SD_RATE
 
 
 class OneLoopCtrl:
     """class with events to control one loop, has playback index"""
 
-    max_late_samples = 5000
+    max_late_samples = MainLoader.get(ConfigName.max_late_seconds, 0.1) * SD_RATE
 
     def __init__(self):
         self._is_rec: bool = False
