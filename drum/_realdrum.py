@@ -25,6 +25,7 @@ class RealDrum:
         self.__change_after_samples: int = MAX_32_INT
         self.__sample_counter: int = 0
         self.__i: Intensity = Intensity.SILENT
+        self.__is_break_pending: bool = False
 
         self.__file_finder = FileFinder("etc/drums", False, "", MainLoader.get(ConfigName.drum_type, "pop"))
         tmp = self.__file_finder.get_path_now()
@@ -91,11 +92,15 @@ class RealDrum:
             play_sound_buff(DrumLoader.get_bk(), out_data, idx)
 
     def play_break_later(self, part_len: int, idx: int) -> None:
+        if self.__is_break_pending:
+            return
+
         bars = 0.5
         samples = self.length * bars
         idx %= part_len
         start_at = (part_len - idx) - samples
         if start_at > 0:
+            self.__is_break_pending = True
             Timer(start_at / SD_RATE, self.play_break_now, [bars]).start()
 
     def __random_samples(self):
@@ -108,6 +113,7 @@ class RealDrum:
 
         def revert():
             self.__i &= ~Intensity.BREAK
+            self.__is_break_pending = False
 
         self.__random_samples()
         self.__i |= Intensity.BREAK

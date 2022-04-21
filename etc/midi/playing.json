@@ -22,7 +22,15 @@
     "86": ["_clear_part_id", 0],
     "96": ["_clear_part_id", 1],
     "106": ["_clear_part_id", 2],
-    "116": ["_clear_part_id", 3]
+    "116": ["_clear_part_id", 3],
+    "82": ["_overdub"],
+    "92": ["_overdub"],
+    "102": ["_overdub"],
+    "112": ["_overdub"],
+    "83": ["_record"],
+    "93": ["_record"],
+    "103": ["_record"],
+    "113": ["_record"]
   },
   "1": {
     "description": "One part: A-rec. B/C-scroll D-silence Dx2-reverse DH-del.",
@@ -30,7 +38,7 @@
     "46": ["_change_map", "0", "playing"],
     "51": ["_undo_loop"],
     "52": ["_redo_loop"],
-    "60": ["_play_loop_next"],
+    "60": ["_overdub_loop"],
     "62": ["_change_loop", "prev"],
     "64": ["_change_loop", "next"],
     "111": ["_change_loop", "silent"],
