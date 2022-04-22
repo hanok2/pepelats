@@ -14,14 +14,13 @@ class WrapBuffer:
         self.__is_empty = True
         self.__buff: np.ndarray = make_zero_buffer(length)
         self.__volume: float = -1
-        self.__length: int = length
         self.__start: int = -1
         self.__undo: List[Any] = []
         self.__redo: List[Any] = []
 
     @property
     def length(self) -> int:
-        return self.__length
+        return len(self.__buff)
 
     @property
     def is_empty(self) -> bool:
@@ -92,15 +91,13 @@ class WrapBuffer:
         assert always_true(
             f"len(self.__buff) {len(self.__buff)} trim_len {trim_len} self.__start {self.__start} idx {idx}")
 
-        self.__length = len(self.__buff)
-        assert self.__length % trim_len == 0 and self.__length > 0, "incorrect buffer trim"
+        assert self.length % trim_len == 0 and self.length > 0, "incorrect buffer trim"
         self.__is_empty = False
 
     def redo(self) -> None:
         if len(self.__redo) > 0:
             self.__undo.append(self.__buff)
             self.__buff = self.__redo.pop()
-            self.__length = len(self.__buff)
             self.__volume = -1
 
     def get_undo_len(self) -> int:
@@ -110,7 +107,6 @@ class WrapBuffer:
         if len(self.__undo) > 0:
             self.__redo.append(self.__buff)
             self.__buff = self.__undo.pop()
-            self.__length = len(self.__buff)
             self.__volume = -1
 
     def save_undo(self) -> None:
