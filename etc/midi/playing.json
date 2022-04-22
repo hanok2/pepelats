@@ -23,14 +23,10 @@
     "96": ["_clear_part_id", 1],
     "106": ["_clear_part_id", 2],
     "116": ["_clear_part_id", 3],
-    "82": ["_overdub"],
-    "92": ["_overdub"],
-    "102": ["_overdub"],
-    "112": ["_overdub"],
-    "83": ["_record"],
-    "93": ["_record"],
-    "103": ["_record"],
-    "113": ["_record"]
+    "82": ["_record"],
+    "92": ["_record"],
+    "102": ["_record"],
+    "112": ["_record"]
   },
   "1": {
     "description": "One part: A-rec. B/C-scroll D-silence Dx2-reverse DH-del.",

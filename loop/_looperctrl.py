@@ -102,22 +102,23 @@ class LooperCtrl(OneLoopCtrl, Song, MsgProcessor):
 
     def _play_part_id(self, part_id: int) -> None:
         self.next = part_id
-        self._is_rec = False
 
         if not self._go_play.is_set():
             self._go_play.set()
             self._redraw()
             return
 
-        self.__stop_quantized()
+        if self.next == self.now and not self._is_rec:
+            self._is_rec = True
+            self.__overdub()
+        else:
+            self._is_rec = False
+            self.__stop_quantized()
+
         self._redraw()
 
-    def _overdub(self) -> None:
+    def __overdub(self) -> None:
         """add recording of same length as initial loop - part.items[0]"""
-
-        if self.next != self.now or self.is_rec:
-            return
-
         part = self.get_item_now()
         part.backup.clear()
         self._is_rec = True
