@@ -3,7 +3,7 @@ from threading import Thread, Event
 from loop._loopsimple import LoopWithDrum
 from loop._oneloopctrl import OneLoopCtrl
 from loop._song import Song
-from utils import MsgProcessor
+from utils import MsgProcessor, MAX_LEN
 
 
 class LooperCtrl(OneLoopCtrl, Song, MsgProcessor):
@@ -118,32 +118,25 @@ class LooperCtrl(OneLoopCtrl, Song, MsgProcessor):
         self._redraw()
 
     def __overdub(self) -> None:
-        """add recording of same length as initial loop - part.items[0]"""
+        """add recording of same length as initial loop - part.length"""
         part = self.get_item_now()
         part.backup.clear()
         self._is_rec = True
-        orig_len = part.items[0].length
+        orig_len = part.length
         assert orig_len > 0
-        tmp = LoopWithDrum(self, orig_len)
-        part.items.append(tmp)
+        loop = LoopWithDrum(self, orig_len)
+        part.items.append(loop)
         part.now = part.next = part.items_len - 1
 
-        self._redraw()
+    def _extend_record(self) -> None:
+        """add recording of max. length, trimmed it will be multiple of drum length or initial loop length"""
 
-    def _record(self) -> None:
-        """add recording of unknown length, multiple of drum length or initial loop length"""
-
-        if self.next != self.now or self.is_rec:
+        if self.next != self.now or not self.is_rec:
             return
 
         part = self.get_item_now()
-        part.backup.clear()
-        part.items.append(LoopWithDrum(self))
-        part.now = part.next = part.items_len - 1
-        part.backup.clear()
-        self._is_rec = True
-
-        self._redraw()
+        loop = part.get_item_now()
+        loop.change_len(MAX_LEN)
 
 
 if __name__ == "__main__":

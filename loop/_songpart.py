@@ -18,13 +18,15 @@ class SongPart(CollectionOwner[LoopWithDrum], Player):
 
     def trim_buffer(self, idx: int) -> None:
         assert always_true(f"trim_buffer {self.__class__.__name__} {idx}")
+
         loop = self.get_item_now()
         if self.now == 0:
             loop.trim_buffer(idx)
             return
 
         recorded_len = loop.get_recorded_len(idx)
-        init_len = self.items[0].length
+        init_len = self.length
+
         assert recorded_len > 0 and init_len > 0
         if recorded_len < init_len // 2:
             loop.finalize(idx, self._ctrl.drum.length)

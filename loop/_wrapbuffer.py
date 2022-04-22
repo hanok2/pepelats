@@ -32,6 +32,13 @@ class WrapBuffer:
     def zero_buff(self) -> None:
         self.__buff[:] = 0
 
+    def change_len(self, new_len: int) -> None:
+        diff = new_len - self.length
+        if diff > 0:
+            self.__buff = np.concatenate((self.__buff[:], make_zero_buffer(diff)), axis=0)
+        elif diff < 0:
+            self.__buff = self.__buff[:new_len]
+
     def record_samples(self, in_data: np.ndarray, idx: int) -> None:
         """Record and fix start for empty, recalculate volume for non empty"""
         if self.__is_empty:
