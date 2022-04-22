@@ -31,12 +31,13 @@ class TestWrapBuffer(TestCase):
         self.assertTrue(test_buff.length == 100_000)
 
     def test_trim5(self):
+        """finalize without recording, start is negative"""
         test_buff = WrapBuffer()
         had_error = False
         try:
             test_buff.finalize(151_000, 100_000)
         except AssertionError as err:
-            self.assertTrue("start non zero" in str(err))
+            self.assertTrue("start must be non negative" in str(err))
             had_error = True
 
         self.assertTrue(had_error)

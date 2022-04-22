@@ -3,7 +3,7 @@ import numpy as np
 from loop._oneloopctrl import OneLoopCtrl
 from loop._player import Player
 from loop._wrapbuffer import WrapBuffer
-from utils import MAX_LEN, STATE_COLS, ScrColors
+from utils import MAX_LEN, STATE_COLS, ScrColors, always_true
 
 
 class LoopSimple(WrapBuffer, Player):
@@ -16,7 +16,8 @@ class LoopSimple(WrapBuffer, Player):
 
     def trim_buffer(self, idx: int) -> None:
         """trim buffer to the length at stop event = idx. Overridden by child class"""
-        WrapBuffer.finalize(self, idx, idx)
+        assert always_true(f"trim_buffer {self.__class__.__name__} {idx}")
+        self.finalize(idx, idx)
 
     # noinspection PyUnusedLocal
     def state_str(self, is_now: bool, is_next: bool) -> str:
@@ -57,11 +58,12 @@ class LoopWithDrum(LoopSimple):
     def trim_buffer(self, idx: int) -> None:
         """create drums of correct length if drum is empty,
         otherwise trims self.length to multiple of drum length"""
+        assert always_true(f"trim_buffer {self.__class__.__name__} {idx}")
         if self._ctrl.drum.is_empty:
             self._ctrl.drum.prepare_drum(idx)
-            WrapBuffer.finalize(self, idx, idx)
+            self.finalize(idx, idx)
         else:
-            WrapBuffer.finalize(self, idx, self._ctrl.drum.length)
+            self.finalize(idx, self._ctrl.drum.length)
 
     def __getstate__(self):
         state = self.__dict__.copy()

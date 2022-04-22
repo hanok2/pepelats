@@ -3,7 +3,7 @@ from typing import List, Any
 import numpy as np
 
 from utils import record_sound_buff, play_sound_buff, SD_RATE, ScrColors, SD_MAX, val_str
-from utils import sound_test, make_zero_buffer, MAX_LEN
+from utils import sound_test, make_zero_buffer, MAX_LEN, always_true
 
 
 class WrapBuffer:
@@ -67,18 +67,22 @@ class WrapBuffer:
         else:
             msg = ""
 
-        assert idx < MAX_LEN, f"idx is too big {msg}"
-        assert trim_len < MAX_LEN, f"trim_len is too big {msg}"
+        idx %= MAX_LEN
+        trim_len %= MAX_LEN
         assert self.__is_empty, f"buffer must be empty {msg}"
-        assert idx > self.__start, f"idx more than start {msg}"
-        assert self.__start >= 0, f"start non zero {msg}"
-
+        assert self.__start >= 0, f"start must be non negative {msg}"
+        self.__start %= MAX_LEN
+        assert always_true(f"WrapBuffer.finalize {msg}")
         idx = round(idx / trim_len) * trim_len
         self.__start = round(self.__start / trim_len) * trim_len
         if idx == self.__start:
             idx += trim_len
 
-        self.__buff = self.__buff[self.__start:idx]
+        if idx > self.__start:
+            self.__buff = self.__buff[self.__start:idx]
+        else:
+            self.__buff = np.concatenate((self.__buff[self.__start:], self.__buff[:idx]), axis=0)
+
         self.__length = len(self.__buff)
         assert self.__length % trim_len == 0, msg
         self.__is_empty = False

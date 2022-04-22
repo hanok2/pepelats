@@ -4,7 +4,7 @@ from loop._loopsimple import LoopWithDrum
 from loop._oneloopctrl import OneLoopCtrl
 from loop._player import Player
 from loop._wrapbuffer import WrapBuffer
-from utils import CollectionOwner, ScrColors
+from utils import CollectionOwner, ScrColors, always_true
 from utils import STATE_COLS
 
 
@@ -17,17 +17,17 @@ class SongPart(CollectionOwner[LoopWithDrum], Player):
         self.items.append(LoopWithDrum(ctrl))
 
     def trim_buffer(self, idx: int) -> None:
+        assert always_true(f"trim_buffer {self.__class__.__name__} {idx}")
         loop = self.get_item_now()
         if self.now == 0:
             loop.trim_buffer(idx)
             return
 
         recorded_len = loop.get_recorded_len(idx)
-        drum_len = self._ctrl.drum.length
-        if recorded_len < drum_len // 2:
-            loop.finalize(idx, drum_len)
+        init_len = self.items[0].length
+        if recorded_len < init_len // 2:
+            loop.finalize(idx, self._ctrl.drum.length)
         else:
-            init_len = self.items[0].length
             loop.finalize(idx, init_len)
 
     @property
