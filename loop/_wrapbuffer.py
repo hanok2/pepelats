@@ -73,13 +73,10 @@ class WrapBuffer:
         assert idx > self.__start, f"idx more than start {msg}"
         assert self.__start >= 0, f"start non zero {msg}"
 
-        if trim_len != idx:
-            idx = round(idx / trim_len) * trim_len
-
-        if self.__start != 0:
-            self.__start = round(self.__start / trim_len) * trim_len
-            if idx == self.__start:
-                idx += trim_len
+        idx = round(idx / trim_len) * trim_len
+        self.__start = round(self.__start / trim_len) * trim_len
+        if idx == self.__start:
+            idx += trim_len
 
         self.__buff = self.__buff[self.__start:idx]
         self.__length = len(self.__buff)
