@@ -16,8 +16,19 @@ class SongPart(CollectionOwner[LoopWithDrum], Player):
         CollectionOwner.__init__(self)
         self.items.append(LoopWithDrum(ctrl))
 
-    def trim_buffer(self, idx: int, trim_len: int) -> None:
-        self.get_item_now().trim_buffer(idx, trim_len)
+    def trim_buffer(self, idx: int) -> None:
+        loop = self.get_item_now()
+        if self.now == 0:
+            loop.trim_buffer(idx)
+            return
+
+        recorded_len = loop.get_recorded_len(idx)
+        drum_len = self._ctrl.drum.length
+        if recorded_len < drum_len // 2:
+            loop.finalize(idx, drum_len)
+        else:
+            init_len = self.items[0].length
+            loop.finalize(idx, init_len)
 
     @property
     def is_empty(self) -> bool:

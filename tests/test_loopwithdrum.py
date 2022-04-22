@@ -41,7 +41,7 @@ class TestLoopWithDrum(TestCase):
             time.sleep(0.1)
 
         loop_len, idx = record_with_drum(240_000, control)
-        self.assertTrue(loop_len % 100_000 == 0)
+        self.assertTrue(loop_len % 100_000 == 0, f"loop_len, idx: {loop_len}, {idx}")
 
         # Test new recorded loop is equal to drum if drum was empty
         control.drum.clear()

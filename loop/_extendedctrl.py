@@ -43,7 +43,7 @@ class ExtendedCtrl(LooperCtrl):
             part = self.get_item_now()
             loop = part.get_item_now()
             if loop.is_empty:
-                loop.trim_buffer(self.idx, self.get_item_now().length)
+                loop.trim_buffer(self.idx)
 
         self._redraw()
 

@@ -4,7 +4,7 @@ import numpy as np
 import sounddevice as sd
 
 from loop._oneloopctrl import OneLoopCtrl
-from utils import always_true
+from utils import always_true, MAX_LEN
 
 
 class Player:
@@ -34,7 +34,8 @@ class Player:
             self._ctrl.get_stop_event().wait()
 
         if self.is_empty:
-            self.trim_buffer(self._ctrl.idx, -1)
+            self._ctrl.idx %= MAX_LEN
+            self.trim_buffer(self._ctrl.idx)
 
         assert always_true(f"======Stop {self}")
 
@@ -47,7 +48,7 @@ class Player:
         pass
 
     @abstractmethod
-    def trim_buffer(self, idx: int, trim_len: int) -> None:
+    def trim_buffer(self, idx: int) -> None:
         pass
 
     @property

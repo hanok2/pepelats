@@ -58,31 +58,32 @@ class WrapBuffer:
         else:
             return idx - self.__start
 
-    def trim_buffer(self, idx: int, trim_len: int) -> None:
+    def finalize(self, idx: int, trim_len: int) -> None:
         """Trim is called once to fix buffer length. Buffer must be multiple of trim_len.
          If this length is negative use only idx value"""
-        assert self.__is_empty, "Trimmed buffer must be empty"
-        assert idx > self.__start, "Trimmed buffer must have: idx {idx} > self.__start {self.__start}"
-        assert self.__start >= 0, f"Trim without recording! self.__start {self.__start}"
+        # noinspection PyUnreachableCode
+        if __debug__:
+            msg = f"trim_len {trim_len} self.__start {self.__start} idx {idx}"
+        else:
+            msg = ""
 
-        if trim_len > 0:
+        assert idx < MAX_LEN, f"idx is too big {msg}"
+        assert trim_len < MAX_LEN, f"trim_len is too big {msg}"
+        assert self.__is_empty, f"buffer must be empty {msg}"
+        assert idx > self.__start, f"idx more than start {msg}"
+        assert self.__start >= 0, f"start non zero {msg}"
+
+        if trim_len != idx:
             idx = round(idx / trim_len) * trim_len
+
+        if self.__start != 0:
             self.__start = round(self.__start / trim_len) * trim_len
             if idx == self.__start:
                 idx += trim_len
-        else:
-            assert self.__start == 0, f"self.__start {self.__start}"
 
-        idx %= MAX_LEN
-        self.__start %= MAX_LEN
-        if idx > self.__start:
-            self.__buff = self.__buff[self.__start:idx]
-        else:
-            self.__buff = np.concatenate((self.__buff[self.__start:], self.__buff[:idx]), axis=0)
-
+        self.__buff = self.__buff[self.__start:idx]
         self.__length = len(self.__buff)
-        assert trim_len <= 0 or self.__length % trim_len == 0, \
-            f"self.__length {self.__length} trim_len {trim_len} self.__start {self.__start} idx {idx}"
+        assert self.__length % trim_len == 0, msg
         self.__is_empty = False
 
     def redo(self) -> None:

@@ -14,9 +14,9 @@ class LoopSimple(WrapBuffer, Player):
         Player.__init__(self, ctrl)
         self.is_silent: bool = False
 
-    def trim_buffer(self, idx, trim_len: int) -> None:
+    def trim_buffer(self, idx: int) -> None:
         """trim buffer to the length at stop event = idx. Overridden by child class"""
-        WrapBuffer.trim_buffer(self, idx, -1)
+        WrapBuffer.finalize(self, idx, idx)
 
     # noinspection PyUnusedLocal
     def state_str(self, is_now: bool, is_next: bool) -> str:
@@ -54,18 +54,14 @@ class LoopWithDrum(LoopSimple):
         if not self.is_silent:
             super().play_samples(out_data, idx)
 
-    def trim_buffer(self, idx, trim_len: int) -> None:
+    def trim_buffer(self, idx: int) -> None:
         """create drums of correct length if drum is empty,
         otherwise trims self.length to multiple of drum length"""
         if self._ctrl.drum.is_empty:
-            self._ctrl.drum.prepare_drum(idx % MAX_LEN)
-            WrapBuffer.trim_buffer(self, idx, -1)
+            self._ctrl.drum.prepare_drum(idx)
+            WrapBuffer.finalize(self, idx, idx)
         else:
-            recorded_len = self.get_recorded_len(idx)
-            if trim_len <= 0 or recorded_len < trim_len // 2:
-                WrapBuffer.trim_buffer(self, idx, self._ctrl.drum.length)
-            else:
-                WrapBuffer.trim_buffer(self, idx, trim_len)
+            WrapBuffer.finalize(self, idx, self._ctrl.drum.length)
 
     def __getstate__(self):
         state = self.__dict__.copy()
