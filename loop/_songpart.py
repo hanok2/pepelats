@@ -25,6 +25,7 @@ class SongPart(CollectionOwner[LoopWithDrum], Player):
 
         recorded_len = loop.get_recorded_len(idx)
         init_len = self.items[0].length
+        assert recorded_len > 0 and init_len > 0
         if recorded_len < init_len // 2:
             loop.finalize(idx, self._ctrl.drum.length)
         else:
