@@ -11,7 +11,7 @@ class WrapBuffer:
 
     def __init__(self, length: int = MAX_LEN):
         self.is_reverse: bool = False
-        self.__is_empty = length == MAX_LEN
+        self.__is_empty = True
         self.__buff: np.ndarray = make_zero_buffer(length)
         self.__volume: float = -1
         self.__length: int = length
@@ -61,18 +61,24 @@ class WrapBuffer:
     def finalize(self, idx: int, trim_len: int) -> None:
         """Trim is called once to fix buffer length. Buffer must be multiple of trim_len.
          If this length is negative use only idx value"""
-        # noinspection PyUnreachableCode
-        if __debug__:
-            msg = f"trim_len {trim_len} self.__start {self.__start} idx {idx}"
-        else:
-            msg = ""
+
+        assert always_true(
+            f"len(self.__buff) {len(self.__buff)} trim_len {trim_len} self.__start {self.__start} idx {idx}")
+
+        if len(self.__buff) == trim_len:
+            self.__is_empty = False
+            return
 
         idx %= MAX_LEN
         trim_len %= MAX_LEN
-        assert self.__is_empty, f"buffer must be empty {msg}"
-        assert self.__start >= 0, f"start must be non negative {msg}"
+        assert self.__is_empty, f"buffer must be empty"
+        assert self.__start >= 0, f"start must be non negative"
+        assert trim_len > 0, f"trim length must be positive"
+
         self.__start %= MAX_LEN
-        assert always_true(f"WrapBuffer.finalize {msg}")
+        assert always_true(
+            f"len(self.__buff) {len(self.__buff)} trim_len {trim_len} self.__start {self.__start} idx {idx}")
+
         idx = round(idx / trim_len) * trim_len
         self.__start = round(self.__start / trim_len) * trim_len
         if idx == self.__start:
@@ -83,8 +89,11 @@ class WrapBuffer:
         else:
             self.__buff = np.concatenate((self.__buff[self.__start:], self.__buff[:idx]), axis=0)
 
+        assert always_true(
+            f"len(self.__buff) {len(self.__buff)} trim_len {trim_len} self.__start {self.__start} idx {idx}")
+
         self.__length = len(self.__buff)
-        assert self.__length % trim_len == 0, msg
+        assert self.__length % trim_len == 0 and self.__length > 0, "incorrect buffer trim"
         self.__is_empty = False
 
     def redo(self) -> None:

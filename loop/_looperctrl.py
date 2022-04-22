@@ -121,7 +121,8 @@ class LooperCtrl(OneLoopCtrl, Song, MsgProcessor):
         part = self.get_item_now()
         part.backup.clear()
         self._is_rec = True
-        part.items.append(LoopWithDrum(self, part.items[0].length))
+        orig_len = part.items[0].length
+        part.items.append(LoopWithDrum(self, orig_len))
         part.now = part.next = part.items_len - 1
 
         self._redraw()
