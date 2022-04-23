@@ -45,8 +45,10 @@ class LooperCtrl(OneLoopCtrl, Song, MsgProcessor):
         if part.is_empty:
             if self.drum.is_empty:
                 self.stop_now()
-            else:
+            elif part.now == 0:
                 self._stop_at_bound(self.drum.length)
+            else:
+                self._stop_at_bound(part.length)
         else:
             if self.next != self.now:
                 self._stop_at_bound(part.length)
@@ -115,10 +117,7 @@ class LooperCtrl(OneLoopCtrl, Song, MsgProcessor):
                 self.__stop_quantized()
         else:
             self.next = part_id
-            if self.next != self.now:
-                self.__stop_quantized()
-            else:
-                self._stop_never()
+            self.__stop_quantized()
 
         self._redraw()
 
