@@ -98,7 +98,7 @@ class LooperCtrl(OneLoopCtrl, Song, MsgProcessor):
         if self._is_rec:
             self._is_rec = False
             if loop.is_empty:
-                loop.trim_buffer(self.idx, self.get_item_now().length)
+                loop.finalize(self.idx, part.length)
                 part.backup.clear()
         else:
             self._is_rec = True

@@ -16,12 +16,12 @@ class SongPart(CollectionOwner[LoopWithDrum], Player):
         CollectionOwner.__init__(self)
         self.items.append(LoopWithDrum(ctrl))
 
-    def trim_buffer(self, idx: int, trim_len: int) -> None:
-        self.get_item_now().trim_buffer(idx, trim_len)
+    def trim_buffer(self, idx: int) -> None:
+        self.get_item_now().finalize(idx, self.length)
 
     @property
     def is_empty(self) -> bool:
-        return self.get_item_now().is_empty
+        return self.items[0].is_empty
 
     @property
     def length(self) -> int:

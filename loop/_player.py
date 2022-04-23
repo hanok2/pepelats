@@ -34,7 +34,7 @@ class Player:
             self._ctrl.get_stop_event().wait()
 
         if self.is_empty:
-            self.trim_buffer(self._ctrl.idx, -1)
+            self.trim_buffer(self._ctrl.idx)
 
         assert always_true(f"======Stop {self}")
 
@@ -47,7 +47,7 @@ class Player:
         pass
 
     @abstractmethod
-    def trim_buffer(self, idx: int, trim_len: int) -> None:
+    def trim_buffer(self, idx: int) -> None:
         pass
 
     @property
