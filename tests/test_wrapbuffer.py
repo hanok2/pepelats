@@ -13,7 +13,7 @@ class TestWrapBuffer(TestCase):
     def test_1(self):
         test_buff = WrapBuffer()
         test_buff.record_samples(sound[:100_000], 0)
-        test_buff.finalize(121_000, 121_000)
+        test_buff.finalize(121_000, 0)
         self.assertTrue(test_buff.length == 121_000)
         print(test_buff.info_str(SCR_COLS - STATE_COLS))
         test_buff.sound_test(1, False)

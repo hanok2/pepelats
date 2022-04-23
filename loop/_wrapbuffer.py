@@ -62,39 +62,36 @@ class WrapBuffer:
         else:
             return idx - self.__start
 
-    def finalize(self, idx: int, trim_len: int) -> None:
+    def finalize(self, idx: int, trim_len: int = 0) -> None:
         """Trim is called once to fix buffer length. Buffer must be multiple of trim_len.
          If this length is negative use only idx value"""
 
-        assert always_true(
-            f"len(self.__buff) {len(self.__buff)} trim_len {trim_len} self.__start {self.__start} idx {idx}")
+        assert always_true(f"before trim: len {len(self.__buff)} trim_len {trim_len} start {self.__start} idx {idx}")
 
-        if len(self.__buff) == trim_len:
+        assert self.__is_empty, f"buffer must be empty"
+        assert self.__start >= 0, f"start must be non negative"
+
+        if trim_len == len(self.__buff):
             self.__is_empty = False
             return
 
-        idx %= MAX_LEN
-        trim_len %= MAX_LEN
-        assert self.__is_empty, f"buffer must be empty"
-        assert self.__start >= 0, f"start must be non negative"
-        assert trim_len > 0, f"trim length must be positive"
-
-        self.__start %= MAX_LEN
-        assert always_true(
-            f"len(self.__buff) {len(self.__buff)} trim_len {trim_len} self.__start {self.__start} idx {idx}")
+        if trim_len <= 0:
+            assert self.__start == 0, f"start must be zero"
+            assert idx < len(self.__buff), f"end of recording beyond buffer"
+            self.__buff = self.__buff[:idx]
+            self.__is_empty = False
+            return
 
         idx = round(idx / trim_len) * trim_len
-        self.__start = round(self.__start / trim_len) * trim_len
-        if idx == self.__start:
+        self.__start %= trim_len
+        if idx <= self.__start:
             idx += trim_len
+        idx += self.__start
 
-        if idx > self.__start:
-            self.__buff = self.__buff[self.__start:idx]
-        else:
-            self.__buff = np.concatenate((self.__buff[self.__start:], self.__buff[:idx]), axis=0)
+        assert idx < len(self.__buff), f"end of recording beyond buffer"
+        self.__buff = self.__buff[self.__start:idx]
 
-        assert always_true(
-            f"len(self.__buff) {len(self.__buff)} trim_len {trim_len} self.__start {self.__start} idx {idx}")
+        assert always_true(f"after trim: len {len(self.__buff)} trim_len {trim_len} start {self.__start} idx {idx}")
 
         assert self.length % trim_len == 0 and self.length > 0, "incorrect buffer trim"
         self.__is_empty = False
