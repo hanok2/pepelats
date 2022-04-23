@@ -17,7 +17,7 @@ class SongPart(CollectionOwner[LoopWithDrum], Player):
         self.items.append(LoopWithDrum(ctrl))
 
     def trim_buffer(self, idx: int) -> None:
-        assert always_true(f"trim_buffer {self.__class__.__name__} {idx}")
+        assert always_true(f"trim_buffer {self.__class__.__name__} idx {idx}")
 
         loop = self.get_item_now()
         if self.now == 0:

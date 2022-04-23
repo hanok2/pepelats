@@ -66,7 +66,6 @@ class WrapBuffer:
          If this length is negative use only idx value"""
 
         assert always_true(f"before trim: len {len(self.__buff)} trim_len {trim_len} start {self.__start} idx {idx}")
-
         assert self.is_empty, f"buffer must be empty"
         assert self.__start >= 0, f"start must be non negative"
 

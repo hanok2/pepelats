@@ -16,7 +16,7 @@ class LoopSimple(WrapBuffer, Player):
 
     def trim_buffer(self, idx: int) -> None:
         """trim buffer to the length at stop event = idx. Overridden by child class"""
-        assert always_true(f"trim_buffer {self.__class__.__name__} {idx}")
+        assert always_true(f"trim_buffer {self.__class__.__name__} idx {idx}")
         self.finalize(idx, 0)
 
     # noinspection PyUnusedLocal
@@ -58,7 +58,7 @@ class LoopWithDrum(LoopSimple):
     def trim_buffer(self, idx: int) -> None:
         """create drums of correct length if drum is empty,
         otherwise trims self.length to multiple of drum length"""
-        assert always_true(f"trim_buffer {self.__class__.__name__} {idx}")
+        assert always_true(f"trim_buffer {self.__class__.__name__} idx {idx}")
         if self._ctrl.drum.is_empty:
             self._ctrl.drum.prepare_drum(idx)
             self.finalize(idx, 0)
