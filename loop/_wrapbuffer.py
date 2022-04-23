@@ -11,7 +11,6 @@ class WrapBuffer:
 
     def __init__(self, length: int = MAX_LEN):
         self.is_reverse: bool = False
-        self.__is_empty = True
         self.__buff: np.ndarray = make_zero_buffer(length)
         self.__volume: float = -1
         self.__start: int = -1
@@ -24,7 +23,7 @@ class WrapBuffer:
 
     @property
     def is_empty(self) -> bool:
-        return self.__is_empty
+        return len(self.__buff) == MAX_LEN
 
     def get_buff_copy(self) -> np.ndarray:
         return self.__buff.copy()
@@ -41,7 +40,7 @@ class WrapBuffer:
 
     def record_samples(self, in_data: np.ndarray, idx: int) -> None:
         """Record and fix start for empty, recalculate volume for non empty"""
-        if self.__is_empty:
+        if self.is_empty:
             if self.__start < 0:
                 self.__start = idx
         elif self.__volume >= 0:
@@ -68,18 +67,13 @@ class WrapBuffer:
 
         assert always_true(f"before trim: len {len(self.__buff)} trim_len {trim_len} start {self.__start} idx {idx}")
 
-        assert self.__is_empty, f"buffer must be empty"
+        assert self.is_empty, f"buffer must be empty"
         assert self.__start >= 0, f"start must be non negative"
-
-        if trim_len == len(self.__buff):
-            self.__is_empty = False
-            return
 
         if trim_len <= 0:
             assert self.__start == 0, f"start must be zero"
             assert idx < len(self.__buff), f"end of recording beyond buffer"
             self.__buff = self.__buff[:idx]
-            self.__is_empty = False
             return
 
         idx = round(idx / trim_len) * trim_len
@@ -92,9 +86,7 @@ class WrapBuffer:
         self.__buff = self.__buff[self.__start:idx]
 
         assert always_true(f"after trim: len {len(self.__buff)} trim_len {trim_len} start {self.__start} idx {idx}")
-
         assert self.length % trim_len == 0 and self.length > 0, "incorrect buffer trim"
-        self.__is_empty = False
 
     def redo(self) -> None:
         if len(self.__redo) > 0:
@@ -118,7 +110,7 @@ class WrapBuffer:
 
     def info_str(self, cols: int) -> str:
         """Colored string to show volume and length"""
-        if self.__is_empty:
+        if self.is_empty:
             return val_str(0, 0, 1, cols)
 
         if self.__volume < 0:
