@@ -25,6 +25,13 @@ class WrapBuffer:
     def is_empty(self) -> bool:
         return len(self.__buff) == MAX_LEN
 
+    def resize_buff(self, length: int) -> None:
+        diff = length - len(self.__buff)
+        if diff > 0:
+            self.__buff = np.concatenate(self.__buff, make_zero_buffer(diff), axis=0)
+        elif diff < 0:
+            self.__buff = self.__buff[0, length]
+
     def get_buff_copy(self) -> np.ndarray:
         return self.__buff.copy()
 

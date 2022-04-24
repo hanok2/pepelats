@@ -3,7 +3,7 @@ from threading import Thread, Event
 from loop._loopsimple import LoopWithDrum
 from loop._oneloopctrl import OneLoopCtrl
 from loop._song import Song
-from utils import MsgProcessor
+from utils import MsgProcessor, MAX_LEN
 
 
 class LooperCtrl(OneLoopCtrl, Song, MsgProcessor):
@@ -92,18 +92,18 @@ class LooperCtrl(OneLoopCtrl, Song, MsgProcessor):
         loop.is_silent = False
         if self._is_rec:
             self._is_rec = False
-            if loop.is_empty:
-                loop.finalize(self.idx, part.length)
-                part.backup.clear()
         else:
             self._is_rec = True
-            if part.now == 0:
-                part.items.append(LoopWithDrum(self))
-                part.now = part.next = part.items_len - 1
-            else:
-                loop.save_undo()
+            loop.save_undo()
 
         self._redraw()
+
+    def _record(self):
+        if self.next == self.now and self.is_rec:
+            part = self.get_item_now()
+            loop = part.get_item_now()
+            if not loop.is_empty:
+                loop.resize_buff(MAX_LEN)
 
     def _play_part_id(self, part_id: int) -> None:
         if self.next != part_id and part_id == self.now:
