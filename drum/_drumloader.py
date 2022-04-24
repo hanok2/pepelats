@@ -56,9 +56,11 @@ class DrumLoader:
         assert always_true(f"Loading drum {dir_name}")
         if len(DrumLoader.__sounds) == 0:
             DrumLoader.__load_sounds(dir_name)
+            assert always_true(f"Loaded drum sounds {len(DrumLoader.__sounds)}")
         DrumLoader.__load_all_patterns(dir_name, "drum_level1", DrumLoader.__ptn_l1)
         DrumLoader.__load_all_patterns(dir_name, "drum_level2", DrumLoader.__ptn_l2)
         DrumLoader.__load_all_patterns(dir_name, "drum_break", DrumLoader.__ptn_bk)
+        assert always_true(f"Loaded drum patterns {len(DrumLoader.__ptn_l1)}")
 
     @staticmethod
     def __load_sounds(dir_name: Path) -> None:
@@ -104,7 +106,7 @@ class DrumLoader:
 
     @staticmethod
     def prepare_all(length: int) -> None:
-        assert length > 0, f"Length must be > 0: {length}"
+        assert length > 0, f"Length must be positive: {length}"
         DrumLoader.length = 0
 
         for i in [DrumLoader.__snd_l1, DrumLoader.__snd_l2, DrumLoader.__snd_bk]:
@@ -118,6 +120,8 @@ class DrumLoader:
 
         for i in DrumLoader.__ptn_bk:
             DrumLoader.__snd_bk.append(DrumLoader.__prepare_one(i, length))
+
+        assert always_true(f"Generated drum patterns {len(DrumLoader.__snd_l1)}")
 
         DrumLoader.random_samples()
         DrumLoader.length = length

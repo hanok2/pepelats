@@ -21,7 +21,6 @@ class Song(CollectionOwner[SongPart]):
     def _prepare_song(self) -> None:
         pass
 
-    @abstractmethod
     def _redraw(self) -> None:
         pass
 

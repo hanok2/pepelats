@@ -1,8 +1,8 @@
 {
   "comment1": "generated drum volume swing and type, changeable on the run",
   "DRUM_SWING": 0.75,
-  "DRUM_VOLUME": 0.75,
-  "DRUM_TYPE": "pop",
+  "DRUM_VOLUME": 0.5319148936170213,
+  "DRUM_TYPE": "rock",
   "comment2": "max. allowed time for being late when changing loop",
   "MAX_LATE_SECONDS": 0.1,
   "comment3": "check these MIDI ports and use first one found as input",
@@ -18,7 +18,7 @@
   ],
   "comment5": "ALSA mixers to record and play",
   "MIXER_IN": 99,
-  "MIXER_OUT": 99,
+  "MIXER_OUT": 92,
   "comment6": "Used by typing keyboard to generate notes",
   "KBD_NOTES": {
     "1": 60,

@@ -58,15 +58,10 @@ class LooperCtrl(OneLoopCtrl, Song, MsgProcessor):
                 self._stop_never()
 
     def _set_drum_length(self, length: int) -> None:
-        if length > 0:
-            self.drum.prepare_drum(length)
+        self.drum.prepare_drum(length)
 
     def _get_drum_length(self) -> int:
         return self.drum.length
-
-    def _redraw(self) -> None:
-        """used by children to redraw itself on screen"""
-        pass
 
     def _prepare_song(self) -> None:
         self._stop_song()

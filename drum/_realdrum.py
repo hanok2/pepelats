@@ -24,7 +24,7 @@ class RealDrum:
     def __init__(self):
         self.__change_after_samples: int = MAX_32_INT
         self.__sample_counter: int = 0
-        self.__i: Intensity = Intensity.SILENT
+        self.__i: Intensity = Intensity.LVL2
         self.__is_break_pending: bool = False
 
         self.__file_finder = FileFinder("etc/drums", False, "", MainLoader.get(ConfigName.drum_type, "pop"))
