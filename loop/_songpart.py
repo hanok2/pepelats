@@ -1,3 +1,5 @@
+from threading import Timer
+
 import numpy as np
 
 from loop._loopsimple import LoopWithDrum
@@ -65,4 +67,14 @@ class SongPart(CollectionOwner[LoopWithDrum], Player):
 
 
 if __name__ == "__main__":
-    pass
+    def test2():
+        c1 = OneLoopCtrl()
+        c1._is_rec = True
+        Timer(3.9, c1.stop_now).start()
+        l1 = SongPart(c1)
+        l1.play_buffer()
+        c1.get_stop_event().clear()
+        Timer(5, c1.stop_now).start()
+        l1.play_buffer()
+
+    test2()

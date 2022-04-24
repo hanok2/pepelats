@@ -1,3 +1,5 @@
+from threading import Timer
+
 import numpy as np
 
 from loop._oneloopctrl import OneLoopCtrl
@@ -78,4 +80,26 @@ class LoopWithDrum(LoopSimple):
 
 
 if __name__ == "__main__":
-    pass
+    def test1():
+        c1 = OneLoopCtrl()
+        c1._is_rec = True
+        Timer(2, c1.stop_now).start()
+        l1 = LoopSimple(c1)
+        l1.play_buffer()
+        c1.get_stop_event().clear()
+        Timer(3, c1.stop_now).start()
+        l1.play_buffer()
+
+
+    def test2():
+        c1 = OneLoopCtrl()
+        c1._is_rec = True
+        Timer(3.9, c1.stop_now).start()
+        l1 = LoopWithDrum(c1)
+        l1.play_buffer()
+        c1.get_stop_event().clear()
+        Timer(5, c1.stop_now).start()
+        l1.play_buffer()
+
+
+    test2()
