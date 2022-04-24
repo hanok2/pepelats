@@ -103,7 +103,7 @@ class RealDrum:
             self.__is_break_pending = True
             Timer(start_at / SD_RATE, self.play_break_now, [bars]).start()
 
-    def __random_samples(self):
+    def __random_samples(self) -> None:
         self.__sample_counter = 0
         DrumLoader.random_samples()
 

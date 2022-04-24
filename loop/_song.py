@@ -77,7 +77,6 @@ class Song(CollectionOwner[SongPart]):
         self._file_finder.items.append(self._song_name)
         self._file_finder.now = self._file_finder.items_len - 1
         self._save_song()
-        self._redraw()
 
     def _delete_song(self) -> None:
         self._stop_song()

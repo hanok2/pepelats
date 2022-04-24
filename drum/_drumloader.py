@@ -106,8 +106,9 @@ class DrumLoader:
 
     @staticmethod
     def prepare_all(length: int) -> None:
-        assert length > 0, f"Length must be positive: {length}"
         DrumLoader.length = 0
+        if length == 0:
+            return
 
         for i in [DrumLoader.__snd_l1, DrumLoader.__snd_l2, DrumLoader.__snd_bk]:
             i.clear()
