@@ -92,16 +92,9 @@ class LooperCtrl(OneLoopCtrl, Song, MsgProcessor):
         loop.is_silent = False
         if self._is_rec:
             self._is_rec = False
-            if loop.is_empty:
-                loop.finalize(self.idx, part.length)
-                part.backup.clear()
         else:
             self._is_rec = True
-            if part.now == 0:
-                part.items.append(LoopWithDrum(self))
-                part.now = part.next = part.items_len - 1
-            else:
-                loop.save_undo()
+            loop.save_undo()
 
         self._redraw()
 
