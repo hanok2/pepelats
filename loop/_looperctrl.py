@@ -3,7 +3,7 @@ from threading import Thread, Event
 from loop._loopsimple import LoopWithDrum
 from loop._oneloopctrl import OneLoopCtrl
 from loop._song import Song
-from utils import MsgProcessor, MAX_LEN
+from utils import MsgProcessor
 
 
 class LooperCtrl(OneLoopCtrl, Song, MsgProcessor):
@@ -45,14 +45,15 @@ class LooperCtrl(OneLoopCtrl, Song, MsgProcessor):
         if part.is_empty:
             if self.drum.is_empty:
                 self.stop_now()
-            elif part.now == 0:
-                self._stop_at_bound(self.drum.length)
             else:
-                self._stop_at_bound(part.length)
+                self._stop_at_bound(self.drum.length)
         else:
             if self.next != self.now:
-                self._stop_at_bound(part.length)
-                self.drum.play_break_later(part.length, self.idx)
+                if self.is_stop_len_set():
+                    self._stop_at_bound(self.drum.length)
+                else:
+                    self._stop_at_bound(part.length)
+                    self.drum.play_break_later(part.length, self.idx)
             else:
                 self._stop_never()
 
@@ -86,7 +87,7 @@ class LooperCtrl(OneLoopCtrl, Song, MsgProcessor):
         else:
             self._prepare_song()
 
-    def _overdub_loop(self) -> None:
+    def _play_loop_next(self) -> None:
         if not self._go_play.is_set():
             self._go_play.set()
             return
@@ -96,50 +97,45 @@ class LooperCtrl(OneLoopCtrl, Song, MsgProcessor):
         loop.is_silent = False
         if self._is_rec:
             self._is_rec = False
+            if loop.is_empty:
+                loop.finalize(self.idx, part.length)
+                part.backup.clear()
         else:
-            loop.save_undo()
             self._is_rec = True
+            if part.now == 0:
+                part.items.append(LoopWithDrum(self))
+                part.now = part.next = part.items_len - 1
+            else:
+                loop.save_undo()
 
         self._redraw()
 
     def _play_part_id(self, part_id: int) -> None:
-
-        if not self._go_play.is_set():
-            self.next = part_id
-            self._go_play.set()
-        elif part_id == self.next == self.now:
-            if not self._is_rec:
-                self._is_rec = True
-                self.__overdub()
-            else:
-                self._is_rec = False
-                self.get_item_now().backup.clear()
-                self.__stop_quantized()
-        else:
-            self.next = part_id
-            self.__stop_quantized()
-
-        self._redraw()
-
-    def __overdub(self) -> None:
-        """add recording of same length as initial loop - part.length"""
-        part = self.get_item_now()
-        self._is_rec = True
-        orig_len = part.length
-        assert orig_len > 0
-        loop = LoopWithDrum(self, orig_len)
-        part.items.append(loop)
-        part.now = part.next = part.items_len - 1
-
-    def _extend_record(self) -> None:
-        """add recording of max. length, trimmed it will be multiple of drum length or initial loop length"""
-
-        if self.next != self.now or not self.is_rec:
+        if self.next != part_id and part_id == self.now:
+            self.next = self.now
+            self._stop_never()
+            self._redraw()
             return
 
-        part = self.get_item_now()
-        loop = part.get_item_now()
-        loop.change_len(MAX_LEN)
+        self.next = part_id
+
+        if not self._go_play.is_set():
+            self._go_play.set()
+            self._redraw()
+            return
+
+        if self.next == self.now:
+            part = self.get_item_now()
+            if self._is_rec:
+                part.backup.clear()
+                self._is_rec = False
+            else:
+                part.items.append(LoopWithDrum(self, part.items[0].length))
+                part.now = part.next = part.items_len - 1
+                self._is_rec = True
+
+        self.__stop_quantized()
+        self._redraw()
 
 
 if __name__ == "__main__":

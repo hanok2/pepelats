@@ -38,7 +38,6 @@ class ExtendedCtrl(LooperCtrl):
     def _prepare_redraw(self, update_method: str, description: str) -> None:
         self.__update_method = update_method
         self.__description = description
-        self._is_rec = False
         self._redraw()
 
     def _prepare_song(self) -> None:

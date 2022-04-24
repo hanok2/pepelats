@@ -2,8 +2,8 @@ from typing import List, Any
 
 import numpy as np
 
-from utils import record_sound_buff, play_sound_buff, SD_RATE, ScrColors, SD_MAX, val_str
-from utils import sound_test, make_zero_buffer, MAX_LEN, always_true
+from utils import record_sound_buff, play_sound_buff, SD_RATE, ScrColors, SD_MAX, val_str, always_true
+from utils import sound_test, make_zero_buffer, MAX_LEN
 
 
 class WrapBuffer:
@@ -31,13 +31,6 @@ class WrapBuffer:
     def zero_buff(self) -> None:
         self.__buff[:] = 0
 
-    def change_len(self, new_len: int) -> None:
-        diff = new_len - self.length
-        if diff > 0:
-            self.__buff = np.concatenate((self.__buff[:], make_zero_buffer(diff)), axis=0)
-        elif diff < 0:
-            self.__buff = self.__buff[:new_len]
-
     def record_samples(self, in_data: np.ndarray, idx: int) -> None:
         """Record and fix start for empty, recalculate volume for non empty"""
         if self.is_empty:
@@ -55,13 +48,7 @@ class WrapBuffer:
     def sound_test(self, duration_sec: float, record: bool) -> None:
         sound_test(self.__buff, duration_sec, record)
 
-    def get_recorded_len(self, idx: int) -> int:
-        if self.__start < 0:
-            return 0
-        else:
-            return idx - self.__start
-
-    def finalize(self, idx: int, trim_len: int = 0) -> None:
+    def finalize(self, idx: int, trim_len: int) -> None:
         """Trim is called once to fix buffer length. Buffer must be multiple of trim_len.
          If this length is negative use only idx value"""
 
@@ -75,14 +62,17 @@ class WrapBuffer:
             self.__buff = self.__buff[:idx]
             return
 
-        idx = round(idx / trim_len) * trim_len
-        self.__start %= trim_len
-        if idx <= self.__start:
-            idx += trim_len
-        idx += self.__start
+        rec_len = idx - self.__start
+        while rec_len < trim_len // 2:
+            trim_len = trim_len // 2
 
-        assert idx < len(self.__buff), f"end of recording beyond buffer"
-        self.__buff = self.__buff[self.__start:idx]
+        rec_len = round(rec_len / trim_len) * trim_len
+        if rec_len == 0:
+            rec_len += trim_len
+
+        new_buff = make_zero_buffer(rec_len)
+        play_sound_buff(self.__buff, new_buff, self.__start)
+        self.__buff = new_buff
 
         assert always_true(f"after trim: len {len(self.__buff)} trim_len {trim_len} start {self.__start} idx {idx}")
         assert self.length % trim_len == 0 and self.length > 0, "incorrect buffer trim"
