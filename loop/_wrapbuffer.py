@@ -28,7 +28,7 @@ class WrapBuffer:
     def resize_buff(self, length: int) -> None:
         diff = length - len(self.__buff)
         if diff > 0:
-            self.__buff = np.concatenate(self.__buff, make_zero_buffer(diff), axis=0)
+            self.__buff = np.concatenate((self.__buff, make_zero_buffer(diff)), axis=0)
         elif diff < 0:
             self.__buff = self.__buff[0, length]
 
