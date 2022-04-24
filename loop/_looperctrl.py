@@ -98,7 +98,7 @@ class LooperCtrl(OneLoopCtrl, Song, MsgProcessor):
 
         self._redraw()
 
-    def _record(self):
+    def _record_part(self):
         if self.next == self.now and self.is_rec:
             part = self.get_item_now()
             loop = part.get_item_now()

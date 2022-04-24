@@ -54,6 +54,8 @@ def val_str(val: float, min_val: float, max_val: float, cols: int) -> str:
 
 
 def run_os_cmd(cmd_list: list[str]) -> int:
+    if os.name != "posix":
+        return 1
     output = sp.run(cmd_list)
     return output.returncode
 
