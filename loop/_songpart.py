@@ -26,7 +26,7 @@ class SongPart(CollectionOwner[LoopWithDrum], Player):
 
     @property
     def is_empty(self) -> bool:
-        return self.get_item_now().is_empty
+        return self.items[0].is_empty
 
     @property
     def length(self) -> int:
