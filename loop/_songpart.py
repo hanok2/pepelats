@@ -22,16 +22,7 @@ class SongPart(CollectionOwner[LoopWithDrum], Player):
         """create drums of correct length if drum is empty,
         otherwise trims self.length to multiple of first loop in the part"""
         assert always_true(f"trim_buffer {self.__class__.__name__} idx {idx}")
-        loop = self.get_item_now()
-        if self.now == 0:
-            # first loop in song part is length, other loops are multiples of it
-            if self._ctrl.drum.is_empty:
-                self._ctrl.drum.prepare_drum(idx)
-                loop.finalize(idx, 0)
-            else:
-                loop.finalize(idx, self._ctrl.drum.length)
-        else:
-            loop.finalize(idx, self.length)
+        self.items[0].trim_buffer(idx)
 
     @property
     def is_empty(self) -> bool:
