@@ -25,7 +25,7 @@ class TestMidiTranslator(TestCase):
         msg = r_conn.recv()
         if msg[0] == ConfigName.prepare_redraw:
             msg = r_conn.recv()
-        self.assertEqual(msg, ["_clear_part_id", 1])
+        self.assertEqual(msg, ["_clear_part"])
         self.assertFalse(r_conn.poll())
 
 
