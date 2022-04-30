@@ -106,6 +106,8 @@ class LooperCtrl(OneLoopCtrl, Song, MsgProcessor):
                 loop.resize_buff(MAX_LEN)
 
     def _play_part_id(self, part_id: int) -> None:
+        prev = self.next
+        self.next = part_id
 
         if not self._go_play.is_set():
             self._go_play.set()
@@ -117,13 +119,10 @@ class LooperCtrl(OneLoopCtrl, Song, MsgProcessor):
         if part.now > 0 and self.is_rec and loop.is_empty:
             loop.finalize(self.idx, part.length)
 
-        if self.next != part_id and part_id == self.now:
-            self.next = self.now
+        if prev != part_id and part_id == self.now:
             self._stop_never()
             self._redraw()
             return
-
-        self.next = part_id
 
         if self.next == self.now:
             if self._is_rec:
