@@ -77,7 +77,7 @@ class WrapBuffer:
         if rec_len == 0:
             rec_len += trim_len
 
-        # align start with length main loop's trim_len
+        # align start with main loop's trim_len
         offset: int = self.__start % trim_len
         if offset < trim_len // 2:
             self.__start -= offset
