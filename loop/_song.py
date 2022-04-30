@@ -51,12 +51,15 @@ class Song(CollectionOwner[SongPart]):
         self.items.clear()
         ctrl = self._get_control()
         for k in load_list:
-            self.items.append(k if k is not None else SongPart(ctrl))
+            if k is None:
+                k = SongPart(ctrl)
+            else:
+                assert type(k) == SongPart
+                k._ctrl = ctrl
+                for b in [*k.items, *k.backup]:
+                    b._ctrl = ctrl
 
-        for a in self.items:
-            a._ctrl = ctrl
-            for b in a.items:
-                b._ctrl = ctrl
+            self.items.append(k)
 
         self._set_drum_length(length)
 
