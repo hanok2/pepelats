@@ -77,9 +77,17 @@ class WrapBuffer:
         if rec_len == 0:
             rec_len += trim_len
 
+        # align start with length main loop's trim_len
         offset: int = self.__start % trim_len
+        if offset < trim_len // 2:
+            self.__start -= offset
+        else:
+            self.__start += (trim_len - offset)
+
+        assert self.__start >= 0
+
         new_buff = make_zero_buffer(rec_len)
-        play_sound_buff(self.__buff, new_buff, self.__start - offset)
+        play_sound_buff(self.__buff, new_buff, self.__start)
         self.__buff = new_buff
 
         assert always_true(f"after trim: len {len(self.__buff)} trim_len {trim_len} start {self.__start} idx {idx}")
