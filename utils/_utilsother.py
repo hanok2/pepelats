@@ -62,19 +62,20 @@ def run_os_cmd(cmd_list: list[str]) -> int:
 
 class MsgProcessor:
 
+    def fake(self):
+        pass
+
     def process_message(self, msg: List[Any]) -> None:
         assert type(msg) == list and len(msg) > 0
         method_name, *params = msg
-        # noinspection PyUnreachableCode
-        if __debug__:
+        found_method = False
+        try:
             method = getattr(self, method_name)
+            found_method = True
             method(*params)
-        else:
-            try:
-                method = getattr(self, method_name)
-                method(*params)
-            except Exception as err:
-                logging.error(f"{self.__class__.__name__} message {msg} error {err}")
+        except Exception as err:
+            logging.error(f"{self.__class__.__name__} got message: {msg}, "
+                          f"got error: {err}, found method: {found_method}")
 
 
 class CollectionOwner(Generic[T]):
