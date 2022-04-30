@@ -99,7 +99,7 @@ class LooperCtrl(OneLoopCtrl, Song, MsgProcessor):
         self._redraw()
 
     def _record_part(self):
-        if self.next == self.now and self.is_rec:
+        if self.next == self.now and self._is_rec:
             part = self.get_item_now()
             loop = part.get_item_now()
             if not loop.is_empty:
@@ -116,7 +116,7 @@ class LooperCtrl(OneLoopCtrl, Song, MsgProcessor):
 
         part = self.get_item_now()
         loop = part.get_item_now()
-        if part.now > 0 and self.is_rec and loop.is_empty:
+        if part.now > 0 and self._is_rec and loop.is_empty:
             loop.finalize(self.idx, part.length)
 
         if prev != part_id and part_id == self.now:
