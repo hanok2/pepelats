@@ -2,6 +2,7 @@ import logging
 import os
 import subprocess as sp
 import time
+import traceback
 from pathlib import Path
 from typing import Any, List, TypeVar, Generic, Union, Dict
 
@@ -75,7 +76,7 @@ class MsgProcessor:
             method(*params)
         except Exception as err:
             logging.error(f"{self.__class__.__name__} got message: {msg}, "
-                          f"got error: {err}, found method: {found_method}")
+                          f"got error: {err}, found method: {found_method}, info: {traceback.format_exc()}")
 
 
 class CollectionOwner(Generic[T]):
