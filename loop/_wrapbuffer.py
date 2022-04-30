@@ -69,7 +69,7 @@ class WrapBuffer:
             self.__buff = self.__buff[:idx]
             return
 
-        rec_len = idx - self.__start
+        rec_len: int = idx - self.__start
         while rec_len < trim_len // 2:
             trim_len = trim_len // 2
 
@@ -77,8 +77,9 @@ class WrapBuffer:
         if rec_len == 0:
             rec_len += trim_len
 
+        offset: int = self.__start % trim_len
         new_buff = make_zero_buffer(rec_len)
-        play_sound_buff(self.__buff, new_buff, self.__start)
+        play_sound_buff(self.__buff, new_buff, self.__start - offset)
         self.__buff = new_buff
 
         assert always_true(f"after trim: len {len(self.__buff)} trim_len {trim_len} start {self.__start} idx {idx}")
