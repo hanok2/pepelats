@@ -47,8 +47,7 @@ class OneLoopCtrl:
             self.__stop_len = self.idx - over + bound_value
 
     def __str__(self):
-        stop = f"stop_len {self.__stop_len}" if self.is_stop_len_set() else "stop_len=None"
-        return f"{self.__class__.__name__} {stop} {self.drum}"
+        return f"{self.__class__.__name__} stop_len {self.__stop_len} {self.drum} is_rec {self.is_rec}"
 
 
 if __name__ == "__main__":

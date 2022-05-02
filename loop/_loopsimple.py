@@ -22,7 +22,7 @@ class LoopSimple(WrapBuffer, Player):
         self.finalize(idx, 0)
 
     # noinspection PyUnusedLocal
-    def state_str(self, is_now: bool, is_next: bool) -> str:
+    def state_str(self, is_now: bool, is_next: bool, is_rec: bool) -> str:
         """colored string to show state of loops"""
         if self.is_silent:
             full_str = '='
@@ -35,7 +35,7 @@ class LoopSimple(WrapBuffer, Player):
         full_str = (full_str * count).rjust(STATE_COLS, '░')
 
         if is_now:
-            tmp = (ScrColors['r'] if self._ctrl.is_rec else ScrColors['g']) + full_str
+            tmp = (ScrColors['r'] if is_rec else ScrColors['g']) + full_str
         else:
             tmp = ScrColors['w'] + full_str
 

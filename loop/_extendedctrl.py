@@ -103,7 +103,7 @@ class ExtendedCtrl(LooperCtrl):
 
         part = self.get_item_now()
         for k, loop in enumerate(part.items):
-            tmp += loop.state_str(k == part.now, k == part.next)
+            tmp += loop.state_str(k == part.now, k == part.next, self._is_rec)
             tmp += loop.info_str(USE_COLS)
             tmp += "\n"
         return tmp[:-1]
@@ -111,7 +111,7 @@ class ExtendedCtrl(LooperCtrl):
     def _show_all_parts(self) -> str:
         tmp = ""
         for k, part in enumerate(self.items):
-            tmp += part.state_str(k == self.now, k == self.next)
+            tmp += part.state_str(k == self.now, k == self.next, self.is_rec)
             tmp += part.items[0].info_str(USE_COLS) if part.items_len else "-" * USE_COLS
             tmp += "\n"
         return tmp[:-1]

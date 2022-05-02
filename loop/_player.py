@@ -56,7 +56,7 @@ class Player:
         pass
 
     @abstractmethod
-    def state_str(self, is_now: bool, is_next: bool) -> str:
+    def state_str(self, is_now: bool, is_next: bool, is_rec: bool) -> str:
         pass
 
     def __getstate__(self):

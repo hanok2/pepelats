@@ -42,14 +42,14 @@ class SongPart(CollectionOwner[LoopWithDrum], Player):
         loop = self.get_item_now()
         WrapBuffer.record_samples(loop, in_data, idx)
 
-    def state_str(self, is_now: bool, is_next: bool) -> str:
+    def state_str(self, is_now: bool, is_next: bool, is_rec: bool) -> str:
         """colored string to show state of loops"""
         count = min(self.items_len, STATE_COLS)
         full_str = '■' * count
         full_str = full_str.rjust(STATE_COLS, '░')
 
         if is_now:
-            tmp = (ScrColors['r'] if self._ctrl.is_rec else ScrColors['g']) + full_str
+            tmp = (ScrColors['r'] if is_rec else ScrColors['g']) + full_str
         elif is_next:
             tmp = (ScrColors['y'] if self._ctrl.is_stop_len_set() else ScrColors['v']) + full_str
         else:
