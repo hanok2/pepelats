@@ -229,27 +229,20 @@ class ExtendedCtrl(LooperCtrl):
     def _undo_loop(self):
         self._is_rec = False
         part = self.get_item_now()
-        if part.now == 0:
-            self._undo_part()
+        loop = part.get_item_now()
+        if loop.is_empty:
+            part.items.pop(part.now)
+            part.now = part.next = 0
         else:
-            loop = part.get_item_now()
-            if loop.is_empty:
-                part.items.pop(part.now)
-                part.now = part.next = 0
-            else:
-                loop.undo()
+            loop.undo()
 
         self._redraw()
 
     def _redo_loop(self):
         self._is_rec = False
         part = self.get_item_now()
-        if part.now == 0:
-            self._redo_part()
-        else:
-            loop = part.get_item_now()
-            loop.redo()
-
+        loop = part.get_item_now()
+        loop.redo()
         self._redraw()
 
 
