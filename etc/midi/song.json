@@ -14,7 +14,7 @@
     "82": [["_save_song"], ["_change_map", "0", "playing"]],
     "92": [["_save_new_song"], ["_change_map", "0", "playing"]],
     "112": [["_load_song"], ["_change_map", "0", "playing"]],
-    "116": ["_delete_song"]
+    "116": [["_delete_song"], ["_change_map", "0", "playing"]]
   },
    "1": {
     "description": "Next: A/B-scroll Dx2-load",

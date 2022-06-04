@@ -148,6 +148,7 @@ class ConfigName:
     # redraw
     prepare_redraw: str = "_prepare_redraw"
     redraw: str = "_redraw"
+    print: str = "_print"
     #  main loader
     drum_swing: str = "DRUM_SWING"
     drum_type: str = "DRUM_TYPE"

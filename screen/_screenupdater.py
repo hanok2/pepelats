@@ -18,7 +18,7 @@ def extend_strings(s: str, fill_char: str, cols: int) -> Tuple[str, int]:
 class ScreenUpdater(MsgProcessor):
     def __init__(self):
         super().__init__()
-        self.__is_stop: bool = True
+        self.__stop: bool = True
         self.__delta: float = 1000000
         self.__sleep_time: float = 1
         self.__loop_len: int = 1000000
@@ -29,8 +29,8 @@ class ScreenUpdater(MsgProcessor):
     def start(self):
         self.__t1.start()
 
-    def _redraw(self, info: str, description: str, loop_len: int, idx: int, is_stop: bool) -> None:
-        self.__is_stop = is_stop
+    def _print(self, info: str, description: str, loop_len: int, idx: int, stop: bool) -> None:
+        self.__stop = stop
         self.__delta = loop_len / UPDATES_PER_LOOP
         self.__sleep_time = self.__delta / SD_RATE
         self.__loop_len = loop_len
@@ -44,9 +44,12 @@ class ScreenUpdater(MsgProcessor):
         print(self.__description)
 
     def __progress_update(self):
-        while os.name == "posix":
+        if os.name != "posix":
+            return
+
+        while True:
             time.sleep(self.__sleep_time)
-            if not self.__is_stop:
+            if not self.__stop:
                 self.__idx += self.__delta
                 self.__idx %= self.__loop_len
                 pos = round(self.__idx / self.__loop_len * SCR_COLS)

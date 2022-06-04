@@ -23,6 +23,10 @@ class LooperCtrl(OneLoopCtrl, Song, MsgProcessor):
     def start(self):
         self.__t1.start()
 
+    def _redraw(self):
+        """used by children to _redraw itself on screen"""
+        pass
+
     def __playback(self) -> None:
         """runs in a thread, play and record current song part"""
         while True:

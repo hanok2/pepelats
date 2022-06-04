@@ -21,9 +21,6 @@ class Song(CollectionOwner[SongPart]):
     def _prepare_song(self) -> None:
         pass
 
-    def _redraw(self) -> None:
-        pass
-
     @abstractmethod
     def _stop_song(self, wait: int = 0) -> None:
         pass
@@ -89,7 +86,6 @@ class Song(CollectionOwner[SongPart]):
         self._file_finder.items.pop(self._file_finder.now)
         self._file_finder.now = self._file_finder.next = 0
         self.__set_song_name()
-        self._redraw()
 
     def __new_song_name(self) -> str:
         return datetime.now().strftime("%m-%d-%H-%M-%S") + self._file_finder.get_end_with()
