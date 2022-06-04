@@ -9,10 +9,11 @@
     "57": ["_change_map", "0", "song"]
   },
   "0": {
-    "description": "Song: Ax2-save Bx2-save_as_new DH-delete",
+    "description": "Song: Ax2-save Bx2-save_as_new Dx2-load DH-delete",
     "update_method": "_show_song_now",
     "82": [["_save_song"], ["_change_map", "0", "playing"]],
     "92": [["_save_new_song"], ["_change_map", "0", "playing"]],
+    "112": [["_load_song"], ["_change_map", "0", "playing"]],
     "116": ["_delete_song"]
   },
    "1": {
