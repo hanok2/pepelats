@@ -6,7 +6,7 @@ from typing import Tuple
 
 from utils import SCR_COLS, print_at, MsgProcessor, SD_RATE, SCR_ROWS
 
-UPDATES_PER_LOOP = 8
+UPDATES_PER_LOOP = 16
 
 
 def extend_strings(s: str, fill_char: str, cols: int) -> Tuple[str, int]:
