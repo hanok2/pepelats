@@ -33,7 +33,7 @@ class ExtendedCtrl(LooperCtrl):
         part = self.get_item_now()
         self.__scr_conn.send([ConfigName.redraw,
                               info, self.__description, part.length, self.idx,
-                              self._go_play.is_set()])
+                              self.get_stop_event().is_set()])
 
     def _prepare_redraw(self, update_method: str, description: str) -> None:
         self.__update_method = update_method
