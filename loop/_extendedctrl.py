@@ -33,7 +33,7 @@ class ExtendedCtrl(LooperCtrl):
         part = self.get_item_now()
         self.__scr_conn.send([ConfigName.redraw,
                               info, self.__description, part.length, self.idx,
-                              self._go_play.is_set(), self.get_stop_event().is_set()])
+                              self._go_play.is_set()])
 
     def _prepare_redraw(self, update_method: str, description: str) -> None:
         self.__update_method = update_method
@@ -209,13 +209,13 @@ class ExtendedCtrl(LooperCtrl):
             new_id = part.now + 1
             new_id %= part.items_len
             part.now = new_id
-        elif params[0] == "delete" and part.now != 0:
+        elif params[0] == "delete" and part.items_len > 1:
             part.items.pop(part.now)
-            part.now = 0
-        elif params[0] == "silent" and part.now != 0:
+            part.now = part.next = 0
+        elif params[0] == "silent":
             loop = self.get_item_now().get_item_now()
             loop.is_silent = not loop.is_silent
-        elif params[0] == "reverse" and part.now != 0:
+        elif params[0] == "reverse":
             loop = self.get_item_now().get_item_now()
             loop.is_reverse = not loop.is_reverse
             loop.is_silent = False
