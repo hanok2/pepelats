@@ -47,30 +47,30 @@ class LooperCtrl(OneLoopCtrl, Song, MsgProcessor):
         has logic when to stop playback"""
         part = self.get_item_now()
         if part.is_empty:
-            if self.drum.is_empty:
+            if self._drum.is_empty:
                 self.stop_now()
             else:
-                self._stop_at_bound(self.drum.length)
+                self._stop_at_bound(self._drum.length)
         else:
             if self.next != self.now:
                 if self.is_stop_len_set():
-                    self._stop_at_bound(self.drum.length)
+                    self._stop_at_bound(self._drum.length)
                 else:
                     self._stop_at_bound(part.length)
-                    self.drum.play_break_later(part.length, self.idx)
+                    self._drum.play_break_later(part.length, self.idx)
             else:
                 self._stop_never()
 
     def _set_drum_length(self, length: int) -> None:
-        self.drum.prepare_drum(length)
+        self._drum.prepare_drum(length)
 
     def _get_drum_length(self) -> int:
-        return self.drum.length
+        return self._drum.length
 
     def _prepare_song(self) -> None:
         self._stop_song()
         self.items.clear()
-        self.drum.clear()
+        self._drum.clear()
 
     def _stop_song(self, wait: int = 0):
         self._is_rec = False
@@ -79,12 +79,6 @@ class LooperCtrl(OneLoopCtrl, Song, MsgProcessor):
             self.stop_now()
         else:
             self._stop_at_bound(self.get_item_now().length)
-
-    def _pause_and_clear(self) -> None:
-        if self._go_play.is_set():
-            self._go_play.clear()
-        else:
-            self._prepare_song()
 
     def _play_loop_next(self) -> None:
         if not self._go_play.is_set():

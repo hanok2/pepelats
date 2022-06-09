@@ -1,1 +1,1 @@
-from drum._realdrum import RealDrum
+from drum._realdrum import RealDrum, FakeDrum

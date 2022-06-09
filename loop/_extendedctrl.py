@@ -2,6 +2,7 @@ import copy
 import os
 from multiprocessing.connection import Connection
 
+from drum import FakeDrum, RealDrum
 from loop._looperctrl import LooperCtrl
 from loop._songpart import SongPart
 from mixer import Mixer
@@ -41,15 +42,19 @@ class ExtendedCtrl(LooperCtrl):
 
     def _prepare_song(self) -> None:
         super()._prepare_song()
-        self.items.append(SongPart(self))
-        self.items.append(SongPart(self))
-        self.items.append(SongPart(self))
-        self.items.append(SongPart(self))
+        for _ in range(4):
+            self.items.append(SongPart(self))
+
+    def _set_free_loops(self) -> None:
+        self._drum = FakeDrum()
+
+    def _set_drum_loops(self) -> None:
+        self._drum = RealDrum()
 
     #  ========= change methods
 
     def _load_drum_type(self):
-        self.drum.load_drum_type()
+        self._drum.load_drum_type()
         self._redraw()
 
     def _change_mixer_in(self, change_by: int) -> None:
@@ -63,26 +68,26 @@ class ExtendedCtrl(LooperCtrl):
         self._redraw()
 
     def _change_drum_volume(self, change_by: int) -> None:
-        self.drum.change_volume(change_by)
+        self._drum.change_volume(change_by)
         self._redraw()
 
     def _change_drum_swing(self, change_by: int) -> None:
-        self.drum.change_swing(change_by)
+        self._drum.change_swing(change_by)
         self._redraw()
 
     def _change_drum(self) -> None:
-        self.drum.play_break_now()
+        self._drum.play_break_now()
 
     def _change_song(self, *params) -> None:
         self._file_finder.iterate_dir(go_fwd=params[0] > 0)
         self._redraw()
 
     def _change_drum_type(self, *params) -> None:
-        self.drum.change_drum_type(go_fwd=params[0] >= 0)
+        self._drum.change_drum_type(go_fwd=params[0] >= 0)
         self._redraw()
 
     def _change_drum_intensity(self, change_by: int) -> None:
-        self.drum.change_intensity(change_by)
+        self._drum.change_intensity(change_by)
 
     # ================ show methods
 
@@ -95,7 +100,7 @@ class ExtendedCtrl(LooperCtrl):
         return ff.get_item_next()
 
     def _show_drum_type(self) -> str:
-        return self.drum.show_drum_type()
+        return self._drum.show_drum_type()
 
     def _show_one_part(self) -> str:
         tmp = ""
@@ -116,8 +121,8 @@ class ExtendedCtrl(LooperCtrl):
         return tmp[:-1]
 
     def _show_drum_param(self) -> str:
-        tmp = "vol:".ljust(STATE_COLS) + val_str(self.drum.volume, 0, 1, USE_COLS) + "\n"
-        tmp += "swing:".ljust(STATE_COLS) + val_str(self.drum.swing, 0.5, 0.75, USE_COLS)
+        tmp = "vol:".ljust(STATE_COLS) + val_str(self._drum.volume, 0, 1, USE_COLS) + "\n"
+        tmp += "swing:".ljust(STATE_COLS) + val_str(self._drum.swing, 0.5, 0.75, USE_COLS)
         return tmp
 
     @staticmethod

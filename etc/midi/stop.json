@@ -9,11 +9,17 @@
     "57": ["_change_map", "0", "song"]
   },
   "0": {
-    "description": "Stop: A-stop_now B-stop_end, C-fade, DH-clear_all",
+    "description": "Stop: A-stop_now B-stop_end, C-fade_fast, D-fade_slow",
     "update_method": "",
     "81": [["_stop_song", 0], ["_change_map", "0", "playing"]],
     "91": [["_stop_song", 1], ["_change_map", "0", "playing"]],
-    "101": [["_fade_and_stop", 11], ["_change_map", "0", "playing"]],
-    "116": [["_prepare_song"], ["_change_map", "0", "playing"]]
-  }
+    "101": [["_fade_and_stop", 5], ["_change_map", "0", "playing"]],
+    "116": [["_fade_and_stop", 10], ["_change_map", "0", "playing"]]
+  },
+   "1": {
+    "description": "Stop: A-drum_loops, D-free_loops",
+    "update_method": "",
+    "81": [["_prepare_song"], ["_set_drum_loops"], ["_change_map", "0", "playing"]],
+    "111": [["_prepare_song"], ["_set_free_loops"], ["_change_map", "0", "playing"]]
+   }
 }

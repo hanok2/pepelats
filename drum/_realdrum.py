@@ -16,12 +16,70 @@ class Intensity(IntEnum):
     BREAK = 4
 
 
-class RealDrum:
+class FakeDrum:
+    @staticmethod
+    def clear() -> None:
+        pass
+
+    @staticmethod
+    def change_volume(change_by: int) -> None:
+        pass
+
+    @staticmethod
+    def change_swing(change_by: int) -> None:
+        pass
+
+    @property
+    def is_empty(self) -> bool:
+        return True
+
+    @property
+    def length(self) -> int:
+        return 0
+
+    @property
+    def volume(self) -> float:
+        return 0
+
+    @property
+    def swing(self) -> float:
+        return 0.5
+
+    def show_drum_type(self) -> str:
+        return str(self)
+
+    def change_drum_type(self, go_fwd: bool) -> None:
+        pass
+
+    def load_drum_type(self) -> None:
+        pass
+
+    def prepare_drum(self, length: int) -> None:
+        pass
+
+    def play_samples(self, out_data: np.ndarray, idx: int) -> None:
+        pass
+
+    def play_break_later(self, part_len: int, idx: int) -> None:
+        pass
+
+    def play_break_now(self, bars: float = 0) -> None:
+        pass
+
+    def change_intensity(self, change_by: int) -> None:
+        pass
+
+    def __str__(self):
+        return "FakeDrum"
+
+
+class RealDrum(FakeDrum):
     """Drums generated from patterns with random changes"""
 
     change_after_bars: int = 3  # change pattern and fill after this many bars
 
     def __init__(self):
+        super().__init__()
         self.__change_after_samples: int = MAX_32_INT
         self.__sample_counter: int = 0
         self.__i: Intensity = Intensity.LVL2
@@ -34,6 +92,31 @@ class RealDrum:
     @staticmethod
     def clear() -> None:
         DrumLoader.length = 0
+
+    @staticmethod
+    def change_volume(change_by: int) -> None:
+        factor = 1.41 if change_by >= 0 else (1 / 1.41)
+        v = MainLoader.get(ConfigName.drum_volume, 1) * factor
+        if v * DrumLoader.max_volume >= SD_MAX:
+            return
+        if v * DrumLoader.max_volume < 0.01 * SD_MAX:
+            return
+        MainLoader.set(ConfigName.drum_volume, v)
+        MainLoader.save()
+        DrumLoader.prepare_all(DrumLoader.length)
+
+    @staticmethod
+    def change_swing(change_by: int) -> None:
+        v = MainLoader.get(ConfigName.drum_swing, 0.625)
+        v += (0.25 / 4) if change_by >= 0 else (-0.25 / 4)
+        if v > 0.80:
+            v = 0.50
+        elif v < 0.45:
+            v = 0.75
+
+        MainLoader.set(ConfigName.drum_swing, v)
+        MainLoader.save()
+        DrumLoader.prepare_all(DrumLoader.length)
 
     @property
     def is_empty(self) -> bool:
@@ -121,31 +204,6 @@ class RealDrum:
             bars = 0.5 if random.random() < 0.5 else 1
         samples = self.length * bars
         Timer(samples / SD_RATE, revert).start()
-
-    @staticmethod
-    def change_volume(change_by: int) -> None:
-        factor = 1.41 if change_by >= 0 else (1 / 1.41)
-        v = MainLoader.get(ConfigName.drum_volume, 1) * factor
-        if v * DrumLoader.max_volume >= SD_MAX:
-            return
-        if v * DrumLoader.max_volume < 0.01 * SD_MAX:
-            return
-        MainLoader.set(ConfigName.drum_volume, v)
-        MainLoader.save()
-        DrumLoader.prepare_all(DrumLoader.length)
-
-    @staticmethod
-    def change_swing(change_by: int) -> None:
-        v = MainLoader.get(ConfigName.drum_swing, 0.625)
-        v += (0.25 / 4) if change_by >= 0 else (-0.25 / 4)
-        if v > 0.80:
-            v = 0.50
-        elif v < 0.45:
-            v = 0.75
-
-        MainLoader.set(ConfigName.drum_swing, v)
-        MainLoader.save()
-        DrumLoader.prepare_all(DrumLoader.length)
 
     def change_intensity(self, change_by: int) -> None:
         i = self.__i + change_by

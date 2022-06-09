@@ -1,6 +1,6 @@
 from threading import Event
 
-from drum import RealDrum
+from drum import RealDrum, FakeDrum
 from utils import MAX_32_INT, ConfigName, MainLoader, SD_RATE
 
 
@@ -11,7 +11,7 @@ class OneLoopCtrl:
 
     def __init__(self):
         self._is_rec: bool = False
-        self.__drum = RealDrum()
+        self._drum: FakeDrum = RealDrum()
         self.idx: int = 0
         self.__stop_len: int = MAX_32_INT
         self.__stop_event: Event = Event()
@@ -21,8 +21,8 @@ class OneLoopCtrl:
         return self._is_rec
 
     @property
-    def drum(self) -> RealDrum:
-        return self.__drum
+    def drum(self) -> FakeDrum:
+        return self._drum
 
     def is_stop_len_set(self) -> bool:
         return self.__stop_len < MAX_32_INT
@@ -47,7 +47,7 @@ class OneLoopCtrl:
             self.__stop_len = self.idx - over + bound_value
 
     def __str__(self):
-        return f"{self.__class__.__name__} stop_len {self.__stop_len} {self.drum} is_rec {self.is_rec}"
+        return f"{self.__class__.__name__} stop_len {self.__stop_len} {self._drum} is_rec {self.is_rec}"
 
 
 if __name__ == "__main__":
