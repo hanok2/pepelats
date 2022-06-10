@@ -31,8 +31,8 @@ class ExtendedCtrl(LooperCtrl):
             info = ""
 
         is_stop_set: bool = self.get_stop_event().is_set()
-        if is_stop_set:
-            description = ScrColors['v'] + self.__description + ScrColors['end']
+        if self.is_stop_len_set():
+            description = ScrColors['y'] + self.__description + ScrColors['end']
         else:
             description = self.__description
 
