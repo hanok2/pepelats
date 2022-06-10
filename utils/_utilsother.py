@@ -3,6 +3,7 @@ import os
 import subprocess as sp
 import time
 import traceback
+from math import log10
 from pathlib import Path
 from typing import Any, List, TypeVar, Generic, Union, Dict
 
@@ -52,6 +53,13 @@ def val_str(val: float, min_val: float, max_val: float, cols: int) -> str:
     k = round(cols * (val - min_val) / (max_val - min_val))
     k = min(k, cols - 1)
     return ('-' * k + '╬').ljust(cols, '-')
+
+
+def decibels(val_ratio: float) -> float:
+    """calculate decibels from -60 to 0 and map it to interval 0 to 1"""
+    db = 20 * log10(val_ratio) + 60
+    db = max(db, 0) / 60
+    return db
 
 
 def run_os_cmd(cmd_list: list[str]) -> int:

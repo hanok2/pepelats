@@ -1,9 +1,8 @@
-from math import log10
 from typing import List, Any
 
 import numpy as np
 
-from utils import record_sound_buff, play_sound_buff, SD_RATE, ScrColors, SD_MAX, always_true
+from utils import record_sound_buff, play_sound_buff, SD_RATE, ScrColors, SD_MAX, always_true, decibels
 from utils import sound_test, make_zero_buffer, MAX_LEN
 
 
@@ -120,9 +119,7 @@ class WrapBuffer:
             return "000.000".ljust(cols, '-')
 
         if self.__volume < 0:
-            vol_db = 20 * log10(np.max(self.__buff) / SD_MAX) + 60
-            vol_db = max(vol_db, 0) / 60
-            self.__volume = vol_db
+            self.__volume = decibels(np.max(self.__buff) / SD_MAX)
 
         sec_len = self.length / SD_RATE
         tmp = "{:07.3F}".format(sec_len).ljust(cols, '-')
