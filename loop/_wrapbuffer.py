@@ -2,7 +2,7 @@ from typing import List, Any
 
 import numpy as np
 
-from utils import record_sound_buff, play_sound_buff, SD_RATE, ScrColors, SD_MAX, val_str, always_true
+from utils import record_sound_buff, play_sound_buff, SD_RATE, ScrColors, SD_MAX, always_true
 from utils import sound_test, make_zero_buffer, MAX_LEN
 
 
@@ -116,14 +116,14 @@ class WrapBuffer:
     def info_str(self, cols: int) -> str:
         """Colored string to show volume and length"""
         if self.is_empty:
-            return val_str(0, 0, 1, cols)
+            return "0.00".ljust(cols, '-')
 
         if self.__volume < 0:
             self.__volume = np.max(self.__buff) / SD_MAX
 
-        tmp = val_str(self.__volume, 0, 1, cols)
-        len_pos = round(self.length / MAX_LEN * cols)
-        return ScrColors['reverse'] + tmp[:len_pos] + ScrColors['end'] + tmp[len_pos:]
+        tmp = str(round(self.length / SD_RATE, 2)).ljust(cols, '-')
+        volume_pos = round(self.__volume * cols)
+        return ScrColors['reverse'] + tmp[:volume_pos] + ScrColors['end'] + tmp[volume_pos:]
 
     def __str__(self):
         return f"{self.__class__.__name__} sec={self.length / SD_RATE:.2f} " \
