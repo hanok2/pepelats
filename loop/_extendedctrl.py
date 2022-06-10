@@ -6,7 +6,7 @@ from drum import FakeDrum, RealDrum
 from loop._looperctrl import LooperCtrl
 from loop._songpart import SongPart
 from mixer import Mixer
-from utils import run_os_cmd
+from utils import run_os_cmd, ScrColors
 from utils import val_str, ConfigName, SCR_COLS, CURRENT_VERSION, STATE_COLS
 
 USE_COLS = SCR_COLS - STATE_COLS
@@ -30,10 +30,16 @@ class ExtendedCtrl(LooperCtrl):
         else:
             info = ""
 
+        is_stop_set: bool = self.get_stop_event().is_set()
+        if is_stop_set:
+            description = ScrColors['v'] + self.__description + ScrColors['end']
+        else:
+            description = self.__description
+
         part = self.get_item_now()
         self.__scr_conn.send([ConfigName.print,
-                              info, self.__description, part.length, self.idx,
-                              self.get_stop_event().is_set()])
+                              info, description, part.length, self.idx,
+                              is_stop_set])
 
     def _prepare_redraw(self, update_method: str, description: str) -> None:
         self.__update_method = update_method

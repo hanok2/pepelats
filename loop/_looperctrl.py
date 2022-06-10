@@ -1,5 +1,6 @@
 from threading import Thread, Event
 
+from drum import RealDrum, FakeDrum
 from loop._loopsimple import LoopWithDrum
 from loop._oneloopctrl import OneLoopCtrl
 from loop._song import Song
@@ -62,6 +63,10 @@ class LooperCtrl(OneLoopCtrl, Song, MsgProcessor):
                 self._stop_never()
 
     def _set_drum_length(self, length: int) -> None:
+        if length <= 0:
+            self._drum = FakeDrum()
+        else:
+            self._drum = RealDrum()
         self._drum.prepare_drum(length)
 
     def _get_drum_length(self) -> int:

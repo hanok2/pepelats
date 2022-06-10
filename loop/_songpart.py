@@ -51,7 +51,7 @@ class SongPart(CollectionOwner[LoopWithDrum], Player):
         if is_now:
             tmp = (ScrColors['r'] if is_rec else ScrColors['g']) + full_str
         elif is_next:
-            tmp = (ScrColors['y'] if self._ctrl.is_stop_len_set() else ScrColors['v']) + full_str
+            tmp = ScrColors['y'] + full_str
         else:
             tmp = ScrColors['w'] + full_str
 
