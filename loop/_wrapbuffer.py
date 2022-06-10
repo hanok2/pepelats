@@ -1,3 +1,4 @@
+from math import log10
 from typing import List, Any
 
 import numpy as np
@@ -119,7 +120,9 @@ class WrapBuffer:
             return "000.000".ljust(cols, '-')
 
         if self.__volume < 0:
-            self.__volume = np.max(self.__buff) / SD_MAX
+            vol_db = 20 * log10(np.max(self.__buff) / SD_MAX) + 60
+            vol_db = max(vol_db, 0) / 60
+            self.__volume = vol_db
 
         sec_len = self.length / SD_RATE
         tmp = "{:07.3F}".format(sec_len).ljust(cols, '-')
