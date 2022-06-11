@@ -1,4 +1,5 @@
 import logging
+import os
 import sys
 from datetime import datetime
 from multiprocessing import Pipe, Process
@@ -7,7 +8,7 @@ from multiprocessing.connection import Connection
 from loop import ExtendedCtrl
 from midi import MidiController, MidiConverter
 from screen import ScreenUpdater
-from utils import ConfigName, get_midi_port
+from utils import ConfigName, open_midi_ports
 
 
 def proc_ctrl(r_conn: Connection, s_conn: Connection):
@@ -33,7 +34,13 @@ if __name__ == "__main__":
     logging.getLogger().setLevel(logging.INFO)
     logging.info(f"Starting Pepelats looper: {dtm}")
 
-    in_midi_port = get_midi_port()
+    if ConfigName.use_typing in sys.argv or not os.name == "posix":
+        from midi import KbdMidiPort
+
+        in_midi_port = KbdMidiPort()
+    else:
+        in_midi_port = open_midi_ports()
+
     if in_midi_port is None:
         logging.error("Failed to connecting to MIDI input ports")
         sys.exit(1)

@@ -1,8 +1,8 @@
+import logging
 import os
 import sys
 from json import load, dump
 from pathlib import Path
-from time import sleep
 from typing import Any, Dict, Union
 from typing import List
 
@@ -11,28 +11,23 @@ import mido
 from utils._utilsother import ConfigName, ROOT_DIR
 
 
-def get_midi_port():
-    """wait for one of MIDI ports for 3 minutes, open and return input port or None"""
+# noinspection PyUnresolvedReferences
+def open_midi_ports():
+    port_names_str: str = os.getenv(ConfigName.midi_port_names)
+    try:
+        port_names: List[str] = loads("[" + port_names_str + "]")
+    except Exception as ex:
+        logging.error(f"Failed to parse {ConfigName.midi_port_names} error: {ex}\nstring value: {port_names_str}")
+        sys.exit(1)
 
-    # noinspection PyUnresolvedReferences
-    def open_midi_ports(port_names: List[str]):
-        port_names_str: str = os.getenv(ConfigName.midi_port_names)
-        for k in range(3):
-            print("Waiting for MIDI port to appear:", port_names)
-            port_list = mido.get_input_names()
-            for name in port_names:
-                for port_name in port_list:
-                    if name in port_name:
-                        print("opening:", port_name)
-                        port_in = mido.open_input(port_name)
-                        return port_in
-            sleep(5)
-
-    if ConfigName.use_typing in sys.argv or not os.name == "posix":
-        from midi import KbdMidiPort
-        return KbdMidiPort()
-    else:
-        return open_midi_ports()
+    logging.info("Waiting for MIDI port to appear:", port_names)
+    port_list = mido.get_input_names()
+    for name in port_names:
+        for port_name in port_list:
+            if name in port_name:
+                print("opening:", port_name)
+                port_in = mido.open_input(port_name)
+                return port_in
 
 
 class JsonDictLoader:
