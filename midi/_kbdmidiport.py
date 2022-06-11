@@ -1,7 +1,7 @@
+import json
 import logging
 import os
 import sys
-from json import loads
 from queue import Queue
 from typing import Dict
 
@@ -20,7 +20,7 @@ class KbdMidiPort:
         self.__kbd_notes: Dict[str, int] = dict()
         if kbd_map_str:
             try:
-                self.__kbd_notes: Dict = loads("{" + kbd_map_str + "}")
+                self.__kbd_notes: Dict = json.loads("{" + kbd_map_str + "}")
             except Exception as ex:
                 logging.error(f"Failed to parse {ConfigName.kbd_notes} error: {ex}\nstring value: {kbd_map_str}")
                 sys.exit(1)

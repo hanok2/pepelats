@@ -1,6 +1,6 @@
+import json
 import logging
 import os
-from json import loads
 from typing import Tuple, Union
 
 import numpy as np
@@ -17,7 +17,7 @@ def find_usb() -> None:
     if not usb_audio_str:
         return
     logging.info(f"Looking for audio devices: {usb_audio_str}")
-    usb_audio = loads("[" + usb_audio_str + "]")
+    usb_audio = json.loads("[" + usb_audio_str + "]")
     all_devices = sd.query_devices()
     for k, dev in enumerate(all_devices):
         for sd_name in usb_audio:
