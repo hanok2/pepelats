@@ -5,7 +5,7 @@
   "DRUM_TYPE": "pop",
   "comment2": "max. allowed time for being late when changing loop",
   "MAX_LATE_SECONDS": 0.1,
-  "comment5": "ALSA mixers to record and play",
+  "comment5": "ALSA mixer volume to record and play",
   "MIXER_IN": 99,
   "MIXER_OUT": 99
 }

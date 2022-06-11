@@ -12,7 +12,7 @@ class TestScreenUpdater(TestCase):
         updater = ScreenUpdater()
         updater._print = MagicMock()
         updater.start()
-        updater.process_message([ConfigName.redraw, "abc", 2, 1])
+        updater.process_message([ConfigName.print, "abc", 2, 1])
         updater._print.assert_called_once_with("abc", 2, 1)
 
 
