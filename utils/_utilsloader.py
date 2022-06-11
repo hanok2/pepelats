@@ -1,7 +1,7 @@
 import logging
 import os
 import sys
-from json import load, dump
+from json import loads, dump, load
 from pathlib import Path
 from typing import Any, Dict, Union
 from typing import List
