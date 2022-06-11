@@ -1,11 +1,11 @@
 import logging
 import os
-from typing import Tuple, Union, List
+from json import loads
+from typing import Tuple, Union
 
 import numpy as np
 import sounddevice as sd
 
-from utils._utilsloader import MainLoader
 from utils._utilsother import ConfigName
 
 logging.getLogger().setLevel(logging.INFO)
@@ -13,13 +13,18 @@ logging.getLogger().setLevel(logging.INFO)
 
 def find_usb() -> None:
     """Look for USB Audio device and set it default"""
-    usb_audio_list: List[str] = MainLoader.get(ConfigName.usb_audio_names, ["USB Audio"])
-    for sd_name in usb_audio_list:
-        for k, dev in enumerate(sd.query_devices()):
+    usb_audio_str: str = os.getenv(ConfigName.usb_audio_names)
+    if not usb_audio_str:
+        return
+    usb_audio = loads("[" + usb_audio_str + "]")
+    all_devices = sd.query_devices()
+    for k, dev in enumerate(all_devices):
+        for sd_name in usb_audio:
             full_name = dev["name"]
             if sd_name in full_name:
                 logging.info(f"Found requested device {sd_name} in {full_name}")
                 sd.default.device = k, k
+                return
 
 
 find_usb()
