@@ -39,7 +39,7 @@ class MockMidiPort:
         return self.__notes.pop(k)
 
 
-class TestMidiCounter(TestCase):
+class TestMidiConverter(TestCase):
 
     def test_1(self):
 

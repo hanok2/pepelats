@@ -11,8 +11,8 @@ class TestLoader(TestCase):
         loader = JsonDictLoader("./etc/looper_defaults.json")
         file: Path = loader.get_filename()
         self.assertTrue(file.name == "looper_defaults.json")
-        note: int = loader.get(ConfigName.kbd_notes, dict()).get("1", None)
-        self.assertTrue(note == 60)
+        swing: float = loader.get(ConfigName.drum_swing, -1)
+        self.assertTrue(swing >= 0.5)
 
 
 if __name__ == "__main__":
