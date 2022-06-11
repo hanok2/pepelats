@@ -15,7 +15,8 @@ def get_midi_port():
     """wait for one of MIDI ports for 3 minutes, open and return input port or None"""
 
     # noinspection PyUnresolvedReferences
-    def wait_for_midi_ports(port_names: List[str]):
+    def open_midi_ports(port_names: List[str]):
+        port_names_str: str = os.getenv(ConfigName.midi_port_names)
         for k in range(3):
             print("Waiting for MIDI port to appear:", port_names)
             port_list = mido.get_input_names()
@@ -29,11 +30,9 @@ def get_midi_port():
 
     if ConfigName.use_typing in sys.argv or not os.name == "posix":
         from midi import KbdMidiPort
-        kbd_map = MainLoader.get(ConfigName.kbd_notes, dict())
-        return KbdMidiPort(kbd_map)
+        return KbdMidiPort()
     else:
-        tmp = MainLoader.get(ConfigName.midi_port_names, [])
-        return wait_for_midi_ports(tmp)
+        return open_midi_ports()
 
 
 class JsonDictLoader:

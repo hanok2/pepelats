@@ -28,23 +28,21 @@ def proc_updater(r_conn: Connection):
 
 if __name__ == "__main__":
     #  freeze_support()
+    logging.getLogger().addHandler(logging.StreamHandler())
     dtm = datetime.now()
     logging.getLogger().setLevel(logging.INFO)
     logging.info(f"Starting Pepelats looper: {dtm}")
 
     in_midi_port = get_midi_port()
     if in_midi_port is None:
-        print("Failed to connecting to MIDI input ports")
         logging.error("Failed to connecting to MIDI input ports")
         sys.exit(1)
     else:
-        print(f"Connected to MIDI input port {in_midi_port.name}")
         logging.info(f"Connected to MIDI input port {in_midi_port.name}")
 
     r_upd, s_upd = Pipe(False)  # screen update messages
     r_ctrl, s_ctrl = Pipe(False)  # looper control messages
 
-    print("Starting application in three OS processes")
     p_upd = Process(target=proc_updater, args=(r_upd,), daemon=True)
     p_ctrl = Process(target=proc_ctrl, args=(r_ctrl, s_upd), daemon=True)
 

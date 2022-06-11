@@ -7,6 +7,23 @@
 export MAX_LEN_SECONDS=60
 export SD_RATE=44100
 
+#Used by typing keyboard to generate notes
+if [[ $KBD_NOTES == "" ]]; then
+  export KBD_NOTES="1": 60, "2": 62, "3": 64, "4": 65, "q": 12,"w": 13
+fi
+#Used for note counting as explained in doc
+if [[ $KBD_NOTES == "" ]]; then
+  export MAPPED_NOTES="60": 80, "62": 90, "64": 100, "65": 110, "12": 40, "13": 50
+fi
+#check these MIDI ports and use first one found as input
+if [[ $MIDI_PORT_NAMES == "" ]]; then
+  export MIDI_PORT_NAMES="ext_conv","BlueBoard","Livid"
+fi
+#check ALSA devices and use first one found
+if [[ $USB_AUDIO_NAMES == "" ]]; then
+  export USB_AUDIO_NAMES="VALETON GP","USB Audio"
+fi
+
 cd_to_script_dir() {
   THIS_DIR=$(dirname "$0")
   cd "$THIS_DIR" || exit 1

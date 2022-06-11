@@ -1,16 +1,30 @@
+import logging
+import os
+import sys
+from json import loads
 from queue import Queue
 from typing import Dict
 
 import keyboard
 import mido
 
+from utils import ConfigName
+
 
 class KbdMidiPort:
     """Using keyboard keys instead of MIDI notes"""
 
-    def __init__(self, kbd_notes: Dict[str, int]):
+    def __init__(self):
         self.name: str = "Typing keyboard"
-        self.__kbd_notes = kbd_notes
+        kbd_map_str: str = os.getenv(ConfigName.kbd_notes)
+        self.__kbd_notes: Dict[str, int] = dict()
+        if kbd_map_str:
+            try:
+                self.__kbd_notes: Dict = loads("{" + kbd_map_str + "}")
+            except Exception as ex:
+                logging.error(f"Failed to parse {ConfigName.kbd_notes} error: {ex}\nstring value: {kbd_map_str}")
+                sys.exit(1)
+
         self.__queue = Queue()
         self.pressed_key = False
         keyboard.on_press(callback=self.on_press, suppress=True)

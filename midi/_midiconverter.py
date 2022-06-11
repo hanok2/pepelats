@@ -1,4 +1,7 @@
 import logging
+import os
+import sys
+from json import loads
 from multiprocessing.connection import Connection
 from threading import Timer
 from typing import Dict
@@ -6,7 +9,7 @@ from typing import Dict
 import mido
 
 from midi._midicontroller import MidiController
-from utils import ConfigName, MainLoader
+from utils import ConfigName
 
 
 def is_midi_ctrl_chg(msg):
@@ -86,7 +89,13 @@ class MidiConverter(MidiController):
 
     def __init__(self, s_conn: Connection, in_port):
         super().__init__(s_conn, in_port)
-        self.__mapped_notes: Dict[str, int] = MainLoader.get(ConfigName.mapped_notes, dict())
+        self.__mapped_notes: Dict[str, int] = dict()
+        mapped_notes_str = os.getenv(ConfigName.mapped_notes)
+        try:
+            self.__mapped_notes = loads("{" + mapped_notes_str + "}")
+        except Exception as ex:
+            logging.error(f"Failed to parse {ConfigName.mapped_notes} error: {ex}\nstring value: {mapped_notes_str}")
+            sys.exit(1)
 
         self.__on_count: int = 0
         self.__off_count: int = 0
@@ -95,7 +104,6 @@ class MidiConverter(MidiController):
         self.__midi_cc_to_note = MidiCcToNote()
 
     def start(self) -> None:
-        print("Started internal MidiConverter")
         logging.info("Started internal MidiConverter")
         while True:
             msg = self._in_port.receive()
