@@ -56,7 +56,7 @@ class KbdMidiPort:
 
 if __name__ == "__main__":
     def test_1():
-        test_port = KbdMidiPort({"1": 60, "2": 62, "3": 64, "4": 65, "q": 12, "w": 13})
+        test_port = KbdMidiPort()
 
         while True:
             test_msg = test_port.receive()
