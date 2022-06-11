@@ -16,6 +16,7 @@ def find_usb() -> None:
     usb_audio_str: str = os.getenv(ConfigName.usb_audio_names)
     if not usb_audio_str:
         return
+    logging.info(f"Looking for audio devices: {usb_audio_str}")
     usb_audio = loads("[" + usb_audio_str + "]")
     all_devices = sd.query_devices()
     for k, dev in enumerate(all_devices):
