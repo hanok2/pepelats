@@ -25,7 +25,7 @@
     "111": ["_change_drum_swing", 1]
   },
  "2": {
-    "description": "Drum_Type: A/B-scroll Dx2-load",
+    "description": "Drum_Type: A/B-scroll D2-load",
     "update_method": "_show_drum_type",
     "81": ["_change_drum_type", -1],
     "91": ["_change_drum_type", 1],

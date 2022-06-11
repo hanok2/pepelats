@@ -9,24 +9,19 @@
     "57": ["_change_map", "0", "song"]
   },
   "0": {
-    "description": "Song: Ax2-save Bx2-save_as_new Dx2-load DH-delete",
+    "description": "Song: A2-save B2-save_new D2-load DH-delete",
     "update_method": "_show_song_now",
     "82": [["_save_song"], ["_change_map", "0", "playing"]],
     "92": [["_save_new_song"], ["_change_map", "0", "playing"]],
     "112": [["_load_song"], ["_change_map", "0", "playing"]],
-    "116": [["_delete_song"], ["_change_map", "0", "playing"]]
+    "116": [["_delete_song"], ["_change_map", "1", "song"]]
   },
    "1": {
-    "description": "Next: A/B-scroll Dx2-load",
+    "description": "Next: A/B-scroll D2-load D3-ver_update",
     "update_method": "_show_song_next",
     "81": ["_change_song", -1],
     "91": ["_change_song", 1],
-    "112": [["_load_song"], ["_change_map", "0", "playing"]]
-  },
-  "2": {
-    "description": "App: Dx2-update DH-restart",
-    "update_method": "_show_version",
-    "112": ["_check_updates"],
-    "116": ["_restart"]
+    "112": [["_load_song"], ["_change_map", "0", "playing"]],
+    "113": ["_check_updates"]
   }
 }

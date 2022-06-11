@@ -1,7 +1,7 @@
 import logging
 import os
 import sys
-from json import dump, load, loads
+from json import dump, load
 from pathlib import Path
 from typing import Any, Dict, Union
 from typing import List
@@ -15,7 +15,7 @@ from utils._utilsother import ConfigName, ROOT_DIR
 def open_midi_ports():
     port_names_str: str = os.getenv(ConfigName.midi_port_names)
     try:
-        port_names: List[str] = loads("[" + port_names_str + "]")
+        port_names: List[str] = json.loads("[" + port_names_str + "]")
     except Exception as ex:
         logging.error(f"Failed to parse {ConfigName.midi_port_names} error: {ex}\nstring value: {port_names_str}")
         sys.exit(1)
