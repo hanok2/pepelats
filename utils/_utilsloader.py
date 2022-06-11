@@ -1,3 +1,4 @@
+import json
 import logging
 import os
 import sys
@@ -11,7 +12,6 @@ import mido
 from utils._utilsother import ConfigName, ROOT_DIR
 
 
-# noinspection PyUnresolvedReferences
 def open_midi_ports():
     port_names_str: str = os.getenv(ConfigName.midi_port_names)
     try:
@@ -21,11 +21,13 @@ def open_midi_ports():
         sys.exit(1)
 
     logging.info("Waiting for MIDI port to appear:", port_names)
+    # noinspection PyUnresolvedReferences
     port_list = mido.get_input_names()
     for name in port_names:
         for port_name in port_list:
             if name in port_name:
                 print("opening:", port_name)
+                # noinspection PyUnresolvedReferences
                 port_in = mido.open_input(port_name)
                 return port_in
 
