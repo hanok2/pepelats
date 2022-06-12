@@ -17,13 +17,11 @@ class KbdMidiPort:
     def __init__(self):
         self.name: str = "Typing keyboard"
         kbd_map_str: str = os.getenv(ConfigName.kbd_notes)
-        self.__kbd_notes: Dict[str, int] = dict()
-        if kbd_map_str:
-            try:
-                self.__kbd_notes: Dict = json.loads("{" + kbd_map_str + "}")
-            except Exception as ex:
-                logging.error(f"Failed to parse {ConfigName.kbd_notes} error: {ex}\nstring value: {kbd_map_str}")
-                sys.exit(1)
+        try:
+            self.__kbd_notes: Dict[str, int] = json.loads("{" + kbd_map_str + "}")
+        except Exception as ex:
+            logging.error(f"Failed to parse {ConfigName.kbd_notes} error: {ex}\nstring value: {kbd_map_str}")
+            sys.exit(1)
 
         self.__queue = Queue()
         self.pressed_key = False

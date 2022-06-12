@@ -56,9 +56,9 @@ def val_str(val: float, min_val: float, max_val: float, cols: int) -> str:
 
 
 def decibels(val_ratio: float) -> float:
-    """calculate decibels from -60 to 0 and map it to interval 0 to 1"""
-    db = 20 * log10(val_ratio) + 60
-    db = max(db, 0) / 60
+    """calculate decibels from -60 to 0"""
+    db = 20 * log10(val_ratio)
+    db = max(db, -60)
     return db
 
 
