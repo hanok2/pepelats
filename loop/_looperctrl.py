@@ -54,7 +54,7 @@ class LooperCtrl(OneLoopCtrl, Song, MsgProcessor):
                 self._stop_at_bound(self._drum.length)
         else:
             if self.next != self.now:
-                if self.is_stop_len_set():
+                if self.is_stop_len_set() and not self._drum.is_empty:
                     self._stop_at_bound(self._drum.length)
                 else:
                     self._stop_at_bound(part.length)
