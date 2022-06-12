@@ -122,13 +122,11 @@ class WrapBuffer:
             self.__volume = -decibels(np.max(self.__buff) / SD_MAX)
 
         sec_len = self.length / SD_RATE
-        tmp1 = "{:07.3F}".format(sec_len)
-        tmp2 = "{:04.1F}".format(self.__volume)
-        return tmp1 + '-' * (cols - 11) + tmp2
+        return "{:06.2F}".format(sec_len) + '-' * (cols - 10) + "{:04.1F}".format(self.__volume)
 
     def __str__(self):
-        return f"{self.__class__.__name__} sec={self.length / SD_RATE:.2f} " \
-               f"vol={self.__volume:.2f} undo={len(self.__undo)} redo={len(self.__redo)}"
+        return f"{self.__class__.__name__} sec={self.length / SD_RATE:.2F} " \
+               f"vol={self.__volume:.2F} undo={len(self.__undo)} redo={len(self.__redo)}"
 
 
 if __name__ == "__main__":

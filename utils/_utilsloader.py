@@ -20,7 +20,7 @@ def open_midi_ports():
         logging.error(f"Failed to parse {ConfigName.midi_port_names} error: {ex}\nstring value: {port_names_str}")
         sys.exit(1)
 
-    logging.info("Waiting for MIDI port to appear:", port_names)
+    logging.info("Opening MIDI ports:", port_names)
     # noinspection PyUnresolvedReferences
     port_list = mido.get_input_names()
     for name in port_names:

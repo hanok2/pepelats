@@ -1,7 +1,8 @@
 #!/bin/bash
 # This script starts pepelats audio looper
 # Optional parameters:
-# --use_typing - use typing keys defined in ./etc/count/kbd_notes.json
+# --use_typing - use typing keys to send MIDI notes
+# --debug - show debug messages on screen
 
 # Looper parameters passed via env.
 export MAX_LEN_SECONDS=60
