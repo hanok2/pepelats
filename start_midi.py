@@ -6,6 +6,7 @@ import mido
 
 from midi import MidiConverter
 from utils import ConfigName
+from utils import open_midi_ports
 
 if __name__ == "__main__":
     # noinspection PyUnresolvedReferences
@@ -13,16 +14,15 @@ if __name__ == "__main__":
 
         if ConfigName.use_typing in sys.argv or not os.name == "posix":
             from midi import KbdMidiPort
-            from utils import open_midi_ports
 
             in_port = KbdMidiPort()
             # on Windows need loopmid application to create this port
-            out_port = open_midi_ports('"pedalCmd"', is_input=False)
+            out_port = open_midi_ports("'" + ConfigName.PEDAL_COMMANDS + "'", is_input=False)
         else:
             tmp = os.getenv(ConfigName.midi_port_names)
             in_port = open_midi_ports(tmp, is_input=True)
             # on Linix create port form python
-            out_port = mido.open_output("pedalCmd", virtual=True)
+            out_port = mido.open_output(ConfigName.pedal_commands, virtual=True)
 
         if not in_port:
             logging.error("Failed to connecting to MIDI input")

@@ -4,6 +4,7 @@ from multiprocessing.connection import Connection
 from loop import ExtendedCtrl
 from midi import MidiController
 from screen import ScreenUpdater
+from utils import open_midi_ports, ConfigName
 
 
 def proc_ctrl(r_conn: Connection, s_conn: Connection):
@@ -22,24 +23,20 @@ def proc_updater(r_conn: Connection):
         screen_updater.process_message(msg)
 
 
+def main():
+    in_midi_port = open_midi_ports("'" + ConfigName.pedal_commands + "'", is_input=True)
+
+    r_upd, s_upd = Pipe(False)  # screen update messages
+    r_ctrl, s_ctrl = Pipe(False)  # looper control messages
+
+    p_upd = Process(target=proc_updater, args=(r_upd,), daemon=True)
+    p_ctrl = Process(target=proc_ctrl, args=(r_ctrl, s_upd), daemon=True)
+
+    p_upd.start()
+    p_ctrl.start()
+
+    MidiController(s_ctrl, in_midi_port).midi_control.start()
+
+
 if __name__ == "__main__":
-
-    def main():
-
-
-        in_midi_port = open_midi_ports()
-
-
-        r_upd, s_upd = Pipe(False)  # screen update messages
-        r_ctrl, s_ctrl = Pipe(False)  # looper control messages
-
-        p_upd = Process(target=proc_updater, args=(r_upd,), daemon=True)
-        p_ctrl = Process(target=proc_ctrl, args=(r_ctrl, s_upd), daemon=True)
-
-        p_upd.start()
-        p_ctrl.start()
-
-        MidiController(s_ctrl, in_midi_port).midi_control.start()
-
-
     main()
