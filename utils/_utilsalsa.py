@@ -25,7 +25,7 @@ def open_midi_ports(port_names_str: str, is_input: bool):
     port_names: List[str] = list_from_str(port_names_str)
     if not port_names:
         logging.error(f"Failed to parse port names string: {port_names_str}")
-        return None
+        return
 
     port_list = mido.get_input_names() if is_input else mido.get_output_names()
     for name in port_names:
@@ -45,6 +45,10 @@ def find_usb() -> None:
         return
     logging.info(f"Looking for audio devices: {usb_audio_str}")
     usb_audio = list_from_str(usb_audio_str)
+    if not usb_audio:
+        logging.error(f"Failed to parse usb audio names string: {usb_audio_str}")
+        return
+
     all_devices = sd.query_devices()
     for k, dev in enumerate(all_devices):
         for sd_name in usb_audio:
