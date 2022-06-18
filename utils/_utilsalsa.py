@@ -44,7 +44,7 @@ def find_usb() -> None:
     if not usb_audio_str:
         return
     logging.info(f"Looking for audio devices: {usb_audio_str}")
-    usb_audio = json.loads("[" + usb_audio_str + "]")
+    usb_audio = list_from_str(usb_audio_str)
     all_devices = sd.query_devices()
     for k, dev in enumerate(all_devices):
         for sd_name in usb_audio:
