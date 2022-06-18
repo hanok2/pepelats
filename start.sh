@@ -59,7 +59,7 @@ for var in "$@"; do
   fi
 done
 
-python_command="$USE_KBD python3 $CODE_OPTIMIZE ./start_looper.py  $*"
+python_command="$USE_KBD python3 $CODE_OPTIMIZE ./start.py  $*"
 
 # keep past 100 lines only
 touch ./log.log
