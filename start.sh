@@ -8,6 +8,7 @@
 export MAX_LEN_SECONDS=60
 export SD_RATE=44100
 
+#For strings below - use single quotes if there are spaces
 #Used by typing keyboard to generate notes
 if [ -z "$KBD_NOTES" ]; then
   export KBD_NOTES='"1": 60, "2": 62, "3": 64, "4": 65, "q": 12,"w": 13'
@@ -22,7 +23,7 @@ if [ -z "$MIDI_PORT_NAMES" ]; then
 fi
 #check ALSA devices and use first one found
 if [ -z "$USB_AUDIO_NAMES" ]; then
-  export USB_AUDIO_NAMES=VALETON GP,USB Audio
+  export USB_AUDIO_NAMES='VALETON GP,USB Audio'
 fi
 
 cd_to_script_dir() {

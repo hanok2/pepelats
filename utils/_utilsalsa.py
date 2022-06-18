@@ -11,10 +11,9 @@ from utils._utilsother import ConfigName
 
 
 def list_from_str(s: str) -> List[str]:
-    new_s = s.strip(' ,').replace("'", "").replace('"', '').replace(',', '","')
-
     # noinspection PyBroadException
     try:
+        new_s = s.strip(' ,').replace("'", "").replace('"', '').replace(',', '","')
         return json.loads(f'["{new_s}"]')
     except Exception as _:
         pass
@@ -41,9 +40,6 @@ def open_midi_ports(port_names_str: str, is_input: bool):
 def find_usb() -> None:
     """Look for USB Audio device and set it default"""
     usb_audio_str: str = os.getenv(ConfigName.usb_audio_names)
-    if not usb_audio_str:
-        return
-    logging.info(f"Looking for audio devices: {usb_audio_str}")
     usb_audio = list_from_str(usb_audio_str)
     if not usb_audio:
         logging.error(f"Failed to parse usb audio names string: {usb_audio_str}")
