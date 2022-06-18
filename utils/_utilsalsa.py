@@ -16,7 +16,7 @@ def open_midi_ports(port_names_str: str, is_input: bool):
         port_names: List[str] = json.loads("[" + port_names_str + "]")
     except Exception as ex:
         logging.error(f"Failed to parse port names, error: {ex}\nstring value: {port_names_str}")
-        sys.exit(1)
+        return None
 
     port_list = mido.get_input_names() if is_input else mido.get_output_names()
     for name in port_names:
