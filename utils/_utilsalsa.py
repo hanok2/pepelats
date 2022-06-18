@@ -8,8 +8,6 @@ import sounddevice as sd
 
 from utils._utilsother import ConfigName
 
-logging.getLogger().setLevel(logging.INFO)
-
 
 def find_usb() -> None:
     """Look for USB Audio device and set it default"""

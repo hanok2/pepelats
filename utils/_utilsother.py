@@ -3,6 +3,7 @@ import os
 import subprocess as sp
 import time
 import traceback
+from datetime import datetime
 from math import log10
 from pathlib import Path
 from typing import Any, List, TypeVar, Generic, Union, Dict
@@ -11,7 +12,9 @@ T = TypeVar('T')
 
 ROOT_DIR = Path(__file__).parent.parent
 
-logging.basicConfig(level=logging.ERROR, filename=Path(ROOT_DIR, 'log.log'), filemode='a')
+logging.basicConfig(level=logging.INFO, filename=Path(ROOT_DIR, 'log.log'), filemode='a')
+logging.getLogger().addHandler(logging.StreamHandler())
+logging.info(f"Starting log: {datetime.now()}")
 
 START_TIME = time.time()
 CURRENT_VERSION = 'June 2022'

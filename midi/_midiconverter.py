@@ -2,13 +2,11 @@ import json
 import logging
 import os
 import sys
-from multiprocessing.connection import Connection
 from threading import Timer
 from typing import Dict
 
 import mido
 
-from midi._midicontroller import MidiController
 from utils import ConfigName
 
 
@@ -77,7 +75,7 @@ class MidiCcToNote:
                 return None
 
 
-class MidiConverter(MidiController):
+class MidiConverter:
     """Count MIDI notes to increase number of messages MIDI pedal send,
     tap, double tap, long tap - send different notes. Count algorithm:
     --take the original note 60, find the mapped note 80
@@ -87,8 +85,9 @@ class MidiConverter(MidiController):
 
     count_restart_seconds = 0.600
 
-    def __init__(self, s_conn: Connection, in_port):
-        super().__init__(s_conn, in_port)
+    def __init__(self, in_port, out_port):
+        self.__in_port = in_port
+        self.__out_port = out_port
         self.__mapped_notes: Dict[str, int] = dict()
         mapped_notes_str = os.getenv(ConfigName.mapped_notes)
         try:
@@ -106,7 +105,7 @@ class MidiConverter(MidiController):
     def start(self) -> None:
         logging.info("Started internal MidiConverter")
         while True:
-            msg = self._in_port.receive()
+            msg = self.__in_port.receive()
             msg = self.__midi_cc_to_note.convert(msg)
             if msg is None:
                 continue
@@ -117,7 +116,7 @@ class MidiConverter(MidiController):
             is_on = is_midi_note_on(msg)
             if is_on and self.__past_note != note:
                 # do not sent same note many times, we count it below
-                self._translator.translate_and_send(str(note))
+                self.__out_port.send(mido.Message.from_bytes([0x90, note, 100]))
 
             self.__past_note = note
             count_note: int = self.__mapped_notes.get(str(note), None)
@@ -155,7 +154,8 @@ class MidiConverter(MidiController):
 
         self.__on_count = self.__off_count = 0
 
-        self._translator.translate_and_send(str(count_note))
+        print(f"Sending note: {count_note}")
+        self.__out_port.send(mido.Message.from_bytes([0x90, count_note, 100]))
 
     def __str__(self):
         return f"{self.__class__.__name__} note={self.__past_count_note} " \

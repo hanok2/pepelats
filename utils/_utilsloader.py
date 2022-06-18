@@ -1,35 +1,9 @@
-import json
-import logging
-import os
-import sys
 from json import dump, load
 from pathlib import Path
 from typing import Any, Dict, Union
 from typing import List
 
-import mido
-
 from utils._utilsother import ConfigName, ROOT_DIR
-
-
-def open_midi_ports():
-    port_names_str: str = os.getenv(ConfigName.midi_port_names)
-    try:
-        port_names: List[str] = json.loads("[" + port_names_str + "]")
-    except Exception as ex:
-        logging.error(f"Failed to parse {ConfigName.midi_port_names} error: {ex}\nstring value: {port_names_str}")
-        sys.exit(1)
-
-    logging.info("Opening MIDI ports:", port_names)
-    # noinspection PyUnresolvedReferences
-    port_list = mido.get_input_names()
-    for name in port_names:
-        for port_name in port_list:
-            if name in port_name:
-                print("opening:", port_name)
-                # noinspection PyUnresolvedReferences
-                port_in = mido.open_input(port_name)
-                return port_in
 
 
 class JsonDictLoader:
