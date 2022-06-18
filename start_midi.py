@@ -17,7 +17,7 @@ if __name__ == "__main__":
 
             in_port = KbdMidiPort()
             # on Windows need loopmid application to create this port
-            out_port = open_midi_ports("'" + ConfigName.pedal_commands + "'", is_input=False)
+            out_port = open_midi_ports(ConfigName.pedal_commands, is_input=False)
         else:
             tmp = os.getenv(ConfigName.midi_port_names)
             in_port = open_midi_ports(tmp, is_input=True)

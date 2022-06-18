@@ -24,7 +24,7 @@ def proc_updater(r_conn: Connection):
 
 
 def main():
-    in_midi_port = open_midi_ports("'" + ConfigName.pedal_commands + "'", is_input=True)
+    in_midi_port = open_midi_ports(ConfigName.pedal_commands, is_input=True)
 
     r_upd, s_upd = Pipe(False)  # screen update messages
     r_ctrl, s_ctrl = Pipe(False)  # looper control messages

@@ -12,9 +12,12 @@ from utils._utilsother import ConfigName
 
 # noinspection PyUnresolvedReferences
 def open_midi_ports(port_names_str: str, is_input: bool):
+    port_names_str = port_names_str.strip(' ,') \
+        .replace("'", "").replace('"', '').replace(',', '","')
+
     try:
-        port_names: List[str] = json.loads("[" + port_names_str + "]")
-    except Exception as ex:
+        port_names: List[str] = json.loads(f'["{port_names_str}"]')
+    except JSONDecodeError as ex:
         logging.error(f"Failed to parse port names, error: {ex}\nstring value: {port_names_str}")
         return None
 
