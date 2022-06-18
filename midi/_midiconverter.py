@@ -116,6 +116,7 @@ class MidiConverter:
             is_on = is_midi_note_on(msg)
             if is_on and self.__past_note != note:
                 # do not sent same note many times, we count it below
+                # assert always_true(f"Sending original note: {note}")
                 self.__out_port.send(mido.Message.from_bytes([0x90, note, 100]))
 
             self.__past_note = note
@@ -154,7 +155,7 @@ class MidiConverter:
 
         self.__on_count = self.__off_count = 0
 
-        print(f"Sending note: {count_note}")
+        # assert always_true(f"Sending counted note: {count_note}")
         self.__out_port.send(mido.Message.from_bytes([0x90, count_note, 100]))
 
     def __str__(self):

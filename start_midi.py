@@ -18,8 +18,6 @@ def open_midi_ports(port_names_str: str, is_input: bool):
         logging.error(f"Failed to parse port names, error: {ex}\nstring value: {port_names_str}")
         sys.exit(1)
 
-    logging.info(f"Opening MIDI ports: {port_names}")
-
     port_list = mido.get_input_names() if is_input else mido.get_output_names()
     for name in port_names:
         for port_name in port_list:
