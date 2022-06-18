@@ -85,9 +85,9 @@ class MidiConverter:
 
     count_restart_seconds = 0.600
 
-    def __init__(self, in_port, out_port):
-        self.__in_port = in_port
-        self.__out_port = out_port
+    def __init__(self):
+        self.__in_port = None
+        self.__out_port = None
         self.__mapped_notes: Dict[str, int] = dict()
         mapped_notes_str = os.getenv(ConfigName.mapped_notes)
         try:
@@ -102,10 +102,11 @@ class MidiConverter:
         self.__past_note: int = -1  # original MIDI note
         self.__midi_cc_to_note = MidiCcToNote()
 
-    def start(self) -> None:
+    def start(self, in_port, out_port) -> None:
         logging.info("Started internal MidiConverter")
-        while True:
-            msg = self.__in_port.receive()
+        self.__in_port = in_port
+        self.__out_port = out_port
+        for msg in self.__in_port.iter_pending():
             msg = self.__midi_cc_to_note.convert(msg)
             if msg is None:
                 continue

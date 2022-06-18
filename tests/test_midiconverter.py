@@ -16,7 +16,12 @@ class EndOfTest(Exception):
     pass
 
 
-class MockMidiPort:
+class MockOutMidiPort:
+    def send(self, msg: mido.Message) -> None:
+        pass
+
+
+class MockInMidiPort:
     def __init__(self):
         self.__notes: Dict[float, int] = dict()
 
@@ -38,17 +43,26 @@ class MockMidiPort:
         time.sleep(k)
         return self.__notes.pop(k)
 
+    def receive1(self) -> mido.Message:
+        if len(self.__notes) == 0:
+            raise EndOfTest()
+
+        k = list(self.__notes)[0]
+        time.sleep(k)
+        return self.__notes.pop(k)
+
 
 class TestMidiConverter(TestCase):
 
     def test_1(self):
 
-        in_port = MockMidiPort()
+        in_port = MockInMidiPort()
         in_port.charge({0.1: 60, 0.15: -60, 0.2: 60})
+        out_port = MockOutMidiPort()
 
-        counter = MidiConverter(s_conn, in_port)
+        counter = MidiConverter()
         try:
-            counter.start()
+            counter.start(in_port, out_port)
         except EndOfTest:
             pass
 

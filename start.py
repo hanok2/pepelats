@@ -16,32 +16,38 @@ from utils import ConfigName
 from utils import open_midi_ports
 
 
-# noinspection PyUnresolvedReferences
-def start_midi():
+def open_in():
     if ConfigName.use_typing in sys.argv or not os.name == "posix":
         from midi import KbdMidiPort
 
-        in_port = KbdMidiPort()
-        # on Windows need loopmid application to create this port
-        out_port = open_midi_ports(ConfigName.pedal_commands, is_input=False)
+        return KbdMidiPort()
     else:
         tmp = os.getenv(ConfigName.midi_port_names)
-        in_port = open_midi_ports(tmp, is_input=True)
+        return open_midi_ports(tmp, is_input=True)
+
+
+def open_out():
+    if ConfigName.use_typing in sys.argv or not os.name == "posix":
+        # on Windows need loopmidi application to create this port
+        return open_midi_ports(ConfigName.pedal_commands, is_input=False)
+    else:
         # on Linix create port form python
-        out_port = mido.open_output(ConfigName.pedal_commands, virtual=True)
+        # noinspection PyUnresolvedReferences
+        return mido.open_output(ConfigName.pedal_commands, virtual=True)
 
-    if not in_port:
-        logging.error("Failed to connecting to MIDI input")
-        sys.exit(1)
 
-    if not out_port:
-        logging.error("Failed to connecting to MIDI output")
-        sys.exit(1)
+def start_midi():
+    out_port = open_out()
+    in_port = None
+    logging.info(f"MIDI output {out_port}")
+    converter = MidiConverter()
+    while True:
+        if not in_port or in_port.closed:
+            in_port = open_in()
+            logging.info(f"MIDI input {in_port}")
+            converter.start(in_port, out_port)
 
-    logging.info(f"Connected to MIDI input: {in_port.name} output: {out_port.name}")
-    converter = MidiConverter(in_port, out_port)
-
-    converter.start()
+        time.sleep(5)
 
 
 def proc_ctrl(r_conn: Connection, s_conn: Connection):
