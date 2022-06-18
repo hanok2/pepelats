@@ -1,7 +1,7 @@
 import json
 import logging
 import os
-from typing import Tuple, Union
+from typing import Tuple, Union, List
 
 import mido
 import numpy as np
@@ -10,15 +10,21 @@ import sounddevice as sd
 from utils._utilsother import ConfigName
 
 
+def list_from_str(s: str) -> List[str]:
+    new_s = s.strip(' ,').replace("'", "").replace('"', '').replace(',', '","')
+
+    # noinspection PyBroadException
+    try:
+        return json.loads(f'["{new_s}"]')
+    except Exception as _:
+        pass
+
+
 # noinspection PyUnresolvedReferences
 def open_midi_ports(port_names_str: str, is_input: bool):
-    port_names_str = port_names_str.strip(' ,') \
-        .replace("'", "").replace('"', '').replace(',', '","')
-
-    try:
-        port_names: List[str] = json.loads(f'["{port_names_str}"]')
-    except JSONDecodeError as ex:
-        logging.error(f"Failed to parse port names, error: {ex}\nstring value: {port_names_str}")
+    port_names: List[str] = list_from_str(port_names_str)
+    if not port_names:
+        logging.error(f"Failed to parse port names string: {port_names_str}")
         return None
 
     port_list = mido.get_input_names() if is_input else mido.get_output_names()

@@ -18,11 +18,11 @@ if [ -z "$MAPPED_NOTES" ]; then
 fi
 #check these MIDI ports and use first one found as input
 if [ -z "$MIDI_PORT_NAMES" ]; then
-  export MIDI_PORT_NAMES='"ext_conv","BlueBoard","Livid"'
+  export MIDI_PORT_NAMES=ext_conv,BlueBoard,Livid
 fi
 #check ALSA devices and use first one found
 if [ -z "$USB_AUDIO_NAMES" ]; then
-  export USB_AUDIO_NAMES='"VALETON GP","USB Audio"'
+  export USB_AUDIO_NAMES=VALETON GP,USB Audio
 fi
 
 cd_to_script_dir() {
