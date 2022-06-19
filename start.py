@@ -34,7 +34,7 @@ def open_out():
         return mido.open_output(ConfigName.pedal_commands, virtual=True)
 
 
-def thread_converter(in_port, out_port):
+def thread_converter():
     in_port = open_in()
     if not in_port:
         logging.error(f"MIDI in conection failed")
