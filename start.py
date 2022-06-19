@@ -25,7 +25,7 @@ def open_in():
 
 
 def open_out():
-    if ConfigName.use_typing in sys.argv or not os.name == "posix":
+    if not os.name == "posix":
         # on Windows need loopmidi application to create this port
         return open_midi_ports(ConfigName.pedal_commands, is_input=False)
     else:
