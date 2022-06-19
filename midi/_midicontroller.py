@@ -9,12 +9,12 @@ class MidiController:
     def __init__(self, s_conn: Connection, in_port):
 
         self._translator: MidiTranslator = MidiTranslator(s_conn)
-        self._in_port = in_port
+        self.__in_port = in_port
 
     def start(self) -> None:
         assert always_true("Started MidiController")
         while True:
-            msg = self._in_port.receive()
+            msg = self.__in_port.receive()
             if msg is None:
                 continue
             note = msg.bytes()[1]

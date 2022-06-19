@@ -60,9 +60,9 @@ class TestMidiConverter(TestCase):
         in_port.charge({0.1: 60, 0.15: -60, 0.2: 60})
         out_port = MockOutMidiPort()
 
-        counter = MidiConverter()
+        counter = MidiConverter(in_port, out_port)
         try:
-            counter.start(in_port, out_port)
+            counter.start()
         except EndOfTest:
             pass
 

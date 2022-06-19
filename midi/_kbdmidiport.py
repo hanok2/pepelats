@@ -48,8 +48,8 @@ class KbdMidiPort:
             self.__queue.put(msg)
             self.pressed_key = False
 
-    def receive(self, block: bool = True):
-        return self.__queue.get(block)
+    def receive(self):
+        return self.__queue.get(block=True)
 
 
 if __name__ == "__main__":

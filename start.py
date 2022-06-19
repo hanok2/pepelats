@@ -36,16 +36,17 @@ def open_out():
         return mido.open_output(ConfigName.pedal_commands, virtual=True)
 
 
-def start_midi():
-    out_port = open_out()
+def start_midi(out_port):
     in_port = None
     logging.info(f"MIDI output {out_port}")
-    converter = MidiConverter()
+
     while True:
-        if not in_port or in_port.closed:
+        # noinspection PyUnresolvedReferences
+        if in_port is None or in_port.closed:
             in_port = open_in()
             logging.info(f"MIDI input {in_port}")
-            converter.start(in_port, out_port)
+            converter = MidiConverter(in_port, out_port)
+            converter.start()
 
         time.sleep(5)
 
@@ -76,12 +77,12 @@ def main():
     p_upd.start()
     p_ctrl.start()
 
-    Thread(target=start_midi, daemon=True).start()
-    time.sleep(2)
+    out_port = open_out()
+    Thread(target=start_midi, args=(out_port,), daemon=True).start()
+    time.sleep(5)
 
-    in_midi_port = open_midi_ports(ConfigName.pedal_commands, is_input=True)
-
-    MidiController(s_ctrl, in_midi_port).start()
+    in_port = open_midi_ports(ConfigName.pedal_commands, is_input=True)
+    MidiController(s_ctrl, in_port).start()
 
 
 if __name__ == "__main__":
