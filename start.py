@@ -3,6 +3,7 @@ import os
 import sys
 from multiprocessing import Pipe, Process
 from multiprocessing.connection import Connection
+from threading import Thread
 
 import mido
 
@@ -59,16 +60,19 @@ def main():
     p_upd.start()
     p_ctrl.start()
 
-    out_port = open_out()
     in_port = open_in()
-
-    if not in_port or not out_port:
-        logging.error(f"MIDI conection failed: {in_port} {out_port}")
+    if not in_port:
+        logging.error(f"MIDI in conection failed")
         sys.exit(1)
 
-    logging.info(f"MIDI connected: {in_port} {out_port}")
-    converter = MidiConverter(in_port, out_port)
-    converter.start()
+    if ConfigName.pedal_commands not in in_port.name:
+        out_port = open_out()
+        if not out_port:
+            logging.error(f"MIDI out conection failed")
+            sys.exit(1)
+
+        converter = MidiConverter(in_port, out_port)
+        Thread(converter.start(), daemon=True).start()
 
     in_port2 = open_midi_ports(ConfigName.pedal_commands, is_input=True)
     MidiController(s_ctrl, in_port2).start()

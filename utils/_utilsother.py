@@ -155,7 +155,6 @@ class ConfigName:
     comment: str = "comment"
     #  other
     use_typing: str = "--use_typing"
-    ext_conv: str = "ext_conv"
     # redraw
     prepare_redraw: str = "_prepare_redraw"
     redraw: str = "_redraw"

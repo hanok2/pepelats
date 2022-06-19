@@ -19,21 +19,23 @@ def list_from_str(s: str) -> List[str]:
         pass
 
 
-# noinspection PyUnresolvedReferences
 def open_midi_ports(port_names_str: str, is_input: bool):
     port_names: List[str] = list_from_str(port_names_str)
     if not port_names:
         logging.error(f"Failed to parse port names string: {port_names_str}")
         return
 
+    # noinspection PyUnresolvedReferences
     port_list = mido.get_input_names() if is_input else mido.get_output_names()
     for name in port_names:
         for port_name in port_list:
             if name in port_name:
                 print(f"opening: {port_name} input: {is_input}")
                 if is_input:
+                    # noinspection PyUnresolvedReferences
                     return mido.open_input(port_name)
                 else:
+                    # noinspection PyUnresolvedReferences
                     return mido.open_output(port_name)
 
 
