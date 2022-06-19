@@ -34,32 +34,7 @@ def open_out():
         return mido.open_output(ConfigName.pedal_commands, virtual=True)
 
 
-def proc_ctrl(r_conn: Connection, s_conn: Connection):
-    pepelats = ExtendedCtrl(s_conn)
-    pepelats.start()
-    while True:
-        msg = r_conn.recv()
-        pepelats.process_message(msg)
-
-
-def proc_updater(r_conn: Connection):
-    screen_updater = ScreenUpdater()
-    screen_updater.start()
-    while True:
-        msg = r_conn.recv()
-        screen_updater.process_message(msg)
-
-
-def main():
-    r_upd, s_upd = Pipe(False)  # screen update messages
-    r_ctrl, s_ctrl = Pipe(False)  # looper control messages
-
-    p_upd = Process(target=proc_updater, args=(r_upd,), daemon=True)
-    p_ctrl = Process(target=proc_ctrl, args=(r_ctrl, s_upd), daemon=True)
-
-    p_upd.start()
-    p_ctrl.start()
-
+def thread_converter(in_port, out_port):
     in_port = open_in()
     if not in_port:
         logging.error(f"MIDI in conection failed")
@@ -71,11 +46,41 @@ def main():
             logging.error(f"MIDI out conection failed")
             sys.exit(1)
 
-        converter = MidiConverter(in_port, out_port)
-        Thread(converter.start(), daemon=True).start()
+    converter = MidiConverter(in_port, out_port)
+    converter.start()
 
-    in_port2 = open_midi_ports(ConfigName.pedal_commands, is_input=True)
-    MidiController(s_ctrl, in_port2).start()
+
+def process_control(r_conn: Connection, s_conn: Connection):
+    pepelats = ExtendedCtrl(s_conn)
+    pepelats.start()
+    while True:
+        msg = r_conn.recv()
+        pepelats.process_message(msg)
+
+
+def process_updater(r_conn: Connection):
+    screen_updater = ScreenUpdater()
+    screen_updater.start()
+    while True:
+        msg = r_conn.recv()
+        screen_updater.process_message(msg)
+
+
+def main():
+    r_upd, s_upd = Pipe(False)  # screen update messages
+    r_ctrl, s_ctrl = Pipe(False)  # looper control messages
+
+    p_upd = Process(target=process_updater, args=(r_upd,), daemon=True)
+    p_ctrl = Process(target=process_control, args=(r_ctrl, s_upd), daemon=True)
+
+    p_upd.start()
+    p_ctrl.start()
+
+    t_conv = Thread(target=thread_converter, daemon=True)
+    t_conv.start()
+
+    in_port = open_midi_ports(ConfigName.pedal_commands, is_input=True)
+    MidiController(s_ctrl, in_port).start()
 
 
 if __name__ == "__main__":
