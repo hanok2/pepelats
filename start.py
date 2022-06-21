@@ -1,6 +1,7 @@
 import logging
 import os
 import sys
+import time
 from multiprocessing import Pipe, Process
 from multiprocessing.connection import Connection
 from threading import Thread
@@ -79,7 +80,7 @@ def main():
 
     t_conv = Thread(target=thread_converter, daemon=True)
     t_conv.start()
-
+    time.sleep(3)
     in_port = open_midi_ports(ConfigName.pedal_commands, is_input=True)
     if not in_port:
         logging.error(f"Failed to open port: {ConfigName.pedal_commands}")
