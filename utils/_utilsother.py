@@ -168,7 +168,7 @@ class ConfigName:
     midi_port_names: str = "MIDI_PORT_NAMES"
     usb_audio_names: str = "USB_AUDIO_NAMES"
     max_late_seconds: str = "MAX_LATE_SECONDS"
-    pedal_commands = "pedalCommands"
+    pedal_commands = "PedalCommands"
 
 
 if __name__ == "__main__":
