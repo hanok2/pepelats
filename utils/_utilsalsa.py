@@ -24,13 +24,15 @@ def open_midi_ports(port_names_str: str, is_input: bool):
     if not port_names:
         logging.error(f"Failed to parse port names string: {port_names_str}")
         return
+    else:
+        logging.info(f"Looking for ports: {port_names} input: {is_input}")
 
     # noinspection PyUnresolvedReferences
     port_list = mido.get_input_names() if is_input else mido.get_output_names()
     for name in port_names:
         for port_name in port_list:
             if name in port_name:
-                print(f"opening: {port_name} input: {is_input}")
+                logging.info(f"Opening: {port_name} input: {is_input}")
                 if is_input:
                     # noinspection PyUnresolvedReferences
                     return mido.open_input(port_name)
