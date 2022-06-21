@@ -31,7 +31,9 @@ def open_out():
     else:
         # on Linix create port form python
         # noinspection PyUnresolvedReferences
-        return mido.open_output(ConfigName.pedal_commands, virtual=True)
+        tmp = mido.open_output(ConfigName.pedal_commands, virtual=True)
+        logging.info(f"Opened virtual port: {tmp}")
+        return tmp
 
 
 def thread_converter():
