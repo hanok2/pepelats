@@ -40,11 +40,10 @@ def thread_converter():
         logging.error(f"MIDI in conection failed")
         sys.exit(1)
 
-    if ConfigName.pedal_commands not in in_port.name:
-        out_port = open_out()
-        if not out_port:
-            logging.error(f"MIDI out conection failed")
-            sys.exit(1)
+    out_port = open_out()
+    if not out_port:
+        logging.error(f"MIDI out conection failed")
+        sys.exit(1)
 
     converter = MidiConverter(in_port, out_port)
     converter.start()
@@ -80,6 +79,9 @@ def main():
     t_conv.start()
 
     in_port = open_midi_ports(ConfigName.pedal_commands, is_input=True)
+    if not in_port:
+        logging.error(f"Failed to open port: {ConfigName.pedal_commands}")
+        sys.exit(1)
     MidiController(s_ctrl, in_port).start()
 
 
