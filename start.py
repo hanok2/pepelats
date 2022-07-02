@@ -53,9 +53,12 @@ def main():
     p_upd.start()
     p_ctrl.start()
 
-    while not in_port:
+    while True:
         in_port = open_midi_ports(ConfigName.pedal_commands, is_input=True)
-        time.sleep(2)
+        if not in_port:
+            time.sleep(2)
+        else:
+            break
 
     MidiController(s_ctrl, in_port).start()
 
