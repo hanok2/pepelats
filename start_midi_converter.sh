@@ -1,13 +1,10 @@
 #!/bin/bash
-# This optional script starts optional MIDI converter mimap5 (link below)
-# If this is not used MIDI event conversion is handled by the looper
-# If this is used
+# This script starts MIDI converter mimap5 (github link below)
 
-
-# Part of hardware MIDI port name that is source of original messages; To check names use: aconnect -l
+# Part of MIDI port name - source of messages
 HARDWARE_NAME="BlueBoard"
-# Full MIDI port name that is source of converted messages
-EXT_CONV="ext_conv"
+# MIDI port name that is source of converted messages
+EXT_CONV="PedalCommands"
 
 THIS_DIR=$(dirname "$0")
 cd "$THIS_DIR" || exit 1
@@ -15,7 +12,7 @@ cd "$THIS_DIR" || exit 1
 if [[ ! -f rules.txt ]]; then
   wget -O rules.txt https://github.com/slmnv5/mimap5/raw/master/rules.txt
   if [[ ! -f rules.txt ]]; then
-    echo "!!!!!!!! Error downloading rules.txt !!!!!!!!!!!!!"
+    echo "Error downloading rules.txt"
     exit 1
   fi
 fi
@@ -23,7 +20,7 @@ fi
 if [[ ! -f mimap5 ]]; then
   wget -O mimap5 https://github.com/slmnv5/mimap5/blob/master/mimap5?raw=true
   if [[ ! -f mimap5 ]]; then
-    echo "!!!!!!!! Error downloading mimap5 !!!!!!!!!!!!!"
+    echo "Error downloading mimap5"
     exit 1
   fi
   chmod a+x mimap5
@@ -40,27 +37,19 @@ while true; do
   fi
 done
 
-if [ -z "$HARDWARE_OUT" ]; then
-    echo "!!!!!!!! Error opening port $HARDWARE_NAME !!!!!!!!!!!!!"
-    exit 1
-fi
 
-
-# Kill and disconnect all
 killall -9 mimap5
 aconnect -x
-# Start client and create MIDI port $EXT_CONV
-# This port must be #1 in the MIDI port names list for the looper
-
+# Start converter and create in and out virtual MIDI ports
 ./mimap5 -r rules.txt -n "$EXT_CONV" &
 time sleep 2
 
 CLIENT_IN=$(aconnect -l | awk -v nm="$EXT_CONV" '$0 ~ nm {print $2;exit}')
 if aconnect -e "${HARDWARE_OUT}0" "${CLIENT_IN}0"; then
-  echo "========= Connected to MIDI port $EXT_CONV =============="
+  echo "Connected MIDI $HARDWARE_OUT to  $EXT_CONV"
   exit 0
 else
-  echo "!!!!!!!! Failed connect to MIDI port $EXT_CONV !!!!!!!!!!!!!"
+  echo "Failed connect MIDI $HARDWARE_OUT to  $EXT_CONV"
   exit 1
 fi
 
