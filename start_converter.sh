@@ -6,8 +6,21 @@ HARDWARE_NAME="BlueBoard"
 # MIDI port name that is source of converted messages
 EXT_CONV="PedalCommands"
 
-THIS_DIR=$(dirname "$0")
-cd "$THIS_DIR" || exit 1
+cd_to_script_dir() {
+  THIS_DIR=$(dirname "$0")
+  cd "$THIS_DIR" || exit 1
+}
+
+check_if_running() {
+  found=$(ps -ef | grep mimap5)
+  if [ -n "$found" ]; then
+    echo "Exiting, this script is already running"
+    exit 1
+  fi
+}
+
+cd_to_script_dir
+check_if_running
 
 if [[ ! -f rules.txt ]]; then
   wget -O rules.txt https://github.com/slmnv5/mimap5/raw/master/rules.txt
@@ -37,10 +50,6 @@ while true; do
   fi
 done
 
-
-killall -9 mimap5
-sleep 1
-aconnect -x
 # Start converter and create in and out virtual MIDI ports
 ./mimap5 -r rules.txt -n "$EXT_CONV" &
 time sleep 2
@@ -53,6 +62,3 @@ else
   echo "Failed connect MIDI $HARDWARE_OUT to  $EXT_CONV"
   exit 1
 fi
-
-
-
