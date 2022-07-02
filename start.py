@@ -43,6 +43,10 @@ def process_updater(r_conn: Connection):
 
 
 def main():
+    in_port = open_midi_ports(ConfigName.pedal_commands, is_input=True)
+    if not in_port:
+        raise RuntimeError(f"Failed to open MIDI port: {ConfigName.pedal_commands}")
+
     r_upd, s_upd = Pipe(False)  # screen update messages
     r_ctrl, s_ctrl = Pipe(False)  # looper control messages
 
@@ -51,10 +55,6 @@ def main():
 
     p_upd.start()
     p_ctrl.start()
-
-    in_port = open_midi_ports(ConfigName.pedal_commands, is_input=True)
-    if not in_port:
-        raise RuntimeError(f"Failed to open MIDI port: {ConfigName.pedal_commands}")
 
     MidiController(s_ctrl, in_port).start()
 
