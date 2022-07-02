@@ -8,7 +8,6 @@
 export MAX_LEN_SECONDS=60
 export SD_RATE=44100
 
-
 #check these MIDI ports and use first one found as input
 if [ -z "$MIDI_PORT_NAMES" ]; then
   export MIDI_PORT_NAMES='PedalCommands,FakeName1,FakeName2'
@@ -23,10 +22,16 @@ cd_to_script_dir() {
   cd "$THIS_DIR" || exit 1
 }
 
+check_if_running() {
+  found=$(ps -ef | grep start_looper.)
+  if [ -n "$found" ]; then
+    echo "Exiting, this script is already running"
+    exit 1
+  fi
+}
+
 cd_to_script_dir
-
-killall s -9 start_looper.sh
-
+check_if_running
 
 CODE_OPTIMIZE="-O"
 for var in "$@"; do
@@ -36,7 +41,7 @@ for var in "$@"; do
   fi
 done
 
-python_command="python3 $CODE_OPTIMIZE ./start.py  $*"
+python_command="python3 $CODE_OPTIMIZE ./start_looper.py  $*"
 
 # keep past 100 lines only
 touch ./log.log
