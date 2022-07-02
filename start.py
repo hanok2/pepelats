@@ -1,29 +1,11 @@
-import os
 from multiprocessing import Pipe, Process
 from multiprocessing.connection import Connection
-
-import mido
 
 from loop import ExtendedCtrl
 from midi import MidiController
 from screen import ScreenUpdater
 from utils import ConfigName
 from utils import open_midi_ports
-
-
-def open_in():
-    tmp = os.getenv(ConfigName.midi_port_names)
-    return open_midi_ports(tmp, is_input=True)
-
-
-def open_out():
-    if not os.name == "posix":
-        # on Windows need loopmidi application to create this port
-        return open_midi_ports(ConfigName.pedal_commands, is_input=False)
-    else:
-        # on Linix create port form python
-        # noinspection PyUnresolvedReferences
-        return mido.open_output(ConfigName.pedal_commands, virtual=True)
 
 
 def process_control(r_conn: Connection, s_conn: Connection):
