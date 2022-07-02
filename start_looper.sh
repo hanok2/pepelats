@@ -23,7 +23,7 @@ cd_to_script_dir() {
 }
 
 check_if_running() {
-  found=$(ps -ef | grep start_looper.)
+  found=$(ps -ef | grep -v grep | grep start_looper.sh)
   if [ -n "$found" ]; then
     echo "Exiting, this script is already running"
     exit 1
