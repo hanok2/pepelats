@@ -22,8 +22,7 @@ def list_from_str(s: str) -> List[str]:
 def open_midi_ports(port_names_str: str, is_input: bool):
     port_names: List[str] = list_from_str(port_names_str)
     if not port_names:
-        logging.error(f"Failed to parse port names string: {port_names_str}")
-        return
+        raise RuntimeError(f"List of MIDI port names is empty: {port_names_str}")
 
     # noinspection PyUnresolvedReferences
     port_list = mido.get_input_names() if is_input else mido.get_output_names()
