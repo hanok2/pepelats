@@ -6,9 +6,6 @@ from unittest import TestCase
 
 import mido
 
-from midi import MidiConverter
-from utils import ConfigName
-
 r_conn, s_conn = Pipe(False)
 
 
@@ -55,24 +52,7 @@ class MockInMidiPort:
 class TestMidiConverter(TestCase):
 
     def test_1(self):
-
-        in_port = MockInMidiPort()
-        in_port.charge({0.1: 60, 0.15: -60, 0.2: 60})
-        out_port = MockOutMidiPort()
-
-        counter = MidiConverter(in_port, out_port)
-        try:
-            counter.start()
-        except EndOfTest:
-            pass
-
-        msg = r_conn.recv()
-        self.assertTrue(ConfigName.prepare_redraw == msg[0])
-
-        msg = r_conn.recv()
-        self.assertEqual(msg, ['_play_part_id', 0])
-
-        self.assertFalse(r_conn.poll())
+        pass
 
 
 if __name__ == "__main__":

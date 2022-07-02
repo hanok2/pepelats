@@ -1,27 +1,19 @@
-import logging
 import os
-import sys
 from multiprocessing import Pipe, Process
 from multiprocessing.connection import Connection
-from threading import Thread
 
 import mido
 
 from loop import ExtendedCtrl
-from midi import MidiController, MidiConverter
+from midi import MidiController
 from screen import ScreenUpdater
 from utils import ConfigName
 from utils import open_midi_ports
 
 
 def open_in():
-    if ConfigName.use_typing in sys.argv or not os.name == "posix":
-        from midi import KbdMidiPort
-
-        return KbdMidiPort()
-    else:
-        tmp = os.getenv(ConfigName.midi_port_names)
-        return open_midi_ports(tmp, is_input=True)
+    tmp = os.getenv(ConfigName.midi_port_names)
+    return open_midi_ports(tmp, is_input=True)
 
 
 def open_out():
@@ -32,22 +24,6 @@ def open_out():
         # on Linix create port form python
         # noinspection PyUnresolvedReferences
         return mido.open_output(ConfigName.pedal_commands, virtual=True)
-
-
-def thread_converter():
-    in_port = open_in()
-    if not in_port:
-        logging.error(f"MIDI in conection failed")
-        sys.exit(1)
-
-    if ConfigName.pedal_commands not in in_port.name:
-        out_port = open_out()
-        if not out_port:
-            logging.error(f"MIDI out conection failed")
-            sys.exit(1)
-
-    converter = MidiConverter(in_port, out_port)
-    converter.start()
 
 
 def process_control(r_conn: Connection, s_conn: Connection):
@@ -75,9 +51,6 @@ def main():
 
     p_upd.start()
     p_ctrl.start()
-
-    t_conv = Thread(target=thread_converter, daemon=True)
-    t_conv.start()
 
     in_port = open_midi_ports(ConfigName.pedal_commands, is_input=True)
     MidiController(s_ctrl, in_port).start()
