@@ -1,5 +1,4 @@
 import os
-import time
 from multiprocessing import Pipe, Process
 from multiprocessing.connection import Connection
 
@@ -53,12 +52,9 @@ def main():
     p_upd.start()
     p_ctrl.start()
 
-    while True:
-        in_port = open_midi_ports(ConfigName.pedal_commands, is_input=True)
-        if not in_port:
-            time.sleep(2)
-        else:
-            break
+    in_port = open_midi_ports(ConfigName.pedal_commands, is_input=True)
+    if not in_port:
+        raise RuntimeError(f"Failed to open MIDI port: {ConfigName.pedal_commands}")
 
     MidiController(s_ctrl, in_port).start()
 
