@@ -23,18 +23,10 @@ cd_to_script_dir() {
   cd "$THIS_DIR" || exit 1
 }
 
-check_if_running() {
-  script_name=${BASH_SOURCE[0]}
-  for pid in $(pidof -x "$script_name"); do
-    if [ "$pid" != "$$" ]; then
-      echo "Exiting. Script $script_name is already running with PID: $pid"
-      exit 1
-    fi
-  done
-}
-
 cd_to_script_dir
-check_if_running
+
+killall -9 start.sh
+
 
 CODE_OPTIMIZE="-O"
 for var in "$@"; do

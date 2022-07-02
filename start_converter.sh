@@ -39,6 +39,7 @@ done
 
 
 killall -9 mimap5
+sleep 1
 aconnect -x
 # Start converter and create in and out virtual MIDI ports
 ./mimap5 -r rules.txt -n "$EXT_CONV" &
