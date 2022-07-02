@@ -25,7 +25,7 @@ cd_to_script_dir() {
 
 cd_to_script_dir
 
-killall -9 start.sh
+killall s -9 start_looper.sh
 
 
 CODE_OPTIMIZE="-O"
