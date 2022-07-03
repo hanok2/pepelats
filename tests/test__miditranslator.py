@@ -2,7 +2,8 @@ import unittest
 from multiprocessing import Pipe
 from unittest import TestCase
 
-from midi import MidiTranslator
+# noinspection PyProtectedMember
+from midi._miditranslator import MidiTranslator
 from utils import ConfigName
 
 r_conn, s_conn = Pipe(False)
