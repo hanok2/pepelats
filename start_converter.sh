@@ -22,8 +22,6 @@ check_if_running() {
 cd_to_script_dir
 check_if_running
 
-wget -nc https://github.com/slmnv5/mimap5/blob/master/kbdmap.txt
-wget -nc https://github.com/slmnv5/mimap5/blob/master/rules.txt
 wget -nc -O mimap5 https://github.com/slmnv5/mimap5/blob/master/mimap5?raw=true
 chmod a+x mimap5
 
