@@ -20,32 +20,26 @@ check_if_running() {
 }
 
 download_file() {
-if [[ ! -f $1  || -s $1 ]]; then
-  wget -O mimap5 https://github.com/slmnv5/mimap5/blob/master/mimap5?raw=true
   if [[ ! -f $1 || -s $1 ]]; then
-    echo "Error downloading file $1"
-    exit 1
+    wget -O mimap5 https://github.com/slmnv5/mimap5/blob/master/mimap5?raw=true
+    if [[ ! -f $1 || -s $1 ]]; then
+      echo "Error downloading file $1"
+      exit 1
+    fi
   fi
-fi
 }
-
 
 cd_to_script_dir
 check_if_running
-download_file(mimap5)
-download_file(rules.txt)
-download_file(kbdmap.txt)
-
+download_file mimap5
+download_file rules.txt
+download_file kbdmap.txt
 
 chmod a+x mimap5
-
-
-
 
 # Start converter and create in and out virtual MIDI ports
 sudo ./mimap5 -r rules.txt -n "$EXT_CONV" -k kbdmap.txt &
 time sleep 2
-
 
 HARDWARE_OUT=""
 while k in {1..10}; do
