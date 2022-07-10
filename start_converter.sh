@@ -41,8 +41,8 @@ for k in {1..10}; do
 done
 
 CLIENT_IN=$(aconnect -l | awk -v nm="$EXT_CONV" '$0 ~ nm {print $2;exit}')
-if aconnect -e "${HARDWARE_OUT}0" "${CLIENT_IN}0"; then
-  echo "Connected MIDI $HARDWARE_OUT to  $EXT_CONV"
+if aconnect -e "${HARDWARE_OUT}0" "${CLIENT_IN}1"; then
+  echo "Connected MIDI ${HARDWARE_OUT}0 to ${EXT_CONV}1"
 else
-  echo "Failed connect MIDI $HARDWARE_OUT to  $EXT_CONV"
+  echo "Failed connect MIDI ${HARDWARE_OUT}0 to ${EXT_CONV}1"
 fi
