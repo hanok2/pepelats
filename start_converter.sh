@@ -26,11 +26,11 @@ wget -nc -O mimap5 https://github.com/slmnv5/mimap5/blob/master/mimap5?raw=true
 chmod a+x mimap5
 
 # Start converter and create in and out virtual MIDI ports
-sudo ./mimap5 -r rules.txt -n "$EXT_CONV" -k kbdmap.txt &
+sudo ./mimap5 -r rules.txt   -k kbdmap.txt  -n "$EXT_CONV" "$@"  &
 time sleep 2
 
 HARDWARE_OUT=""
-while k in {1..10}; do
+for k in {1..10}; do
   echo "Waiting for MIDI port $HARDWARE_NAME"
   HARDWARE_OUT=$(aconnect -l | awk -v nm="$HARDWARE_NAME" '$0 ~ nm {print $2;exit}')
   if [ -z "$HARDWARE_OUT" ]; then
