@@ -20,7 +20,7 @@ check_if_running() {
 }
 
 cd_to_script_dir
-check_if_running
+sudo killall mimap5
 
 wget -nc -O mimap5 https://github.com/slmnv5/mimap5/blob/master/mimap5?raw=true
 chmod a+x mimap5
