@@ -21,7 +21,7 @@ check_if_running() {
 
 download_file() {
   if [[ ! -f $1 || -s $1 ]]; then
-    wget -O mimap5 https://github.com/slmnv5/mimap5/blob/master/mimap5?raw=true
+    wget -O mimap5 https://github.com/slmnv5/mimap5/blob/master/$1?raw=true
     if [[ ! -f $1 || -s $1 ]]; then
       echo "Error downloading file $1"
       exit 1
