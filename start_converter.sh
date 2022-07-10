@@ -31,10 +31,10 @@ download_file() {
 
 cd_to_script_dir
 check_if_running
-download_file mimap5
+
 download_file rules.txt
 download_file kbdmap.txt
-
+download_file mimap5
 chmod a+x mimap5
 
 # Start converter and create in and out virtual MIDI ports
