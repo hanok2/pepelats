@@ -1,7 +1,6 @@
 #!/bin/bash
 # This script starts pepelats audio looper
 # Optional parameters:
-# --use_typing - use typing keys to send MIDI notes
 # --debug - show debug messages on screen
 
 # Looper parameters passed via env.
@@ -17,21 +16,14 @@ if [ -z "$USB_AUDIO_NAMES" ]; then
   export USB_AUDIO_NAMES='VALETON GP,USB Audio'
 fi
 
-cd_to_script_dir() {
-  THIS_DIR=$(dirname "$0")
-  cd "$THIS_DIR" || exit 1
-}
+THIS_DIR=$(dirname "$0")
+cd "$THIS_DIR" || exit 1
 
-check_if_running() {
-  found=$(ps -ef | grep python3 | grep start_looper.py)
-  if [ -n "$found" ]; then
-    echo "Exiting, this script is already running"
-    exit 1
-  fi
-}
-
-cd_to_script_dir
-check_if_running
+found=$(ps -ef | grep python3 | grep start_looper.py)
+if [ -n "$found" ]; then
+  echo "Exiting, this script is already running"
+  exit 1
+fi
 
 CODE_OPTIMIZE="-O"
 for var in "$@"; do
