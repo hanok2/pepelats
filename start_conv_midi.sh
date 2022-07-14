@@ -18,10 +18,10 @@ chmod a+x mimap5
 # Wait for hardware to appear
 HARDWARE_OUT=""
 for k in {1..50}; do
-  echo "Waiting for MIDI port $HARDWARE_NAME"
+  echo "started $k times wait MIDI port $HARDWARE_NAME"
   HARDWARE_OUT=$(aconnect -l | awk -v nm="$HARDWARE_NAME" '$0 ~ nm {print $2;exit}')
   if [ -z "$HARDWARE_OUT" ]; then
-    sleep 5
+    sleep 10
   else
     break
   fi
