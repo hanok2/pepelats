@@ -1,7 +1,5 @@
 #!/bin/bash
 # This script starts pepelats audio looper
-# Optional parameters:
-# --debug - show debug messages on screen
 
 # Looper parameters passed via env.
 export MAX_LEN_SECONDS=60
