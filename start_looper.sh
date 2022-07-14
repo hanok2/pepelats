@@ -57,7 +57,7 @@ sudo dmesg -D
 for k in {1..100}; do
   echo "started $k time(s)"
   killall -s 9 -w -v python3
-  sleep 3
+  sleep 10
   $python_command
 done
 
