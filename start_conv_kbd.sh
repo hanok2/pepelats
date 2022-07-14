@@ -1,8 +1,5 @@
 #!/bin/bash
-# This script starts MIDI converter mimap5 (github link below)
-
-# MIDI port name that is source of converted messages
-EXT_CONV="PedalCommands"
+# This script starts MIDI converter mimap5 (github link below) using typing keyboard
 
 cd_to_script_dir() {
   THIS_DIR=$(dirname "$0")
@@ -11,6 +8,7 @@ cd_to_script_dir() {
 
 cd_to_script_dir
 sudo killall mimap5
+if [ -s mimap5 ]; then rm -fv mimap5; fi
 
 wget -nc -O mimap5 https://github.com/slmnv5/mimap5/blob/master/mimap5?raw=true
 chmod a+x mimap5

@@ -13,6 +13,7 @@ cd_to_script_dir() {
 
 cd_to_script_dir
 sudo killall mimap5
+if [ -s mimap5 ]; then rm -fv mimap5; fi
 
 wget -nc -O mimap5 https://github.com/slmnv5/mimap5/blob/master/mimap5?raw=true
 chmod a+x mimap5
@@ -34,7 +35,7 @@ done
 # connect using linux alsa command
 CLIENT_IN=$(aconnect -l | awk -v nm="$EXT_CONV" '$0 ~ nm {print $2;exit}')
 if aconnect -e "${HARDWARE_OUT}0" "${CLIENT_IN}0"; then
-  echo "Connected MIDI ${HARDWARE_OUT}0 to ${EXT_CONV}1"
+  echo "Connected MIDI ${HARDWARE_OUT}0 to ${CLIENT_IN}0"
 else
-  echo "Failed connect MIDI ${HARDWARE_OUT}0 to ${EXT_CONV}1"
+  echo "Failed connect MIDI ${HARDWARE_OUT}0 to ${CLIENT_IN}0"
 fi
