@@ -19,7 +19,7 @@ fi
 chmod a+x mimap5
 
 ./mimap5 -r rules.txt  -n "$EXT_CONV" "$@" &
-
+sleep 2
 # Wait for hardware to appear
 HARDWARE_OUT=""
 for k in {1..50}; do
