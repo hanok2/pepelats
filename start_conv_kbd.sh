@@ -5,7 +5,7 @@
 THIS_DIR=$(dirname "$0")
 cd "$THIS_DIR" || exit 1
 
-found=$(ps -ef | grep mimap5)
+found=$(ps -ef | grep -v grep | grep mimap5)
 if [ -n "$found" ]; then
   echo "Exiting, mimap5 is already running"
   exit 1
