@@ -27,7 +27,7 @@ def process_updater(r_conn: Connection):
 
 def main():
     # noinspection PyUnresolvedReferences
-    in_port = mido.open_input(name=ConfigName.port_name)
+    in_port = mido.open_input(name=ConfigName.port_name, virtual=True)
     if not in_port:
         raise RuntimeError(f"Failed to open MIDI port: {ConfigName.port_name}")
 
