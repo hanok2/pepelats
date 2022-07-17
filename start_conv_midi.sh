@@ -16,9 +16,7 @@ fi
 #wget -nc -O mimap5 https://github.com/slmnv5/mimap5/blob/master/mimap5?raw=true
 chmod a+x mimap5
 
-hmod a+x mimap5
-
-RES=1
+RES=""
 PID=1
 while true; do
 # Start using MIDI source
