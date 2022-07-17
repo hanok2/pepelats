@@ -165,7 +165,7 @@ class ConfigName:
     drum_volume: str = "DRUM_VOLUME"
     usb_audio_names: str = "USB_AUDIO_NAMES"
     max_late_seconds: str = "MAX_LATE_SECONDS"
-    pedal_commands = "PedalCommands"
+    port_name = "Pepelats"
 
 
 if __name__ == "__main__":

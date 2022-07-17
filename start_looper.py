@@ -1,11 +1,12 @@
 from multiprocessing import Pipe, Process
 from multiprocessing.connection import Connection
 
+import mido
+
 from loop import ExtendedCtrl
 from midi import MidiController
 from screen import ScreenUpdater
 from utils import ConfigName
-from utils import open_midi_ports
 
 
 def process_control(r_conn: Connection, s_conn: Connection):
@@ -25,9 +26,10 @@ def process_updater(r_conn: Connection):
 
 
 def main():
-    in_port = open_midi_ports(ConfigName.pedal_commands, is_input=True)
+    # noinspection PyUnresolvedReferences
+    in_port = mido.open_input(name=ConfigName.port_name)
     if not in_port:
-        raise RuntimeError(f"Failed to open MIDI port: {ConfigName.pedal_commands}")
+        raise RuntimeError(f"Failed to open MIDI port: {ConfigName.port_name}")
 
     r_upd, s_upd = Pipe(False)  # screen update messages
     r_ctrl, s_ctrl = Pipe(False)  # looper control messages
