@@ -1,7 +1,6 @@
 #!/bin/bash
 # This script starts MIDI converter mimap5 (github link below) using typing keyboard
 
-
 THIS_DIR=$(dirname "$0")
 cd "$THIS_DIR" || exit 1
 
@@ -15,6 +14,6 @@ fi
 chmod a+x mimap5
 
 # Start converter and create in and out virtual MIDI ports using typing keyboard only
-sudo ./mimap5 -r rules.txt -k kbdmap.txt "$@" &
+sudo ./mimap5 -r rules.txt -k kbdmap.txt -n PedalCommands "$@" &
 
 
