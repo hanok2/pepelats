@@ -5,10 +5,9 @@
 export MAX_LEN_SECONDS=60
 export SD_RATE=44100
 
-#check these MIDI ports and use first one found as input
-if [ -z "$MIDI_PORT_NAMES" ]; then
-  export MIDI_PORT_NAMES='PedalCommands,FakeName1,FakeName2'
-fi
+#use this MIDI port as input
+export MIDI_PORT_NAMES='PedalCommands_out'
+
 #check ALSA devices and use first one found
 if [ -z "$USB_AUDIO_NAMES" ]; then
   export USB_AUDIO_NAMES='VALETON GP,USB Audio'
