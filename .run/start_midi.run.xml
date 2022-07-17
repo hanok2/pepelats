@@ -7,14 +7,14 @@
       <env name="PYTHONUNBUFFERED" value="1" />
       <env name="MAPPED_NOTES" value="&quot;60&quot;: 80, &quot;62&quot;: 90, &quot;64&quot;: 100, &quot;65&quot;: 110, &quot;12&quot;: 40, &quot;13&quot;: 50" />
       <env name="KBD_NOTES" value="&quot;1&quot;: 60, &quot;2&quot;: 62, &quot;3&quot;: 64, &quot;4&quot;: 65, &quot;q&quot;: 12,&quot;w&quot;: 13" />
-      <env name="MIDI_PORT_NAMES" value="loopMidi, BlueBoard, iPad" />
+      <env name="MIDI_PORT_NAME" value="loopMidi" />
     </envs>
     <option name="SDK_HOME" value="" />
     <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
     <option name="IS_MODULE_SDK" value="true" />
     <option name="ADD_CONTENT_ROOTS" value="true" />
     <option name="ADD_SOURCE_ROOTS" value="true" />
-    <option name="SCRIPT_NAME" value="C:\Users\erik\git\pepelats\start_looper.py" />
+    <option name="SCRIPT_NAME" value="$PROJECT_DIR$/start_looper.py" />
     <option name="PARAMETERS" value="" />
     <option name="SHOW_COMMAND_LINE" value="false" />
     <option name="EMULATE_TERMINAL" value="false" />

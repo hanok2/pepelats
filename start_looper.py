@@ -26,7 +26,7 @@ def process_updater(r_conn: Connection):
 
 
 def main():
-    port_name = os.getenv("MIDI_PORT_NAMES", "PedalCommands_out")
+    port_name = os.getenv("MIDI_PORT_NAME", "PedalCommands_out")
     # noinspection PyUnresolvedReferences
     in_port = mido.open_input(name=port_name)
     if not in_port:

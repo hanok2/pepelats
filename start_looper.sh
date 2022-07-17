@@ -6,7 +6,7 @@ export MAX_LEN_SECONDS=60
 export SD_RATE=44100
 
 #use this MIDI port as input
-export MIDI_PORT_NAMES='PedalCommands_out'
+export MIDI_PORT_NAME='PedalCommands_out'
 
 #check ALSA devices and use first one found
 if [ -z "$USB_AUDIO_NAMES" ]; then
