@@ -16,13 +16,24 @@ fi
 #wget -nc -O mimap5 https://github.com/slmnv5/mimap5/blob/master/mimap5?raw=true
 chmod a+x mimap5
 
+hmod a+x mimap5
+
+RES=1
+PID=1
+while true; do
 # Start using MIDI source
-CMD1="./mimap5 -r rules.txt -i $HARDWARE_NAME -n PedalCommands $@"
+./mimap5 -r rules.txt -i $HARDWARE_NAME -n PedalCommands $@ &
+PID=$!
+sleep 3
+RES=$(ps -p $PID -o pid=)
+if [ -n "$RES" ]; then exit 0; fi
 
 # Start using typing keyboard
-CMD2="sudo ./mimap5 -r rules.txt -k kbdmap.txt -n PedalCommands $@"
+sudo ./mimap5 -r rules.txt -k kbdmap.txt -n PedalCommands $@ &
+PID=$!
+sleep 3
+RES=$(ps -p $PID -o pid=)
+if [ -n "$RES" ]; then exit 0; fi
+echo running again
 
-"CMD1" || "CMD2"
-while [ $? -ne 0 ]; do
-  "CMD1" || "CMD2"
 done
