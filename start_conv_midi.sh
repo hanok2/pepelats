@@ -20,14 +20,14 @@ RES=""
 PID=1
 while true; do
 # Start using MIDI source
-./mimap5 -r rules.txt -i $HARDWARE_NAME -n PedalCommands $@ &
+./mimap5 -r rules.txt -i $HARDWARE_NAME -n PedalCommands "$@" &
 PID=$!
 sleep 3
 RES=$(ps -p $PID -o pid=)
 if [ -n "$RES" ]; then exit 0; fi
 
 # Start using typing keyboard
-sudo ./mimap5 -r rules.txt -k kbdmap.txt -n PedalCommands $@ &
+sudo ./mimap5 -r rules.txt -k kbdmap.txt -n PedalCommands "$@" &
 PID=$!
 sleep 3
 RES=$(ps -p $PID -o pid=)
