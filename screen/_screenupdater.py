@@ -2,17 +2,10 @@ import os
 import sys
 import time
 from threading import Thread
-from typing import Tuple
 
 from utils import SCR_COLS, print_at, MsgProcessor, SD_RATE, SCR_ROWS
 
 UPDATES_PER_LOOP = 16
-
-
-def extend_strings(s: str, fill_char: str, cols: int) -> Tuple[str, int]:
-    line_list = s.split('\n')
-    mp = map(lambda x: x.ljust(cols, fill_char), line_list)
-    return "\n".join(list(mp)), len(line_list) + 1
 
 
 class ScreenUpdater(MsgProcessor):
