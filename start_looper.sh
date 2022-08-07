@@ -39,8 +39,9 @@ mv -f ./tmp.log ./log.log
 
 echo "$python_command"
 
-# disable under voltage error on screen as it works OK with under voltage
+# disable under voltage error on screen and disable typing echo
 sudo dmesg -D
+stty -echo
 
 # restart many times
 for k in {1..100}; do
