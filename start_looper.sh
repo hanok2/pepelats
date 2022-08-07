@@ -16,9 +16,9 @@ fi
 THIS_DIR=$(dirname "$0")
 cd "$THIS_DIR" || exit 1
 
-found=$(ps -ef | grep -v grep | grep -c start_looper.sh)
-if [ "$found" -gt 2 ]; then
-  echo "Exiting, this script is already running"
+found=$(ps -ef | grep -v grep | grep start_looper.py)
+if [ -n "$found" ]; then
+  echo "Exiting, already running"
   exit 1
 fi
 
