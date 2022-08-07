@@ -8,7 +8,7 @@ THIS_DIR=$(dirname "$0")
 cd "$THIS_DIR" || exit 1
 
 found=$(ps -ef | grep -v grep | grep -c start_conv_midi.sh)
-if [ "$found" -gt 1 ]; then
+if [ "$found" -gt 2 ]; then
   echo "Exiting, this script is already running"
   exit 1
 fi
