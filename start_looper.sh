@@ -43,9 +43,7 @@ echo "$python_command"
 sudo dmesg -D
 stty -echo
 
-# restart many times
-for k in {1..100}; do
-  echo "started $k times"
+while true; do
   killall -s 9 -w -v python3
   sleep 10
   $python_command
