@@ -31,7 +31,7 @@ sudo ./mimap5 -r rules.txt -k kbdmap.txt -n PedalCommands "$@" &
 PID=$!
 sleep 10
 RES=$(ps -p $PID -o pid=)
-if [ -n "$RES" ]; then exit 0; fi
+if [ -n "$RES" ]; then stty -echo; exit 0; fi
 echo running again
 
 done

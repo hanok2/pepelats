@@ -50,3 +50,5 @@ for k in {1..100}; do
 done
 
 sudo dmesg -E
+stty echo
+
