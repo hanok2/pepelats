@@ -16,8 +16,9 @@ fi
 THIS_DIR=$(dirname "$0")
 cd "$THIS_DIR" || exit 1
 
-if pidof -o %PPID -x "$0" > /dev/null; then
-  echo "Process already running"
+found=$(ps -ef | grep -v grep | grep -c start_looper.sh)
+if [ "$found" -gt 1 ]; then
+  echo "Exiting, this script is already running"
   exit 1
 fi
 
